@@ -1,0 +1,66 @@
+---
+title: "Data Science with `R` Project Proposal"
+author: "Team COVID-19 Predictor"
+date: "20.05.2020"
+output: html_document
+---
+![DataSciR](datascir_w300.png)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Project Title: COVID-19 Prediction using CT-Scans
+
+## Team:
+
+#### Jalaj, Vora
+M.Sc. Digital Engineering <br>
+
+#### Shivam, Singh
+M.Sc. Digital Engineering <br>
+
+#### Subhankar, Patra
+M.Sc. Data and Knowledge Engineering <br>
+
+#### Subhajit, Mondal
+M.Sc. Data and Knowledge Engineering <br>
+
+#### Roshmitha, Thummala
+M.Sc. Data and Knowledge Engineering <br>
+
+***
+
+## Background and Motivation:
+
+***
+
+## Ground Truth:
+
+***
+
+## Data Science Pipeline Design Overview
+
+***
+
+## Time Plan
+
+**2 Meetings per week. Tuesday and Friday at 17:30 Sharp!**
+
+```{r echo = FALSE, results='asis'}
+
+d<-data.frame(Sr.nr.= c(1,2,3),
+              x=c(11,12,23), 
+              y=c(54,54,54),
+              z=c(1,2,3),
+              w=c(1,2,3),
+              r=c(1,2,3))
+library(knitr)
+
+kable(d, row.names = NA, col.names = NA,  align = "lll", caption = "A Sample Table")
+```
+
+***
+
+
+[Google](http://www.google.com) <br>
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
