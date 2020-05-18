@@ -397,12 +397,12 @@ summary {
 </div>
 <div id="background-and-motivation" class="section level2">
 <h2>Background and Motivation:</h2>
-<p>The COVID-19 or the SARS-COV2 possibly originated from the district of Wuhan, China has transpired to be a pandemic worldwide. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Particularly this is in line with our motivation towards building a classifier that predicts the presence or absence of COVID19 in a patient from chest X ray or CT scan. The project tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus. The proposal describes categorically the following points, viz. the feature extraction and selection areas, models that are to be used, fusion techniques that can be employed, overall architecture of the system to be built.</p>
+<p>The COVID-19 or the SARS-COV2 possibly originated from the district of Wuhan, China has transpired to be a pandemic worldwide. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Particularly, this is in line with our motivation towards building a classifier that predicts the presence or absence of COVID-19 in a patient from chest X-Ray or CT-scan. The project tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus. The proposal describes categorically the following points, viz. the feature extraction and selection areas, models that are to be used, fusion techniques that can be employed, overall architecture of the system to be built.</p>
 <hr />
 </div>
 <div id="ground-truth-and-technology-stack" class="section level2">
 <h2>Ground Truth and Technology Stack:</h2>
-<p>The project shall be built using <code>R</code> and related <code>R</code> based API’s like <code>shiny</code>, <code>magick</code>, <code>opencv</code>. We may try to emphasize more on the grounds of explainable machine learning, by means of both trying classifiers like the SVM and using the much complex self-representation power using the Neural Nets.</p>
+<p>The project shall be built using <code>R</code> and related <code>R</code> based API’s like <code>magick</code>, <code>opencv</code> and <code>tidyverse</code> packages like <code>dplyr</code> and <code>tidyr</code> for data manipulation, <code>ggplot2</code> for data visualization, <code>rmarkdown</code> and <code>knitr</code> for reproducible &amp; automated reporting, <code>shiny</code> for interactive web applications, and <code>tidymodels</code> for inferential and predictive modeling. <br> We may try to emphasize more on the grounds of explainable machine learning, by means of both trying classifiers like the SVM and using the much complex self-representation power using the Neural Nets.</p>
 <div id="dataset" class="section level3">
 <h3>Dataset</h3>
 <p>We may try to learn from chest X-Rays or CT-scan images. However, as literature surveys suggest, CT-scans transfer much knowledge and thus is better suitable Deep learning-based approaches, X-Rays on the other hand are cheap source and, in much abundance, than CT-scans and gives good results on the fronts of vision tasks. Both Deep learning-based approach and features extraction using computer vision can be done from them. We may for reasons of abundance of data try to stick to X-Ray images.<br> In particular we may try to use the <a href="https://github.com/rezacsedu/DeepCOVIDExplainer">COVIDx</a> dataset as was used in “DeepCOVIDExplainer: Explainable COVID-19 Predictions Based on Chest X-ray Images”.</p>
@@ -410,7 +410,7 @@ summary {
 </div>
 </div>
 <div id="data-science-pipeline-design-overview" class="section level2">
-<h2>Data Science Pipeline Design Overview</h2>
+<h2>Data Science Pipeline Design Overview:</h2>
 <div id="feature-extraction-and-selection" class="section level3">
 <h3>Feature Extraction and Selection</h3>
 <p>For the part of feature extraction, we shall try texture-based descriptors. There exist several texture-based vision algorithms. We might combine features before training and train our model on a combined feature set. Or we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. <br> Literature survey tells us Local Binary Patterns shall be a good choice for texture-based descriptor. We may also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. <br> Moreover, there are several neural nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto encodes the parameters.</p>
@@ -432,7 +432,7 @@ summary {
 </div>
 </div>
 <div id="time-plan" class="section level2">
-<h2>Time Plan</h2>
+<h2>Time Plan:</h2>
 <p><strong>2 Meetings per week. Tuesday and Friday at 17:30 Sharp!</strong></p>
 <table>
 <caption>A Sample Table</caption>

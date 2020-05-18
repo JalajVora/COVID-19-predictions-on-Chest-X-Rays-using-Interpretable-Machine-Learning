@@ -32,13 +32,13 @@ M.Sc. Data and Knowledge Engineering <br>
 
 ## Background and Motivation:
 
-The COVID-19 or the SARS-COV2 possibly originated from the district of Wuhan, China has transpired to be a pandemic worldwide. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Particularly this is in line with our motivation towards building a classifier that predicts the presence or absence of COVID19 in a patient from chest X ray or CT scan. The project tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus. The proposal describes categorically the following points, viz. the feature extraction and selection areas, models that are to be used, fusion techniques that can be employed, overall architecture of the system to be built.
+The COVID-19 or the SARS-COV2 possibly originated from the district of Wuhan, China has transpired to be a pandemic worldwide. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Particularly, this is in line with our motivation towards building a classifier that predicts the presence or absence of COVID-19 in a patient from chest X-Ray or CT-scan. The project tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus. The proposal describes categorically the following points, viz. the feature extraction and selection areas, models that are to be used, fusion techniques that can be employed, overall architecture of the system to be built.
 
 ***
 
 ## Ground Truth and Technology Stack:
 
-The project shall be built using `R` and related `R` based API’s like `shiny`,  `magick`, `opencv`.
+The project shall be built using `R` and related `R` based API’s like `magick`, `opencv` and `tidyverse` packages like `dplyr` and `tidyr` for data manipulation, `ggplot2` for data visualization, `rmarkdown` and `knitr` for reproducible & automated reporting, `shiny` for interactive web applications, and `tidymodels` for inferential and predictive modeling. <br>
 We may try to emphasize more on the grounds of explainable machine learning, by means of both trying classifiers like the SVM and using the much complex self-representation power using the Neural Nets.
 
 ### Dataset
@@ -47,7 +47,7 @@ In particular we may try to use the [COVIDx](https://github.com/rezacsedu/DeepCO
 
 ***
 
-## Data Science Pipeline Design Overview
+## Data Science Pipeline Design Overview:
 
 ### Feature Extraction and Selection
 For the part of feature extraction, we shall try texture-based descriptors. There exist several texture-based vision algorithms. We might combine features before training and train our model on a combined feature set. Or we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. <br>
@@ -71,7 +71,7 @@ The overall architecture of the system is like the above… where we have images
 
 ***
 
-## Time Plan
+## Time Plan:
 
 **2 Meetings per week. Tuesday and Friday at 17:30 Sharp!**
 
