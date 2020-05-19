@@ -101,7 +101,8 @@ AUC ROC: Indicates how well the probabilities from the positive classes are sepa
 
 
 ### Visualization
-
+Visualization is a computer generated image using a computer representation of data as primary source and a human as its primary targets. It's an abstract of information.
+Box Plot easily display data and we can see outliers as well. It graphically displays the data in five statistics Minimum quartile, 25th or lower quartile, 50th or median quartile, 75th or upper quartile and the maximum quartile, which summarizes the distribution of dataset
 ***
 
 ## Time Plan:
