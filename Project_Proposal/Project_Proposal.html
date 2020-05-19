@@ -376,6 +376,11 @@ summary {
 <p>The COVID-19 or the SARS-COV2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, through RT-PCR kits <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, it fits in-line with our motivation towards building a classifier that predicts the presence or absence of COVID-19 in a patient from chest X-Ray images. In addition to current research, our work tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus.</p>
 <hr />
 </div>
+<div id="project-objective" class="section level2">
+<h2>Project Objective:</h2>
+<p>To attain nothing</p>
+<hr />
+</div>
 <div id="ground-truth-and-technology-stack" class="section level2">
 <h2>Ground Truth and Technology Stack:</h2>
 <div id="technology-stack" class="section level3">
@@ -390,18 +395,26 @@ summary {
 </div>
 <div id="data-science-pipeline-design-overview" class="section level2">
 <h2>Data Science Pipeline Design Overview:</h2>
-<p>The proposal describes categorically the following points, viz. the feature extraction and selection areas, models that are to be used, fusion techniques that can be employed, overall architecture of the system to be built.</p>
+<p>We would be following a typical Data Science pipeline starting with Pre-Processing of Data, Feature Extraction and Selection and then feeding descriptors (trainable vectors) to different classifiers to train and then evaluation would be done based on predictor’s results. The details are delineated in the following sections.</p>
 <div id="feature-extraction-and-selection" class="section level3">
 <h3>Feature Extraction and Selection</h3>
-<p>For the part of feature extraction, we shall try texture-based descriptors. There exist several texture-based vision algorithms. We might combine features before training and train our model on a combined feature set. Or we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. <br> Literature survey tells us Local Binary Patterns shall be a good choice for texture-based descriptor. We may also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. <br> Moreover, there are several neural nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto encodes the parameters.</p>
+<p>For the part of feature extraction, we will try texture-based descriptors. There exist several texture-based vision algorithms. We will try to combine features before training and train our model on a combined feature set. Or else we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. Literature survey tells us Local Binary Patterns shall be a good choice for texture-based descriptor. We will also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. Moreover, there are several Neural-Nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto-encodes the parameters.</p>
 </div>
-<div id="models-to-train-and-aim-of-the-project" class="section level3">
-<h3>Models to train and aim of the project</h3>
-<p>The problem in hand is a classification problem where we can either classify an image as positive or negative. Here we would like to emphasize that the model won’t predict presence or absence or pneumonia, which is a result not only of COVID-19 but other kind of reasons also affect this. <br></p>
-<p>We mainly will try two kinds of algorithms:</p>
+<div id="model-selection-and-modelling" class="section level3">
+<h3>Model Selection and Modelling</h3>
+<p>The problem in hand is a classification problem where we would be classifying whether an image as positive or negative w.r.t COVID-19. Here, we would like to emphasize that the model won’t predict presence or absence or pneumonia, which is a result not only of COVID-19 but other kind of reasons also affect this. <br></p>
+<p>We intend to work on two kinds of algorithms:</p>
 <ol style="list-style-type: decimal">
-<li><p>One that can be trained based on features to be extracted, like clustering, SVM, binary classification (regression). Mostly because the models are intrinsically explainable.</p></li>
-<li><p>Neural Net based approaches, where the model is a black box model, and we use tools like saliency maps for description.</p></li>
+<li>One that can be trained based on features to be extracted such as:</li>
+</ol>
+<ul>
+<li>Clustering Algorithms</li>
+<li>SVM</li>
+<li>Binary Classifiers</li>
+</ul>
+<p>Mostly because the models are intrinsically explainable.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Neural Network based approaches, where the model is a black box model and we will use tools like saliency maps for description.</li>
 </ol>
 </div>
 <div id="overview-of-design" class="section level3">
@@ -412,8 +425,8 @@ summary {
 </div>
 <div id="evaluation-and-visualization" class="section level2">
 <h2>Evaluation and Visualization</h2>
-<div id="evaluation" class="section level3">
-<h3>Evaluation</h3>
+<div id="evaluation-methodology" class="section level3">
+<h3>Evaluation Methodology</h3>
 <p>Evaluation Metrics are used to calculate the performance of the model. We have different type of evaluation methods but selecting a metric is an important step in the project. Most commonly used metrics are Precision and Recall. Precision and Recall are also used with other metrics like Accuracy, F1-Score, Area under ROC curve, MAP Score. The higer the metric value the better the performance.</p>
 <p>Accuracy: Best and mostly used metric. Easily suited for binary as well as multiclass classification problem. <span class="math display">\[\ Accuracy = Number~of~corrected~predictions~/~Total~number~of~predictions \]</span> <span class="math display">\[\ Accuracy = (TP+TN) / (TP+TN+FP+FN) \]</span></p>
 <p>Precision: It is a best choice when we want to be very sure of our prediction. <span class="math display">\[\ Precision = TP / TP+FP \]</span></p>
@@ -436,64 +449,52 @@ summary {
 <h2>Time Plan:</h2>
 <p><strong>2 Meetings per week. Tuesday and Friday at 17:30 Sharp!</strong></p>
 <table>
-<caption>A Sample Table</caption>
+<caption>Time-Line</caption>
 <thead>
 <tr class="header">
 <th align="left">Sr.Nr.</th>
-<th align="left">Work_Slot</th>
+<th align="center">Work_Slot</th>
 <th align="left">Time_Period</th>
-<th align="left">Tasks</th>
-<th align="left">Member_Name</th>
+<th align="center">Tasks</th>
+<th align="center">Member_Name</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td align="left">1</td>
-<td align="left">1</td>
+<td align="center">1</td>
 <td align="left">22.05.2020 - 05.06.2020</td>
-<td align="left">Data-Preprocessing</td>
-<td align="left">Jalaj, Subhankar</td>
+<td align="center">Data Pre-processing &amp; Feature Engineering</td>
+<td align="center">Jalaj, Subhankar</td>
 </tr>
 <tr class="even">
 <td align="left">2</td>
-<td align="left">2</td>
+<td align="center">2</td>
 <td align="left">05.06.2020 - 19.06.2020</td>
-<td align="left">Modeling</td>
-<td align="left">Subhajit, Shivam</td>
+<td align="center">Model Selection and Modelling</td>
+<td align="center">Subhajit, Shivam</td>
 </tr>
 <tr class="odd">
 <td align="left">3</td>
-<td align="left">3</td>
+<td align="center">3</td>
 <td align="left">19.06.2020 - 03.07.2020</td>
-<td align="left">Evaluation</td>
-<td align="left">Roshmitha</td>
+<td align="center">Visualisation and Evaluation</td>
+<td align="center">Roshmitha</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<div id="team" class="section level3">
-<h3>Team:</h3>
-<div id="jalaj-vora" class="section level5">
-<h5><strong>Jalaj, Vora</strong></h5>
-<p>M.Sc. Digital Engineering <br></p>
+<div id="team" class="section level4">
+<h4><strong>Team:</strong></h4>
+<p><a href="mailto::jalaj.vora@st.ovgu.de"><strong>Jalaj, Vora</strong></a> <em>M.Sc. Digital Engineering</em> <br></p>
+<p><a href="mailto::shivam.singh@st.ovgu.de"><strong>Shivam, Singh</strong></a> <em>M.Sc. Digital Engineering</em> <br></p>
+<p><a href="mailto::subhankar.patra@st.ovgu.de"><strong>Subhankar, Patra</strong></a> <em>M.Sc. Data and Knowledge Engineering</em> <br></p>
+<p><a href="mailto::subhajit.mondal@st.ovgu.de"><strong>Subhajit, Mondal</strong></a> <em>M.Sc. Data and Knowledge Engineering</em> <br></p>
+<p><a href="mailto::roshmitha.thummala@st.ovgu.de"><strong>Roshmitha, Thummala</strong></a> <em>M.Sc. Data and Knowledge Engineering</em> <br></p>
+<p><br></p>
 </div>
-<div id="shivam-singh" class="section level5">
-<h5><strong>Shivam, Singh</strong></h5>
-<p>M.Sc. Digital Engineering <br></p>
-</div>
-<div id="subhankar-patra" class="section level5">
-<h5><strong>Subhankar, Patra</strong></h5>
-<p>M.Sc. Data and Knowledge Engineering <br></p>
-</div>
-<div id="subhajit-mondal" class="section level5">
-<h5><strong>Subhajit, Mondal</strong></h5>
-<p>M.Sc. Data and Knowledge Engineering <br></p>
-</div>
-<div id="roshmitha-thummala" class="section level5">
-<h5><strong>Roshmitha, Thummala</strong></h5>
-<p>M.Sc. Data and Knowledge Engineering <br></p>
-<p><strong><em>Supervised by:</em></strong> Uli Niemann</p>
-</div>
+<div id="supervised-by-m.sc.-uli-niemann" class="section level4">
+<h4><strong>Supervised by:</strong> <a href="http://www.kmd.ovgu.de/Team/Academic+Staff/Uli+Niemann.html">M.Sc. Uli Niemann</a></h4>
 </div>
 </div>
 </div>
