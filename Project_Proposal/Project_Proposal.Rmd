@@ -22,7 +22,12 @@ The COVID-19 or the SARS-COV2 originated from the district of Wuhan, China has t
 ***
 ## Project Objective:
 
-To attain nothing
+Aim of our project is to come up with an explaination that why the 
+model chosen to work with by researchers behaves in the fashion it did. Specifically, we are suppose to work on finding out how and what 
+features are contributing in Deep Learning Approach and in other explainable classifiers. Secondly, We would also try other simpler 
+classifiers and would compare the performance and also want to know 
+whether we could achieve similar, close or even better performance on 
+the same experiment using other classifiers.
 
 ***
 ## Ground Truth and Technology Stack:
