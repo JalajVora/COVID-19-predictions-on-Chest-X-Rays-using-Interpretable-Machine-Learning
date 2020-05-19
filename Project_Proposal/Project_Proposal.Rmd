@@ -72,6 +72,36 @@ We mainly will try two kinds of algorithms:
 
 The overall architecture of the system is like the above… where we have images and we extract features from them or do certain preprocessing such as cropping of image etc. Then the features or preprocessed images are fed to the classifier for training. Once trained unknown instance is supplied for classification. We will use late fusion; hence we cumulate the prediction of each of the classifier with certain confidence. The confidence shall be extracted by calculating the MAP score. The Map score can be calculated on a test set that shall be segregated from the overall dataset before the training phase begins. The ratio of the MAP score shall give the confidence contribution of each of the systems.
 
+## Evaluation and Visualization
+
+### Evaluation
+
+Evaluation Metrics are used to calculate the performance of the model. We have different type of evaluation methods but selecting a metric is an important step in the project. Most commonly used metrics are Precision and Recall. Precision and Recall are also used with other metrics like Accuracy, F1-Score, Area under ROC curve, MAP Score.
+The higer the metric value the better the performance.
+
+Accuracy: Best and mostly used metric. Easily suited for binary as well as multiclass classification problem.
+$$\Accuracy=Number of corrected predictions/Total number of predictions$$
+$$\Accuracy=(TP+TN)/(TP+TN+FP+FN) number of predictions$$
+
+Precision: It is a best choice when we want to be very sure of our prediction.
+$$\Precision=TP/TP+FP$$
+
+Recall: Captures as many positives as possible
+$$\Recall=TP/TP+FN$$
+
+F1-Score: It is a weighted average between Precision and Recall.
+$$\F1-Score=2*(Precision*Recall)/(Precision+Recall)
+
+MAP score: Quantifies how good our model at performing the query. First we calculate the average of the precision for each query and then the mean of all these AP scores.
+Q – No.of queries in the set 
+AveP(q) – Average pecision for a each query q
+$$\sum_{q=1}^{Q} AveP(q)/Q$$
+
+AUC ROC: Indicates how well the probabilities from the positive classes are separated from the negative classes. Mostly used to check or visualize the performance of the multi-class classification models. ROC is the probability curve and AUC represents degree or measure of separability.
+
+
+### Visualization
+
 ***
 
 ## Time Plan:
