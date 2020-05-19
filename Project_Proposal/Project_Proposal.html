@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Team COVID-19 Predictor" />
+<meta name="author" content="Team: COVID-19 Predictor" />
 
 
 <title>Data Science with R Project Proposal</title>
@@ -363,7 +363,7 @@ summary {
 
 
 <h1 class="title toc-ignore">Data Science with <code>R</code> Project Proposal</h1>
-<h4 class="author">Team COVID-19 Predictor</h4>
+<h4 class="author">Team: COVID-19 Predictor</h4>
 <h4 class="date">20.05.2020</h4>
 
 </div>
@@ -371,46 +371,50 @@ summary {
 
 <div id="project-title-covid-19-prediction-using-explainable-machine-learning" class="section level1">
 <h1>Project Title: COVID-19 Prediction using Explainable Machine Learning</h1>
-<div id="team" class="section level2">
-<h2>Team:</h2>
-<div id="jalaj-vora" class="section level4">
-<h4>Jalaj, Vora</h4>
+<div id="team" class="section level3">
+<h3>Team:</h3>
+<div id="jalaj-vora" class="section level5">
+<h5><strong>Jalaj, Vora</strong></h5>
 <p>M.Sc. Digital Engineering <br></p>
 </div>
-<div id="shivam-singh" class="section level4">
-<h4>Shivam, Singh</h4>
+<div id="shivam-singh" class="section level5">
+<h5><strong>Shivam, Singh</strong></h5>
 <p>M.Sc. Digital Engineering <br></p>
 </div>
-<div id="subhankar-patra" class="section level4">
-<h4>Subhankar, Patra</h4>
+<div id="subhankar-patra" class="section level5">
+<h5><strong>Subhankar, Patra</strong></h5>
 <p>M.Sc. Data and Knowledge Engineering <br></p>
 </div>
-<div id="subhajit-mondal" class="section level4">
-<h4>Subhajit, Mondal</h4>
+<div id="subhajit-mondal" class="section level5">
+<h5><strong>Subhajit, Mondal</strong></h5>
 <p>M.Sc. Data and Knowledge Engineering <br></p>
 </div>
-<div id="roshmitha-thummala" class="section level4">
-<h4>Roshmitha, Thummala</h4>
+<div id="roshmitha-thummala" class="section level5">
+<h5><strong>Roshmitha, Thummala</strong></h5>
 <p>M.Sc. Data and Knowledge Engineering <br></p>
 <hr />
 </div>
 </div>
 <div id="background-and-motivation" class="section level2">
 <h2>Background and Motivation:</h2>
-<p>The COVID-19 or the SARS-COV2 possibly originated from the district of Wuhan, China has transpired to be a pandemic worldwide. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Particularly, this is in line with our motivation towards building a classifier that predicts the presence or absence of COVID-19 in a patient from chest X-Ray or CT-scan. The project tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus. The proposal describes categorically the following points, viz. the feature extraction and selection areas, models that are to be used, fusion techniques that can be employed, overall architecture of the system to be built.</p>
+<p>The COVID-19 or the SARS-COV2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, through RT-PCR kits [1], it fits in-line with our motivation towards building a classifier that predicts the presence or absence of COVID-19 in a patient from chest X-Ray images. In addition to current research, our work tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus.</p>
 <hr />
 </div>
 <div id="ground-truth-and-technology-stack" class="section level2">
 <h2>Ground Truth and Technology Stack:</h2>
-<p>The project shall be built using <code>R</code> and related <code>R</code> based API’s like <code>magick</code>, <code>opencv</code> and <code>tidyverse</code> packages like <code>dplyr</code> and <code>tidyr</code> for data manipulation, <code>ggplot2</code> for data visualization, <code>rmarkdown</code> and <code>knitr</code> for reproducible &amp; automated reporting, <code>shiny</code> for interactive web applications, and <code>tidymodels</code> for inferential and predictive modeling. <br> We may try to emphasize more on the grounds of explainable machine learning, by means of both trying classifiers like the SVM and using the much complex self-representation power using the Neural Nets.</p>
+<div id="technology-stack" class="section level3">
+<h3>Technology Stack</h3>
+<p>The project will be built in <code>R</code> with usage of API’s like <code>magick</code>, <code>opencv</code> for image processing and <code>tidyverse</code> packages like <code>dplyr</code> and <code>tidyr</code> for data manipulation, <code>ggplot2</code> for data visualization, <code>rmarkdown</code> and <code>knitr</code> for reproducible &amp; automated reporting, <code>shiny</code> for interactive web applications, and <code>tidymodels</code> for inferential and predictive modeling.</p>
+</div>
 <div id="dataset" class="section level3">
 <h3>Dataset</h3>
-<p>We may try to learn from chest X-Rays or CT-scan images. However, as literature surveys suggest, CT-scans transfer much knowledge and thus is better suitable Deep learning-based approaches, X-Rays on the other hand are cheap source and, in much abundance, than CT-scans and gives good results on the fronts of vision tasks. Both Deep learning-based approach and features extraction using computer vision can be done from them. We may for reasons of abundance of data try to stick to X-Ray images.<br> In particular we may try to use the <a href="https://github.com/rezacsedu/DeepCOVIDExplainer">COVIDx</a> dataset as was used in “DeepCOVIDExplainer: Explainable COVID-19 Predictions Based on Chest X-ray Images”.</p>
+<p>Our approach to learn would be from chest X-Rays however, as literature surveys suggest, CT-scans transfer much knowledge and thus is better suitable Deep Learning based approaches, X-Rays on the other hand are publicly available and abundant source than CT-scans and gives good results on the fronts of vision tasks. Both Deep Learning based approaches and features extraction using computer vision will be done from them. We will for reasons of abundance of data stick to X-Ray images.<br> In particular we will use the <a href="https://github.com/rezacsedu/DeepCOVIDExplainer">Dataset</a> as our Ground Truth.</p>
 <hr />
 </div>
 </div>
 <div id="data-science-pipeline-design-overview" class="section level2">
 <h2>Data Science Pipeline Design Overview:</h2>
+<p>The proposal describes categorically the following points, viz. the feature extraction and selection areas, models that are to be used, fusion techniques that can be employed, overall architecture of the system to be built.</p>
 <div id="feature-extraction-and-selection" class="section level3">
 <h3>Feature Extraction and Selection</h3>
 <p>For the part of feature extraction, we shall try texture-based descriptors. There exist several texture-based vision algorithms. We might combine features before training and train our model on a combined feature set. Or we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. <br> Literature survey tells us Local Binary Patterns shall be a good choice for texture-based descriptor. We may also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. <br> Moreover, there are several neural nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto encodes the parameters.</p>
@@ -431,29 +435,6 @@ summary {
 <hr />
 </div>
 </div>
-<div id="Evaluation" class="section level2">
-<h2>Evaluation</h2>
-<p>Evaluation Metrics are used to calculate the performance of the model. We have different type of evaluation methods but selecting a metric is an important step in the project. Most commonly used metrics are Precision and Recall. Precision and Recall are also used with other metrics like Accuracy, F1-Score, Area under ROC curve, MAP Score.</p>
-<p>The higer the metric value the better the performance</p>
-<p><b><i>Accuracy</i></b>: Best and mostly used metric. Easily suited for binary as well as multiclass classification problem.</p>
-<p><img src="Accuracy_1.png"/></p>
-<p><img src="Accuracy_2.png"/></p>
-<p><b><i>Precision</i></b>: It is a best choice when we want to be very sure of our prediction.</p>
-<p><img src="Precision.png"/></p>
-<p><b><i>Recall</i></b>: captures as many positives as possible</p>
-<p><img src="Recall.png"/></p>
-<p><b><i>F1-Score</i></b>:It is a weighted average between Precision and Recall. we want to have a good precision & recall.</p>
-<p><img src="F1.png"/></p>
-<p><b><i>MAP score</i></b>:Quantifies how good our model at performing the query. First we calculate the average of the precision for each query and then the mean of all these AP scores.</p>
-<p><img src="MAP.png"/></p>
-<p>Q – No.of queries in the set </br>
-AveP(q) – Average pecision for a each query q</p>
-<p><b><i>AUC ROC</i></b>:Indicates how well the probabilities from the positive classes are separated from the negative classes. Mostly used to check or visualize the performance of the multi-class classification models.
-  </br>ROC is the probability curve and AUC represents degree or measure of separability.
-</p>
-<hr />
-</div>
-
 <div id="time-plan" class="section level2">
 <h2>Time Plan:</h2>
 <p><strong>2 Meetings per week. Tuesday and Friday at 17:30 Sharp!</strong></p>
