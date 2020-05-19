@@ -1,6 +1,6 @@
 ---
 title: "Data Science with `R` Project Proposal"
-author: "Team COVID-19 Predictor"
+author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
 output: html_document
 ---
@@ -11,28 +11,28 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Project Title: COVID-19 Prediction using Explainable Machine Learning
 
-## Team:
+### Team:
 
-#### Jalaj, Vora
+##### **Jalaj, Vora** 
 M.Sc. Digital Engineering <br>
 
-#### Shivam, Singh
+##### **Shivam, Singh**
 M.Sc. Digital Engineering <br>
 
-#### Subhankar, Patra
+##### **Subhankar, Patra**
 M.Sc. Data and Knowledge Engineering <br>
 
-#### Subhajit, Mondal
+##### **Subhajit, Mondal**
 M.Sc. Data and Knowledge Engineering <br>
 
-#### Roshmitha, Thummala
+##### **Roshmitha, Thummala**
 M.Sc. Data and Knowledge Engineering <br>
 
 ***
 
 ## Background and Motivation:
 
-The COVID-19 or the SARS-COV2 possibly originated from the district of Wuhan, China has transpired to be a pandemic worldwide. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Particularly, this is in line with our motivation towards building a classifier that predicts the presence or absence of COVID-19 in a patient from chest X-Ray or CT-scan. The project tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus. The proposal describes categorically the following points, viz. the feature extraction and selection areas, models that are to be used, fusion techniques that can be employed, overall architecture of the system to be built.
+The COVID-19 or the SARS-COV2 possibly originated from the district of Wuhan, China has transpired to be a pandemic worldwide. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Particularly, this is in line with our motivation towards building a classifier that predicts the presence or absence of COVID-19 in a patient from chest X-Ray images. The project tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus.
 
 ***
 
@@ -48,6 +48,8 @@ In particular we may try to use the [COVIDx](https://github.com/rezacsedu/DeepCO
 ***
 
 ## Data Science Pipeline Design Overview:
+
+The proposal describes categorically the following points, viz. the feature extraction and selection areas, models that are to be used, fusion techniques that can be employed, overall architecture of the system to be built.
 
 ### Feature Extraction and Selection
 For the part of feature extraction, we shall try texture-based descriptors. There exist several texture-based vision algorithms. We might combine features before training and train our model on a combined feature set. Or we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. <br>
