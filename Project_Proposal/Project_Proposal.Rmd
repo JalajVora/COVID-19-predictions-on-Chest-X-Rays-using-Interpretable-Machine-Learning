@@ -3,7 +3,6 @@ title: "Data Science with `R` Project Proposal"
 author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
 output: html_document
-#bibliography: bibliography.bib
 ---
 
 ```{r setup, include=FALSE}
