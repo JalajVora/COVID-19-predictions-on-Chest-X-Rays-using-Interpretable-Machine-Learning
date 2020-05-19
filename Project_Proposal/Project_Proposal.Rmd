@@ -80,22 +80,27 @@ Evaluation Metrics are used to calculate the performance of the model. We have d
 The higer the metric value the better the performance.
 
 Accuracy: Best and mostly used metric. Easily suited for binary as well as multiclass classification problem.
-$$\Accuracy=Number of corrected predictions/Total number of predictions$$
-$$\Accuracy=(TP+TN)/(TP+TN+FP+FN) number of predictions$$
+$$\ Accuracy = Number~of~corrected~predictions~/~Total~number~of~predictions $$
+$$\ Accuracy = (TP+TN) / (TP+TN+FP+FN) $$
 
 Precision: It is a best choice when we want to be very sure of our prediction.
-$$\Precision=TP/TP+FP$$
+$$\ Precision = TP / TP+FP $$
 
 Recall: Captures as many positives as possible
-$$\Recall=TP/TP+FN$$
+$$\ Recall = TP / TP+FN $$
 
 F1-Score: It is a weighted average between Precision and Recall.
-$$\F1-Score=2*(Precision*Recall)/(Precision+Recall)
+
+$$\ F^1-Score = 2 * (Precision*Recall) / (Precision+Recall) $$
+
 
 MAP score: Quantifies how good our model at performing the query. First we calculate the average of the precision for each query and then the mean of all these AP scores.
+
 Q – No.of queries in the set 
+
 AveP(q) – Average pecision for a each query q
-$$\sum_{q=1}^{Q} AveP(q)/Q$$
+
+$$\sum_{q=1}^{Q} AveP(q)/Q $$
 
 AUC ROC: Indicates how well the probabilities from the positive classes are separated from the negative classes. Mostly used to check or visualize the performance of the multi-class classification models. ROC is the probability curve and AUC represents degree or measure of separability.
 
