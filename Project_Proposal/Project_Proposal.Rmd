@@ -2,7 +2,10 @@
 title: "Data Science with `R` Project Proposal"
 author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
-output: html_document
+output:
+  pdf_document:
+    citation_package: natbib
+bibliograpy : ref-dsr.bib
 runtime: shiny
 ---
 
@@ -150,3 +153,6 @@ kable(d, row.names = NA, col.names = NA,  align = "lclcc", caption = "Time-Line"
 <br>
 
 #### **Supervised by:** [M.Sc. Uli Niemann](http://www.kmd.ovgu.de/Team/Academic+Staff/Uli+Niemann.html)
+
+# References
+
