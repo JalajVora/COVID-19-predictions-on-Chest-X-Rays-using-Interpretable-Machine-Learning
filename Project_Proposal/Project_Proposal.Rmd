@@ -2,13 +2,14 @@
 title: "Data Science with `R` Project Proposal"
 author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
-output: html_document
-#output: pdf_document
+#output: html_document
+output: pdf_document
 #output:
  # pdf_document:
   #  citation_package: natbib
 #bibliograpy : ref-dsr.bib
-runtime: shiny
+#csl: data-and-knowledge-engineering.csl
+#runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -20,19 +21,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Background and Motivation:
 
-The COVID-19 or the SARS-COV2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide [WHO reference]. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits @Zhao2020COVIDCTDatasetAC. These kits usually takes upto 4-6 hours to reproduce the results which, statistically speaking not very optimal way to move forward as the rate of COVID-19 patients registeration grows exponentially. with this problem in scientific community, it motivated to aim of Data Sciene can be brought to help. So, it leaded to a possibility of building a classifier which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images. As this approach seems to be less time and resource consuming and we hoped to achieve a competible performance w.r.t RT-PCR kits.Also in addition to a good prediction, we needed reasons that could justify what are the features that may be responsible to the diagonistic process. In addition to current research, our work tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus.
+The COVID-19 or the SARS-COV2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide [WHO reference]. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits @Zhao2020COVIDCTDatasetAC. These kits usually takes upto 4-6 hours to reproduce the results which, statistically speaking not very optimal way to move forward as the rate of COVID-19 patients registeration grows exponentially. with this problem in scientific community, it motivated to aim of Data Sciene can be brought to help. So, it leaded to a possibility of building a classifier which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images. As this approach seems to be less time and resource consuming and we hoped to achieve a competible performance w.r.t RT-PCR kits.Also in addition to a good prediction, we needed reasons that could justify what are the features that may be responsible to the diagonistic process. In addition to current research, our work tries to finds insights of COVID-19 detection using simpler explainable models and effectively use the research surrounding the virus. Aim of our project is to come up with an explanation that why the  model chosen to work with by researchers behaves in the fashion it did. Specifically, we are suppose to work on finding out how and what features are contributing in Deep Learning Approach and in other explainable classifiers. Secondly, We would also try other simpler 
+classifiers and would compare the performance and also want to know 
+whether we could achieve similar, close or even better performance on 
+the same experiment using other classifiers. [-@R-base]
 
-[^1]: https://arxiv.org/abs/2003.13865
 
 ***
 ## Project Objective:
 
-Aim of our project is to come up with an explanation that why the 
-model chosen to work with by researchers behaves in the fashion it did. Specifically, we are suppose to work on finding out how and what 
-features are contributing in Deep Learning Approach and in other explainable classifiers. Secondly, We would also try other simpler 
-classifiers and would compare the performance and also want to know 
-whether we could achieve similar, close or even better performance on 
-the same experiment using other classifiers. [-@R-base]
+
 
 ***
 ## Ground Truth and Technology Stack:
@@ -136,7 +134,8 @@ kable(d, row.names = NA, col.names = NA,  align = "lclcc", caption = "Time-Line"
 ```
 
 ***
-#### **Team:**
+## **Team:**
+
 [**Jalaj, Vora**](mailto::jalaj.vora@st.ovgu.de) 
 *M.Sc. Digital Engineering* <br>
 
@@ -157,4 +156,3 @@ kable(d, row.names = NA, col.names = NA,  align = "lclcc", caption = "Time-Line"
 #### **Supervised by:** [M.Sc. Uli Niemann](http://www.kmd.ovgu.de/Team/Academic+Staff/Uli+Niemann.html)
 
 # References
-
