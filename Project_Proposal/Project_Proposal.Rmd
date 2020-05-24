@@ -30,7 +30,7 @@ the same experiment using other classifiers.
 ***
 ## Project Objective:
 
-
+From the motivation to help flattening the curve of COVID-19 patient, we aim to build classifiers which achieves a base accuracy of 85% using X-Rays. Secondly, we aim to experiment on the classifiers which are intrinsically explainable as well as which aren't. With this experiments we would try to come up with set of features that would be responsible for the diagonistic process by Classifier as well as with an explaination in mathematical form of why such a set of features were significant in doing so.
 
 ***
 ## Ground Truth and Technology Stack:
@@ -39,7 +39,7 @@ the same experiment using other classifiers.
 The project will be built in `R` with usage of API’s like `magick`, `opencv` for image processing and `tidyverse` packages like `dplyr` and `tidyr` for data manipulation, `ggplot2` for data visualization, `rmarkdown` and `knitr` for reproducible & automated reporting, `shiny` for interactive web applications, and `tidymodels` for inferential and predictive modeling.
 
 ### Dataset
-In order to train the classifier, CT-Scan data would be gold-standard for us [some citation] and also the experiment by @Zhao2020COVIDCTDatasetAC suggest pretty good results in terms of accuracy and F1-Score. However, due to less in quantity we would like to use X-rays as our dataset to train and test. Though, it won't be that competible in terms of quality w.r.t CT-Scans but as it is availbale in abundance for COVID-19 positives and negatives and as per [some citation] being sufficient to diagonise similar to CT-Scan.
+In order to train the classifier, CT-Scan data would be gold-standard for us [some citation] and also the experiment by @Zhao2020COVIDCTDatasetAC suggest pretty good results in terms of accuracy and F1-Score. However, due to less in quantity, we would like to use X-rays as our dataset to train and test. Though, it won't be that competible in terms of quality w.r.t CT-Scans but as it is availbale in abundance for COVID-19 positives and negatives and as per [some citation] being sufficient to diagonise similar to CT-Scan.
 
 Our dataset consists of 1500 X-Ray images of so and so size. We have so and so COVID-19 positives and so and so negatives. We would like shuffle, batch and repeat to train 66% of data and the rest to test while building the model.
 
