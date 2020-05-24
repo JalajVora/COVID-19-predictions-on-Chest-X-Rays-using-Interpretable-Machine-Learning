@@ -49,7 +49,7 @@ In particular we will use the [Dataset](https://github.com/JalajVora/Data-Scienc
 
 ## Data Science Pipeline Design Overview:
 
-We would be following a typical Data Science pipeline starting with Pre-Processing of Data, Feature Extraction and Selection and then feeding descriptors (trainable vectors) to different classifiers to train and then evaluation would be done based on predictor's results. The details are delineated in the following sections.  
+We would be following a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor's results. The details are delineated in the following sections.  
 
 ### Feature Extraction and Selection
 For the part of feature extraction, we will try texture-based descriptors. There exist several texture-based vision algorithms. We will try to combine features before training and train our model on a combined feature set. Or else we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. Literature survey tells us Local Binary Patterns shall be a good choice for texture-based descriptor. We will also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. Moreover, there are several Neural-Nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto-encodes the parameters.
