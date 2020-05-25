@@ -116,6 +116,9 @@ $$\sum_{q=1}^{Q} AveP(q)/Q $$
 
 ### Visualization
 Visualization is a computer generated image using a computer representation of data as primary source and a human as its primary targets. It's an abstract of information. Box Plot easily display data and we can see outliers as well. It graphically displays the data in five statistics Minimum quartile, 25^th^ or lower quartile, 50^th^ or median quartile, 75^th^ or upper quartile and the maximum quartile, which summarizes the distribution of dataset.
+Our plan is to visualize our output in Box-plot diagram, for instance, we are gonna display probability of having COVID in quartiles.
+X-ray's without COVID as minimum quartile, X-ray's which has very less probability of getting COVID as the lower quartile and continues till X-ray's which has very strong probability of getting COVID as Maximum quartile. 
+
 
 ***
 
