@@ -3,13 +3,13 @@ title: "Data Science with `R` Project Proposal"
 author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
 #output: html_document
-output: pdf_document
+#output: pdf_document
 #output:
  # pdf_document:
   #  citation_package: natbib
 #bibliograpy : ref-dsr.bib
 #csl: data-and-knowledge-engineering.csl
-#runtime: shiny
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
