@@ -2,11 +2,17 @@
 title: "Data Science with `R` Project Proposal"
 author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
-#bibliograpy : references.bib
 #output: pdf_document
-#link-citations: yes
-#csl: data-and-knowledge-engineering.csl
 references:
+- id: WHO
+  title: Novel Coronavirus – China 2020
+  author:
+  - family: World Health Organisation
+  URL: 'https://www.who.int/csr/don/12-january-2020-novel-coronavirus-china/en/'
+  issued:
+    year: 2020
+    month: 1
+
 - id: fenner2012a
   title: One-click science marketing
   author:
@@ -57,6 +63,8 @@ references:
   issued:
     year: 2012
     month: 3
+
+
 runtime: shiny
 ---
 
@@ -70,34 +78,34 @@ runtime: shiny
 
 
 ## Background and Motivation:
-
-The COVID-19 or the SARS-CoV-2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide [WHO reference]. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits [@Zhao2020COVIDCTDatasetAC] which usually takes upto 4-6 hours to reproduce the results which is not very optimal way to move forward as the rate of COVID-19 patients registered grows exponentially. With this problem in scientific community, it motivated to aim of Data Sciene Methodology be brought to be a part in helping flattening the curve. So, this lead to a possibility of building classifiers which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images [citation of some similar experiments]. As this approach is can be less time and resource consuming and hoped to achieve more streamlined performance compared to RT-PCR kits. Also in addition to a good prediction, we needed reasons that could justify what could be the features that are responsible in the diagonistic process [@DeepCOVIDExplainer; @fenner2012a]. 
+The COVID-19 or the SARS-CoV-2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide [@WHO]. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits [@Zhao2020COVIDCTDatasetAC] which usually takes upto 4-6 hours to reproduce the results which is not very optimal way to move forward as the rate of COVID-19 patients registered grows exponentially. With this problem in scientific community, it motivated to aim of Data Science Methodology be brought to be a part in helping flattening the curve. So, this lead to a possibility of building classifiers which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images [citation of some similar experiments]. As this approach is can be less time and resource consuming and hoped to achieve more streamlined performance compared to RT-PCR kits. Also in addition to a good prediction, we needed reasons that could justify what could be the features that are responsible in the diagonistic process [@DeepCOVIDExplainer; @fenner2012a]. 
 
 With this idea and motivation in hand, our work tries to experiment in building classifier with CXR (Chest X-Rays) as Ground Truth predicts whether an X-Ray image belongs to COVID-19 negative or positive. Along with, we try to come up with features that contributes to the detection of an image and also with an explaination delineating why was such a behaviour observed.
 
 
 ***
 ## Project Objective:
+From the motivation to help flattening the curve of COVID-19, Can we use a Data Science in order to predict a patient's COVID-19 Infection? To answer the this question, we aim to answer few sub-questions:
 
-From the motivation to help flattening the curve of COVID-19, we aim to build classifiers which achieves a base Accuracy, F~1~-Score and AUC of 85% using X-Rays. Although, research [@Zhao2020COVIDCTDatasetAC; @DeepCOVIDExplainer] extensively works with Neural Networks to classify, we intend to work classifiers which are intrinsicaly explainable. With this experiments we would try to come up with set of features that would be responsible for the diagonistic process by Classifier as well as with an explaination of why such a set of features were significant in doing so.
+* How well could classifiers perform on Chest X-Rays?
+* Although @Zhao2020COVIDCTDatasetAC and @DeepCOVIDExplainer extensively works with Neural Networks (Black-Box Model) to classify, Can simple and intrinsically explainable classifiers achieve a base Accuracy, F~1~-Score and AUC of 85% using CXR?
+* How does different features of CXR contribute to the model prediction and Can we come up with few number of feature w.r.t their importance?
+* Which flavour of ~multilabel transform~ algorithm perform best among all, the one which considers label correlation or the one which does not?
+* Can we come up with explaination of our model's decsision and prediction?
 
 ***
 ## Ground Truth and Technology Stack:
 
 ### Technology Stack
-The project will be built in `R` with usage of API’s like `magick`, `opencv` for image processing and `tidyverse` packages like `dplyr` and `tidyr` for data manipulation, `ggplot2` for data visualization, `rmarkdown` and `knitr` for reproducible & automated reporting, `shiny` for interactive web applications, and `tidymodels` for inferential and predictive modeling.
+The project will be built in `R` with usage of API’s like `magick`, `opencv` for image processing and `tidyverse` packages like `dplyr` and `tidyr` for data manipulation, `ggplot2` for data visualization, `rmarkdown` and `knitr` for reproducible and automated reporting, `shiny` for interactive web applications and `tidymodels` for inferential and predictive modeling.
 
 ### Dataset
-In order to train the classifier, CT-Scan data would be gold-standard for us [@Zhao2020COVIDCTDatasetAC] and also the experiment by [@cohen2020covid] suggest pretty good results in terms of accuracy and F1-Score. However, due to less in quantity, we would like to use X-rays as our dataset to train and test. Though, it won't be that competible in terms of quality w.r.t CT-Scans but as it is availbale in abundance for COVID-19 positives and negatives and as per [@KERMANY20181122] it has proved to be sufficient and comparable to diagonise w.r.t CT-Scans.
+In order to train the classifier, CT-Scan data would be gold-standard for us [@Zhao2020COVIDCTDatasetAC] and also the experiment by [@cohen2020covid] suggest pretty good results in terms of Accuracy and F~1~-Score. However, due to less in quantity, we would like to use X-rays as our dataset to train and test. Though, it won't be that competible in terms of quality w.r.t CT-Scans but as it is availbale in abundance for COVID-19 positives and negatives and as per [@KERMANY20181122] it has proved to be sufficient and comparable to diagonise w.r.t CT-Scans.
 
-Our dataset consists of 1500 X-Ray images of so and so size. We have so and so COVID-19 positives and so and so negatives. We would like shuffle, batch and repeat to train 66% of data and the rest to test while building the model. [citing all the links from which we have collected our dataset]
-
-In particular we will use the [Dataset](https://github.com/JalajVora/Data-Science-with-R-Project/tree/master/dataset) as our Ground Truth.
+Our dataset consists of 1500 X-Ray images of so and so size. We have so and so COVID-19 positives and so and so negatives. We would like shuffle, batch and repeat to train 66% of data and the rest to test while building the model. [citing all the links from which we have collected our dataset]. In particular we will use the <https://shorturl.at/qwLR0> as our Ground Truth.
 
 ***
-
 ## Data Science Pipeline Design Overview:
-
 We would be following a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor's results. The details are delineated in the following sections.  
 
 ### Feature Extraction and Selection
@@ -135,30 +143,13 @@ Evaluation Metrics are used to calculate the performance of the model. We have d
 
 *Accuracy:* Best and mostly used metric. Easily suited for binary as well as multiclass classification problem.
 
-$$\ Accuracy = Number~of~corrected~predictions~/~Total~number~of~predictions $$
-
-$$\ Accuracy = (TP+TN) / (TP+TN+FP+FN) $$
-
 *Precision:* It is a best choice when we want to be very sure of our prediction.
-
-$$\ Precision = TP / TP+FP $$
 
 *Recall:* Captures as many positives as possible
 
-$$\ Recall = TP / TP+FN $$
-
 *F~1~-Score:* It is a harmonic mean between Precision and Recall.
 
-$$\ F_1-Score = 2 * (Precision*Recall) / (Precision+Recall) $$
-
-
-*MAP score:* Quantifies how good our model at performing the query. First we calculate the average of the precision for each query and then the mean of all these AP scores.
-
-Q – No.of queries in the set 
-
-AveP(q) – Average precision for a each query q
-
-$$\sum_{q=1}^{Q} AveP(q)/Q $$
+*MAP score:* Quantifies how good our model at performing the query. First we calculate the average of the precision for each query and then the mean of all these AP scores. Q – No.of queries in the set and AveP(q) – Average precision for a each query q
 
 *AUC & ROC:* Indicates how well the probabilities from the positive classes are separated from the negative classes. Mostly used to check or visualize the performance of the multi-class classification models. ROC is the probability curve and AUC represents degree or measure of separability.
 
@@ -170,7 +161,6 @@ X-ray's without COVID as minimum quartile, X-ray's which has very less probabili
 
 
 ***
-
 ## Time Plan:
 
 **2 Meetings per week. Tuesday and Friday at 17:30 Sharp!**
@@ -182,38 +172,24 @@ Individual topics have been assigned in a fashion where each pair or individual 
 ***
 ## **Team:**
 
-[**Jalaj, Vora**](mailto::jalaj.vora@st.ovgu.de) 
+* [**Jalaj, Vora**](mailto::jalaj.vora@st.ovgu.de) 
 *M.Sc. Digital Engineering* <br>
 
-[**Shivam, Singh**](mailto::shivam.singh@st.ovgu.de)
+* [**Shivam, Singh**](mailto::shivam.singh@st.ovgu.de)
 *M.Sc. Digital Engineering* <br>
 
-[**Subhankar, Patra**](mailto::subhankar.patra@st.ovgu.de)
+* [**Subhankar, Patra**](mailto::subhankar.patra@st.ovgu.de)
 *M.Sc. Data and Knowledge Engineering* <br>
 
-[**Subhajit, Mondal**](mailto::subhajit.mondal@st.ovgu.de)
+* [**Subhajit, Mondal**](mailto::subhajit.mondal@st.ovgu.de)
 *M.Sc. Data and Knowledge Engineering* <br>
 
-[**Roshmitha, Thummala**](mailto::roshmitha.thummala@st.ovgu.de)
+* [**Roshmitha, Thummala**](mailto::roshmitha.thummala@st.ovgu.de)
 *M.Sc. Data and Knowledge Engineering* <br>
 
 <br>
 
 #### **Supervised by:** [M.Sc. Uli Niemann](http://www.kmd.ovgu.de/Team/Academic+Staff/Uli+Niemann.html)
 
+
 # References
-
-
-``` {r generateBibliography, echo=FALSE, eval=TRUE, message=FALSE, warning=FALSE}
-require("knitcitations")
-cleanbib()
-options("citation_format" = "pandoc")
-read.bibtex(file = "references.bib")
-```
-
-World Health Organization (WHO). WHO Statement regarding cluster of pneumonia cases in Wuhan, China
-2020 [14 Januray 2020]. Available from: <https://www.who.int/china/news/detail/09-01-2020-who-statementregarding-cluster-of-pneumonia-cases-in-wuhan-china>
-
-
-World Health Organization (WHO). Novel Coronavirus – China 2020 [14 January 2020]. Available from:
-<https://www.who.int/csr/don/12-january-2020-novel-coronavirus-china/en/>
