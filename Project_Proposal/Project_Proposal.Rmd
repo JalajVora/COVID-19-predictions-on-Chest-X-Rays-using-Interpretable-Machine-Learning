@@ -2,7 +2,7 @@
 title: "Data Science with `R` Project Proposal"
 author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
-#output: pdf_document
+output: pdf_document
 references:
 - id: WHO
   title: Novel Coronavirus – China 2020
@@ -13,176 +13,183 @@ references:
     year: 2020
     month: 1
 
-@article{wang2020deep,
-  title={A deep learning algorithm using CT images to screen for Corona Virus Disease (COVID-19)},
-  author={Wang, Shuai and Kang, Bo and Ma, Jinlu and Zeng, Xianjun and Xiao, Mingming and Guo, Jia and Cai, Mengjiao and Yang, Jingyi and Li, Yaodong and Meng, Xiangfei and others},
-  journal={MedRxiv},
-  year={2020},
-  publisher={Cold Spring Harbor Laboratory Press}
-}
+# @article{wang2020deep,
+#   title={A deep learning algorithm using CT images to screen for Corona Virus Disease (COVID-19)},
+#   author={Wang, Shuai and Kang, Bo and Ma, Jinlu and Zeng, Xianjun and Xiao, Mingming and Guo, Jia and Cai, Mengjiao and Yang, Jingyi and Li, Yaodong and Meng, Xiangfei and others},
+#   journal={MedRxiv},
+#   year={2020},
+#   publisher={Cold Spring Harbor Laboratory Press}
+# }
+# 
+# - id: 
+#   title: 
+#   author:
+#   - family: 
+#     given: 
+#   container-title: 
+#   volume: 
+#   URL: 
+#   DOI: 
+#   issue: 
+#   publisher: 
+#   page: 
+#   type: 
+#   issued:
+#     year: 
+#     month: 
+# 
+# 
+# - id: Zhao2020COVIDCTDatasetAC
+#   title: One-click science marketing
+#   author:
+#   - family: Zhao
+#     given: Martin
+#   container-title: Nature Materials
+#   volume: 11
+#   URL: 'http://dx.doi.org/10.1038/nmat3283'
+#   DOI: 10.1038/nmat3283
+#   issue: 4
+#   publisher: Nature Publishing Group
+#   page: 261-263
+#   type: article-journal
+#   issued:
+#     year: 2012
+#     month: 3
+# 
+# - id: DeepCOVIDExplainer
+#   title: One-click science marketing
+#   author:
+#   - family: George
+#     given: Martin
+#   container-title: Nature Materials
+#   volume: 11
+#   URL: 'http://dx.doi.org/10.1038/nmat3283'
+#   DOI: 10.1038/nmat3283
+#   issue: 4
+#   publisher: Nature Publishing Group
+#   page: 261-263
+#   type: article-journal
+#   issued:
+#     year: 2012
+#     month: 3
+# 
+# @article{wang2020deep,
+#   title={A deep learning algorithm using CT images to screen for Corona Virus Disease (COVID-19)},
+#   author={Wang, Shuai and Kang, Bo and Ma, Jinlu and Zeng, Xianjun and Xiao, Mingming and Guo, Jia and Cai, Mengjiao and Yang, Jingyi and Li, Yaodong and Meng, Xiangfei and others},
+#   journal={MedRxiv},
+#   year={2020},
+#   publisher={Cold Spring Harbor Laboratory Press}
+# }
+# 
+# - id: 
+#   title: 
+#   author:
+#   - family: 
+#     given: 
+#   container-title: 
+#   volume: 
+#   URL: 
+#   DOI: 
+#   issue: 
+#   publisher: 
+#   page: 
+#   type: 
+#   issued:
+#     year: 
+#     month: 
+#     
+# @article{li2020artificial,
+#   title={Artificial intelligence distinguishes COVID-19 from community acquired pneumonia on chest CT},
+#   author={Li, Lin and Qin, Lixin and Xu, Zeguo and Yin, Youbing and Wang, Xin and Kong, Bin and Bai, Junjie and Lu, Yi and Fang, Zhenghan and Song, Qi and others},
+#   journal={Radiology},
+#   pages={200905},
+#   year={2020},
+#   publisher={Radiological Society of North America}
+# }
+# - id: 
+#   title: 
+#   author:
+#   - family: 
+#     given: 
+#   container-title: 
+#   volume: 
+#   URL: ''
+#   DOI: 
+#   issue: 
+#   publisher: 
+#   page: 
+#   type: 
+#   issued:
+#     year: 
+#     month: 
+# 
+# @article{zhao2020covid,
+#   title={COVID-CT-Dataset: a CT scan dataset about COVID-19},
+#   author={Zhao, Jinyu and Zhang, Yichen and He, Xuehai and Xie, Pengtao},
+#   journal={arXiv preprint arXiv:2003.13865},
+#   year={2020}
+# }
+# 
+# - id: 
+#   title: 
+#   author:
+#   - family: 
+#     given: 
+#   container-title: 
+#   volume: 
+#   URL: 
+#   DOI: 
+#   issue: 
+#   publisher: 
+#   page: 
+#   type: 
+#   issued:
+#     year: 
+#     month: 
+# 
+# @article{karim2020deepcovidexplainer,
+#   title={Deepcovidexplainer: Explainable covid-19 predictions based on chest x-ray images},
+#   author={Karim, Md and D{\"o}hmen, Till and Rebholz-Schuhmann, Dietrich and Decker, Stefan and Cochez, Michael and Beyan, Oya and others},
+#   journal={arXiv preprint arXiv:2004.04582},
+#   year={2020}
+# }
+# 
+# - id: 
+#   title: 
+#   author:
+#   - family: 
+#     given: 
+#   container-title: 
+#   volume: 
+#   URL: 
+#   DOI: 
+#   issue: 
+#   publisher: 
+#   page: 
+#   type: 
+#   issued:
+#     year: 
+#     month: 
+#     
+# - id: 
+#   title: 
+#   author:
+#   - family: 
+#     given: 
+#   container-title: 
+#   volume: 
+#   URL: 
+#   DOI: 
+#   issue: 
+#   publisher: 
+#   page: 
+#   type: 
+#   issued:
+#     year: 
+#     month: 
+#     
 
-- id: 
-  title: 
-  author:
-  - family: 
-    given: 
-  container-title: 
-  volume: 
-  URL: 
-  DOI: 
-  issue: 
-  publisher: 
-  page: 
-  type: 
-  issued:
-    year: 
-    month: 
-
-
-- id: Zhao2020COVIDCTDatasetAC
-  title: One-click science marketing
-  author:
-  - family: Zhao
-    given: Martin
-  container-title: Nature Materials
-  volume: 11
-  URL: 'http://dx.doi.org/10.1038/nmat3283'
-  DOI: 10.1038/nmat3283
-  issue: 4
-  publisher: Nature Publishing Group
-  page: 261-263
-  type: article-journal
-  issued:
-    year: 2012
-    month: 3
-
-- id: DeepCOVIDExplainer
-  title: One-click science marketing
-  author:
-  - family: George
-    given: Martin
-  container-title: Nature Materials
-  volume: 11
-  URL: 'http://dx.doi.org/10.1038/nmat3283'
-  DOI: 10.1038/nmat3283
-  issue: 4
-  publisher: Nature Publishing Group
-  page: 261-263
-  type: article-journal
-  issued:
-    year: 2012
-    month: 3
-
-@article{wang2020deep,
-  title={A deep learning algorithm using CT images to screen for Corona Virus Disease (COVID-19)},
-  author={Wang, Shuai and Kang, Bo and Ma, Jinlu and Zeng, Xianjun and Xiao, Mingming and Guo, Jia and Cai, Mengjiao and Yang, Jingyi and Li, Yaodong and Meng, Xiangfei and others},
-  journal={MedRxiv},
-  year={2020},
-  publisher={Cold Spring Harbor Laboratory Press}
-}
-
-- id: 
-  title: 
-  author:
-  - family: 
-    given: 
-  container-title: 
-  volume: 
-  URL: 
-  DOI: 
-  issue: 
-  publisher: 
-  page: 
-  type: 
-  issued:
-    year: 
-    month: 
-    
-@article{li2020artificial,
-  title={Artificial intelligence distinguishes COVID-19 from community acquired pneumonia on chest CT},
-  author={Li, Lin and Qin, Lixin and Xu, Zeguo and Yin, Youbing and Wang, Xin and Kong, Bin and Bai, Junjie and Lu, Yi and Fang, Zhenghan and Song, Qi and others},
-  journal={Radiology},
-  pages={200905},
-  year={2020},
-  publisher={Radiological Society of North America}
-}
-- id: 
-  title: 
-  author:
-  - family: 
-    given: 
-  container-title: 
-  volume: 
-  URL: ''
-  DOI: 
-  issue: 
-  publisher: 
-  page: 
-  type: 
-  issued:
-    year: 
-    month: 
-
-@article{zhao2020covid,
-  title={COVID-CT-Dataset: a CT scan dataset about COVID-19},
-  author={Zhao, Jinyu and Zhang, Yichen and He, Xuehai and Xie, Pengtao},
-  journal={arXiv preprint arXiv:2003.13865},
-  year={2020}
-}
-
-- id: 
-  title: 
-  author:
-  - family: 
-    given: 
-  container-title: 
-  volume: 
-  URL: 
-  DOI: 
-  issue: 
-  publisher: 
-  page: 
-  type: 
-  issued:
-    year: 
-    month: 
-    
-- id: 
-  title: 
-  author:
-  - family: 
-    given: 
-  container-title: 
-  volume: 
-  URL: 
-  DOI: 
-  issue: 
-  publisher: 
-  page: 
-  type: 
-  issued:
-    year: 
-    month: 
-    
-- id: 
-  title: 
-  author:
-  - family: 
-    given: 
-  container-title: 
-  volume: 
-  URL: 
-  DOI: 
-  issue: 
-  publisher: 
-  page: 
-  type: 
-  issued:
-    year: 
-    month: 
-    
-
-runtime: shiny
+#runtime: shiny
 ---
 
 
@@ -202,12 +209,16 @@ With this idea and motivation in hand, our work tries to experiment in building 
 
 ***
 ## Project Objective:
-From the motivation to help flattening the curve of COVID-19, Can we use a Data Science in order to predict a patient's COVID-19 Infection? To answer the this question, we aim to answer few sub-questions:
+From the motivation to help flattening the curve of COVID-19,
+
+> Can we use a Data Science for COVID-19 diagnosis? 
+
+To answer the this question, we aim to answer few sub-questions:
 
 * How well could classifiers perform on Chest X-Rays?
 * Although @Zhao2020COVIDCTDatasetAC and @DeepCOVIDExplainer extensively works with Neural Networks (Black-Box Model) to classify, Can simple and intrinsically explainable classifiers achieve a base Accuracy, F~1~-Score and AUC of 85% using CXR?
 * How does different features of CXR contribute to the model prediction and Can we come up with few number of feature w.r.t their importance?
-* Which flavour of ~multilabel transform~ algorithm perform best among all, the one which considers label correlation or the one which does not?
+* Which flavour of ~~multilabel transform~~ algorithm perform best among all, the one which considers label correlation or the one which does not?
 * Can we come up with explaination of our model's decsision and prediction?
 
 ***
@@ -217,64 +228,75 @@ From the motivation to help flattening the curve of COVID-19, Can we use a Data 
 The project will be built in `R` with usage of API’s like `magick`, `opencv` for image processing and `tidyverse` packages like `dplyr` and `tidyr` for data manipulation, `ggplot2` for data visualization, `rmarkdown` and `knitr` for reproducible and automated reporting, `shiny` for interactive web applications and `tidymodels` for inferential and predictive modeling.
 
 ### Dataset
-In order to train the classifier, CT-Scan data would be gold-standard for us [@Zhao2020COVIDCTDatasetAC; @falanu; @dhikanu; @puchhadu] and also the experiment by [@cohen2020covid] suggest pretty good results in terms of Accuracy and F~1~-Score. However, due to less in quantity, we would like to use X-rays as our dataset to train and test. Though, it won't be that competible in terms of quality w.r.t CT-Scans but as it is availbale in abundance for COVID-19 positives and negatives and as per [@KERMANY20181122] it has proved to be sufficient and comparable to diagonise w.r.t CT-Scans.
+Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @DeepCOVIDExplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @Joseph. 
 
-Our dataset consists of 1500 X-Ray images of so and so size. We have so and so COVID-19 positives and so and so negatives. We would like shuffle, batch and repeat to train 66% of data and the rest to test while building the model. [citing all the links from which we have collected our dataset]. In particular we will use the [COVID-19 Dataset Repository]<https://shorturl.at/qwLR0> as our Ground Truth.
+According to [@Zhao2020COVIDCTDatasetAC; @falanu; @dhikanu; @puchhadu] CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F~1~-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won't be that competible in terms of quality w.r.t CT-Scans but @KERMANY20181122 suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.
+
+In particular we will use the [COVID-19 Dataset Repository](https://shorturl.at/qwLR0) as our Ground Truth.
+
+[^1]: https://github.com/rezacsedu/DeepCOVIDExplainer
+[^2]: https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia
+[^3]: https://www.kaggle.com/c/rsna-pneumonia-detection-challenge
+[^4]: https://github.com/ieee8023/covid-chestxray-dataset
+
+### Github
+The `R` scripts, process notebook and other resources have been stored at the [repository](https://github.com/JalajVora/Data-Science-with-R-Project).
 
 ***
-## Data Science Pipeline Design Overview:
-We would be following a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor's results. The details are delineated in the following sections.  
+## Design overview (Algorithms and Methods):
+* **Pre-Processing**
+  - We would be following a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor's results. The details are delineated in the following sections.  
 
-### Feature Extraction and Selection
-For the part of feature extraction, we will try texture-based descriptors. There exist several texture-based vision algorithms. We will try to combine features before training and train our model on a combined feature set. Or else we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. Literature survey tells us Local Binary Patterns shall be a good choice for texture-based descriptor. We will also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. Moreover, there are several Neural-Nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto-encodes the parameters.
+  - For the part of feature extraction, we will try texture-based descriptors. 
+  - There exist several texture-based vision algorithms. We will try to combine features before training and train our model on a combined feature set. Or else we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. 
+  - Literature survey tells us Local Binary Patterns shall be a good choice for texture-based descriptor. We will also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. 
+  - Moreover, there are several Neural-Nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto-encodes the parameters.
 
-### Model Selection and Modelling
-The problem in hand is a classification problem where we would be classifying whether an image as positive or negative w.r.t COVID-19. Here, we would like to emphasize that the model won’t predict presence or absence or pneumonia, which is a result not only of COVID-19 but other kind of reasons also affect this. <br>
+* **Classification**
+  - The problem in hand is a classification problem where we would be classifying whether an image as positive or negative w.r.t COVID-19. 
+  - Here, we would like to emphasize that the model won’t predict presence or absence or pneumonia, which is a result not only of COVID-19 but other kind of reasons also affect this.
+  - We intend to work on two kinds of algorithms:
+    1. One that can be trained based on features to be extracted such as:
+      + Clustering Algorithms
+        - k-Means
+        - kNN
+      + Support Vector Machines 
+      + Binary Classifiers
+        - Decision Trees
+        - Naive Bayes
+    - Mostly because the models are intrinsically explainable.
 
-We intend to work on two kinds of algorithms:
-
-1. One that can be trained based on features to be extracted such as:
-  + Clustering Algorithms
-    - k-Means
-    - kNN
-  + Support Vector Machines 
-  + Binary Classifiers
-    - Decision Trees
-    - Naive Bayes
-
-Mostly because the models are intrinsically explainable.
-
-2. Neural Network based approaches, where the model is a black box model and we will use tools like saliency maps for description.
-
-### Overview of Design
-
+    2. Neural Network based approaches, where the model is a black box model and we will use tools like saliency maps for description.
 ![](Picture1.png)
+  - The above figure suggests the overall overview of an architecture of the system we would like to develop. 
+  - We will have images as data and we would pre-proccess by cropping of images and extract features from them. 
+  - Then after, the features or preprocessed images are fed to the classifier for training. 
+  - Once trained unknown instance is supplied for classification. 
+  - We will use late fusion; hence we accumulate the prediction of each of the classifier with certain confidence. 
+  - The confidence shall be extracted by calculating the MAP score [@Info_Retri]. 
+  - The Map score can be calculated on a test set that shall be segregated from the overall dataset before the training phase begins. 
+  - The ratio of the MAP score  shall give the confidence contribution of each of the systems.
 
-The above figure suggests the overall overview of an architecture of the system we would like to develop. We will have images as data and we would pre-proccess by cropping of images and extract features from them. Then after, the features or preprocessed images are fed to the classifier for training. Once trained unknown instance is supplied for classification. We will use late fusion; hence we accumulate the prediction of each of the classifier with certain confidence. The confidence shall be extracted by calculating the MAP score. The Map score can be calculated on a test set that shall be segregated from the overall dataset before the training phase begins. The ratio of the MAP score [@Info_Retri] shall give the confidence contribution of each of the systems.
+* **Evaluation**
+  - Evaluation Metrics are used to calculate the performance of the model. 
+  - We have different type of evaluation methods but selecting a metric is an important step in the project. 
+  - Most commonly used metrics are Precision and Recall. 
+  - Precision and Recall are also used with other metrics like Accuracy, F1-Score, Area under ROC curve, MAP Score. 
+  - The higher the metric value the better the performance.
+  - *Accuracy:* Best and mostly used metric. Easily suited for binary as well as multiclass classification problem.
+  - *Precision:* It is a best choice when we want to be very sure of our prediction.
+  - *Recall:* Captures as many positives as possible
+  - *F~1~-Score:* It is a harmonic mean between Precision and Recall.
+  - *MAP score:* Quantifies how good our model at performing the query. First we calculate the average of the precision for each query and then the mean of all these AP scores. Q – No.of queries in the set and AveP(q) – Average precision for a each query q
+  - *AUC & ROC:* Indicates how well the probabilities from the positive classes are separated from the negative classes. Mostly used to check or visualize the performance of the multi-class classification models. ROC is the probability curve and AUC represents degree or measure of separability.
 
-## Evaluation and Visualization
-
-### Evaluation Methodology
-
-Evaluation Metrics are used to calculate the performance of the model. We have different type of evaluation methods but selecting a metric is an important step in the project. Most commonly used metrics are Precision and Recall. Precision and Recall are also used with other metrics like Accuracy, F1-Score, Area under ROC curve, MAP Score. The higher the metric value the better the performance.
-
-*Accuracy:* Best and mostly used metric. Easily suited for binary as well as multiclass classification problem.
-
-*Precision:* It is a best choice when we want to be very sure of our prediction.
-
-*Recall:* Captures as many positives as possible
-
-*F~1~-Score:* It is a harmonic mean between Precision and Recall.
-
-*MAP score:* Quantifies how good our model at performing the query. First we calculate the average of the precision for each query and then the mean of all these AP scores. Q – No.of queries in the set and AveP(q) – Average precision for a each query q
-
-*AUC & ROC:* Indicates how well the probabilities from the positive classes are separated from the negative classes. Mostly used to check or visualize the performance of the multi-class classification models. ROC is the probability curve and AUC represents degree or measure of separability.
-
-
-### Visualization
-Visualization is a computer generated image using a computer representation of data as primary source and a human as its primary targets. It's an abstract of information. Box Plot easily display data and we can see outliers as well. It graphically displays the data in five statistics Minimum quartile, 25^th^ or lower quartile, 50^th^ or median quartile, 75^th^ or upper quartile and the maximum quartile, which summarizes the distribution of dataset.
-Our plan is to visualize our output in Box-plot diagram, for instance, we are gonna display probability of having COVID in quartiles.
-X-ray's without COVID as minimum quartile, X-ray's which has very less probability of getting COVID as the lower quartile and continues till X-ray's which has very strong probability of getting COVID as Maximum quartile. 
+* **Visualization**
+  - Visualization is a computer generated image using a computer representation of data as primary source and a human as its primary targets. 
+  - It's an abstract of information. 
+  - Box Plot easily display data and we can see outliers as well. 
+  - It graphically displays the data in five statistics Minimum quartile, 25^th^ or lower quartile, 50^th^ or median quartile, 75^th^ or upper quartile and the maximum quartile, which summarizes the distribution of dataset.
+  - Our plan is to visualize our output in Box-plot diagram, for instance, we are gonna display probability of having COVID in quartiles.
+  - X-ray's without COVID as minimum quartile, X-ray's which has very less probability of getting COVID as the lower quartile and continues till X-ray's which has very strong probability of getting COVID as Maximum quartile. 
 
 
 ***
@@ -282,12 +304,31 @@ X-ray's without COVID as minimum quartile, X-ray's which has very less probabili
 
 **2 Meetings per week. Tuesday and Friday at 17:30 Sharp!**
 
-Individual topics have been assigned in a fashion where each pair or individual would research and implement the functionality in the given time period. Any hindrances and issues would be discussed and will be tried at best to resolve within a weeks time. As the components of the pipeline depend on each other, research of the methodology would be done in parallel whereas the implementation part in an incremental approach.
+```{r echo = FALSE, results='asis'}
+
+d<-data.frame(Sr.Nr.= c(1, 2, 3, 4, 5, 6, 7),
+              Week=c(1, 2, 3, 4, 5, 6, 7), 
+              Time_Period=c('22.05.2020 - 28.05.2020','29.05.2020 - 04.06.2020','05.06.2020 - 11.06.2020','12.06.2020 - 18.06.2020', '19.06.2020 - 25.06.2020', '26.06.2020 - 02.07.2020', '03.07.2020 - 09.07.2020'),
+              Tasks=c("Data Pre-processing --> Subhankar
+                      Model Selection Literature Review --> Shivam 
+                      Exploratory Data Analysis Methodologies for [Dataset](https://shorturl.at/qwLR0) --> Jalaj
+                      Feature Selection and Extraction Literature Review --> Subhajit 
+                      Evaluation Methodologies  w.r.t Interpretability Literature Review  --> Roshmita", "Feature Engineering --> Subhajit, SVM Implementation w.r.t Image Dataset --> Jalaj, Logistic Regression and Perceptron Implementation --> Shivam, Bayesian Implementation --> Roshmita, Decision Trees and Random Forest Implementation --> Subhankar", 
+                      "Model Selection", 
+                      "Modelling", 
+                      "Visualization", 
+                      "Evaluation", 
+                      "Majje"),
+              Member_Name=c('Jalaj', 'Subhankar','Subhajit', 'Shivam','Roshmitha','Jalaj', 'Subhankar'),
+              Deadline=c('28.05.2020 -- 23:59','04.06.2020 -- 23:59','11.06.2020 -- 23:59', '18.06.2020 -- 23:59', '25.06.2020 -- 23:59', '02.07.2020 -- 23:59', '08.07.2020 -- 23:59'))
+library(knitr)
+kable(d,  align = "lllccc", caption = "Timeline")
+```
 
 
 
 ***
-## **Team:**
+## Team:
 
 * [**Jalaj, Vora**](mailto::jalaj.vora@st.ovgu.de) 
 *M.Sc. Digital Engineering* <br>
@@ -304,9 +345,8 @@ Individual topics have been assigned in a fashion where each pair or individual 
 * [**Roshmitha, Thummala**](mailto::roshmitha.thummala@st.ovgu.de)
 *M.Sc. Data and Knowledge Engineering* <br>
 
-<br>
 
-#### **Supervised by:** [M.Sc. Uli Niemann](http://www.kmd.ovgu.de/Team/Academic+Staff/Uli+Niemann.html)
+**Supervised by:** [M.Sc. Uli Niemann](http://www.kmd.ovgu.de/Team/Academic+Staff/Uli+Niemann.html)
 
 
 # References
