@@ -2,7 +2,7 @@
 title: "Data Science with `R` Project Proposal"
 author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
-output: pdf_document
+#output: pdf_document
 references:
 - id: WHO
   title: Novel Coronavirus – China 2020
@@ -189,7 +189,7 @@ references:
 #     month: 
 #     
 
-#runtime: shiny
+runtime: shiny
 ---
 
 
@@ -253,7 +253,7 @@ The `R` scripts, process notebook and other resources have been stored at the [r
   - Moreover, there are several Neural-Nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto-encodes the parameters.
 
 * **Classification**
-  - The problem in hand is a classification problem where we would be classifying whether an image as positive or negative w.r.t COVID-19. 
+  - The problem in hand is a classification problem where we would be classifying an image being COVID-19 positive or negative. 
   - Here, we would like to emphasize that the model won’t predict presence or absence or pneumonia, which is a result not only of COVID-19 but other kind of reasons also affect this.
   - We intend to work on two kinds of algorithms:
     1. One that can be trained based on features to be extracted such as:
@@ -309,11 +309,8 @@ The `R` scripts, process notebook and other resources have been stored at the [r
 d<-data.frame(Sr.Nr.= c(1, 2, 3, 4, 5, 6, 7),
               Week=c(1, 2, 3, 4, 5, 6, 7), 
               Time_Period=c('22.05.2020 - 28.05.2020','29.05.2020 - 04.06.2020','05.06.2020 - 11.06.2020','12.06.2020 - 18.06.2020', '19.06.2020 - 25.06.2020', '26.06.2020 - 02.07.2020', '03.07.2020 - 09.07.2020'),
-              Tasks=c("Data Pre-processing --> Subhankar
-                      Model Selection Literature Review --> Shivam 
-                      Exploratory Data Analysis Methodologies for [Dataset](https://shorturl.at/qwLR0) --> Jalaj
-                      Feature Selection and Extraction Literature Review --> Subhajit 
-                      Evaluation Methodologies  w.r.t Interpretability Literature Review  --> Roshmita", "Feature Engineering --> Subhajit, SVM Implementation w.r.t Image Dataset --> Jalaj, Logistic Regression and Perceptron Implementation --> Shivam, Bayesian Implementation --> Roshmita, Decision Trees and Random Forest Implementation --> Subhankar", 
+              Tasks=c("Data Pre-processing",
+                      "Feature-Engineering",
                       "Model Selection", 
                       "Modelling", 
                       "Visualization", 
