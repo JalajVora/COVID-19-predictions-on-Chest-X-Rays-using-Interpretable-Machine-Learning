@@ -267,7 +267,9 @@ The `R` scripts, process notebook and other resources have been stored at the [r
     - Mostly because the models are intrinsically explainable.
 
     2. Neural Network based approaches, where the model is a black box model and we will use tools like saliency maps for description.
+    
 ![](Picture1.png)
+  
   - The above figure suggests the overall overview of an architecture of the system we would like to develop. 
   - We will have images as data and we would pre-proccess by cropping of images and extract features from them. 
   - Then after, the features or preprocessed images are fed to the classifier for training. 
