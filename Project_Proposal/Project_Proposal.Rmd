@@ -246,7 +246,7 @@ The `R` scripts, process notebook and other resources have been stored at the [r
 ## Design overview (Algorithms and Methods):
 * **Pre-Processing**
   - We would be following a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor's results. The details are delineated in the following sections.  
-
+  - Our data contains 313 positive COVID-19 CXR images and 1000 negative COVID-19 CXR images. For this class imbalance problem, we would be using data resampling techniques. Currently, we are exploring the R package 'imbalance' for this problem. 
   - For the part of feature extraction, we will try texture-based descriptors. 
   - There exist several texture-based vision algorithms. We will try to combine features before training and train our model on a combined feature set. Or else we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. 
   - Literature survey tells us Local Binary Patterns shall be a good choice for texture-based descriptor. We will also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. 
