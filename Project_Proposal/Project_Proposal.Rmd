@@ -2,7 +2,9 @@
 title: "Data Science with `R` Project Proposal"
 author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
-#output: pdf_document
+bibliography: references.bib
+csl: data-and-knowledge-engineering.csl
+output: pdf_document
 references:
 - id: WHO
   title: Novel Coronavirus – China 2020
@@ -12,9 +14,11 @@ references:
   issued:
     year: 2020
     month: 1
-
-runtime: shiny
 ---
+
+
+
+
 
 
 
@@ -22,7 +26,7 @@ runtime: shiny
 
 
 ## Background and Motivation:
-The COVID-19 or the SARS-CoV-2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide [@WHO]. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits [@Zhao2020COVIDCTDatasetAC] which usually takes upto 4-6 hours to reproduce the results which is not very optimal way to move forward as the rate of COVID-19 patients registered grows exponentially. With this problem in scientific community, it motivated to aim of Data Science Methodology be brought to be a part in helping flattening the curve. So, this lead to a possibility of building classifiers which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images [citation of some similar experiments]. As this approach is can be less time and resource consuming and hoped to achieve more streamlined performance compared to RT-PCR kits. Also in addition to a good prediction, we needed reasons that could justify what could be the features that are responsible in the diagonistic process [@DeepCOVIDExplainer; @fenner2012a]. 
+The COVID-19 or the SARS-CoV-2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide [@WHO]. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits [@Zhao2020COVIDCTDatasetAC] which usually takes upto 4-6 hours to reproduce the results which is not very optimal way to move forward as the rate of COVID-19 patients registered grows exponentially. With this problem in scientific community, it motivated to aim of Data Science Methodology be brought to be a part in helping flattening the curve. So, this lead to a possibility of building classifiers which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images [citation of some similar experiments]. As this approach is can be less time and resource consuming and hoped to achieve more streamlined performance compared to RT-PCR kits. Also in addition to a good prediction, we needed reasons that could justify what could be the features that are responsible in the diagonistic process [@karim2020deepcovidexplainer]. 
 
 With this idea and motivation in hand, our work tries to experiment in building classifier with CXR (Chest X-Rays) as Ground Truth predicts whether an X-Ray image belongs to COVID-19 negative or positive. Along with, we try to come up with features that contributes to the detection of an image and also with an explaination delineating why was such a behaviour observed.
 
@@ -36,9 +40,9 @@ From the motivation to help flattening the curve of COVID-19,
 To answer the this question, we aim to answer few sub-questions:
 
 * How well could classifiers perform on Chest X-Rays?
-* Although @Zhao2020COVIDCTDatasetAC and @DeepCOVIDExplainer extensively works with Neural Networks (Black-Box Model) to classify, Can simple and intrinsically explainable classifiers achieve a base Accuracy, F~1~-Score and AUC of 85% using CXR?
+* Although [@Zhao2020COVIDCTDatasetAC] and [@karim2020deepcovidexplainer] extensively works with Neural Networks (Black-Box Model) to classify, Can simple and intrinsically explainable classifiers achieve a base Accuracy, F~1~-Score and AUC of 85% using CXR?
 * How does different features of CXR contribute to the model prediction and Can we come up with few number of feature w.r.t their importance?
-* Which flavour of algorithm perform best among all and is there possibility of Ensemble Classifier?
+* Which flavour of algorithm perform best among all and is there a possibility of Classification in Ensemble setting?
 * Can we come up with explaination of our model's decsision and prediction?
 
 ***
@@ -48,9 +52,9 @@ To answer the this question, we aim to answer few sub-questions:
 The project will be built in `R` with usage of API’s like `magick`, `opencv` for image processing and `tidyverse` packages like `dplyr` and `tidyr` for data manipulation, `ggplot2` for data visualization, `rmarkdown` and `knitr` for reproducible and automated reporting, `shiny` for interactive web applications and `tidymodels` for inferential and predictive modeling.
 
 ### Dataset
-Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @DeepCOVIDExplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @Joseph. 
+Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @karim2020deepcovidexplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @cohen2020covid. 
 
-According to [@Zhao2020COVIDCTDatasetAC; @falanu; @dhikanu; @puchhadu] CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F~1~-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won't be that competible in terms of quality w.r.t CT-Scans but @KERMANY20181122 suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.
+According to [@Zhao2020COVIDCTDatasetAC; @wang2020deep; @li2020artificial; @karim2020deepcovidexplainer] CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F~1~-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won't be that competible in terms of quality w.r.t CT-Scans but @KERMANY20181122 suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.
 
 In particular we will use the [COVID-19 Dataset Repository](https://shorturl.at/qwLR0) as our Ground Truth.
 
@@ -64,16 +68,15 @@ The `R` scripts, process notebook and other resources have been stored at the [r
 
 ***
 ## Design overview (Algorithms and Methods):
+We would be following a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding Descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor's results. The details are delineated in the following sections:
+
 * **Pre-Processing**
-  - We would be following a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor's results. The details are delineated in the following sections.  
-  - Our data contains 313 positive COVID-19 CXR images and 1000 negative COVID-19 CXR images. For this class imbalance problem, we would be using data resampling techniques. Currently, we are exploring the R package 'imbalance' for this problem. 
-  - For the part of feature extraction, we will try texture-based descriptors. 
-  - There exist several texture-based vision algorithms. We will try to combine features before training and train our model on a combined feature set. Or else we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected. 
-  - Literature survey tells us Local Binary Patterns shall be a good choice for texture-based descriptor. We will also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. 
-  - Moreover, there are several Neural-Nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto-encodes the parameters.
+  - There exist several texture-based vision algorithms. We will try to combine features before training and train our model on a combined feature set; Or else we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected [@pereira2020covid]. 
+  - Literature survey tells us Local Binary Patterns [@nanni2010local] shall be a good choice for texture-based descriptor. 
+  - We will also try to use pretrained networks to gain texture descriptors or vision API’s for the extraction part. Moreover, there are several Neural-Nets we faced in literature survey, that are carefully curated for the purpose of the COVID-19, which requires the image to directly fed to the net, and thereby auto-encodes the parameters [@pereira2020covid].
 
 * **Classification**
-  - The problem in hand is a classification problem where we would be classifying an image being COVID-19 positive or negative. 
+  - The problem in hand is a classification problem where we would be classifying an image being COVID-19 positive or negative along with a class imbalance problem [@fernandez2013analysing]. 
   - Here, we would like to emphasize that the model won’t predict presence or absence or pneumonia, which is a result not only of COVID-19 but other kind of reasons also affect this.
   - We intend to work on following algorithms:
     + Clustering Algorithms
@@ -96,70 +99,66 @@ The `R` scripts, process notebook and other resources have been stored at the [r
   - *Recall:* Captures as many positives as possible
   - *F~1~-Score:* It is a harmonic mean between Precision and Recall.
   - *AUC & ROC:* Indicates how well the probabilities from the positive classes are separated from the negative classes. ROC is the probability curve and AUC represents degree or measure of separability.
+  
 
 
 ***
 ## Time Plan:
 
-> **2 Meetings per week. Tuesday and Friday at 17:30 Sharp via [Zoom](https://ovgu.zoom.us/j/8905371732?pwd=b2ExRjZFazRON3VGK2s0cjgvWXVYZz09). Every Friday, Weekly Achievements would be discussed.**
+> **2 Meetings per week. Tuesday and Friday at 17:30 Sharp via [Zoom](https://ovgu.zoom.us/j/8905371732?pwd=b2ExRjZFazRON3VGK2s0cjgvWXVYZz09)[^5]. Every Friday, Weekly Achievements would be discussed.**
+
+[^5]: https://zoom.us/
 
 ```{r echo = FALSE, results='asis'}
+dt <- data.frame(Work_Slot = c(rep("1", 3),
+                                rep("2", 5),
+                                rep("3", 5),
+                                rep("4", 5),
+                                rep("5", 4)),
 
-dt <- data.frame(Week = c(rep("1", 3), 
-                          rep("2", 5), 
-                          rep("3", 5), 
-                          rep("4", 5), 
-                          rep("5", 5), 
-                          rep("6", 5), 
-                          rep("7", 4)),
-                               
-                 Date = c(rep("22.05.2020 - 28.05.2020", 3), 
-                          rep("29.05.2020 - 04.06.2020", 5), 
-                          rep("05.06.2020 - 11.06.2020", 5), 
-                          rep("12.06.2020 - 18.06.2020", 5), 
-                          rep("19.06.2020 - 25.06.2020", 5), 
-                          rep("26.06.2020 - 02.07.2020", 5), 
-                          rep("03.07.2020 - 09.07.2020", 4)),
-                 
-                 Deadline = c(rep("28.05.2020 -- 23:59", 3), 
-                              rep("04.06.2020 -- 23:59", 5), 
-                              rep("11.06.2020 -- 23:59", 5), 
-                              rep("18.06.2020 -- 23:59", 5), 
-                              rep("25.06.2020 -- 23:59", 5), 
-                              rep("02.07.2020 -- 23:59", 5), 
-                              rep("08.07.2020 -- 23:59", 4)),
-                 
-                 Member_Name = c("Jalaj and Subhankar", "Shivam and Subhajit", "Roshmitha", 
-                                 "Jalaj", "Shivam", "Shubhankar", "Subhajit", "Roshmitha", 
-                                 "Jalaj", "Subhajit", "Shivam", "Subhankar", "Roshmitha", 
-                                 "Jalaj", "Subhajit", "Shivam", "Subhankar", "Roshmitha", 
-                                 "Jalaj", "Subhajit", "Shivam", "Subhankar", "Roshmitha", 
-                                 "Jalaj", "Subhajit", "Shivam", "Subhankar", "Roshmitha", 
-                                 "Jalaj", "Subhajit", "Shivam", "Subhankar and Roshmitha"),
-                 
-                 Task_Assigned = c("Data Acquisition and Data Pre-Processing Literature Reivew", 
-                                   "Feature Engineering and Model Selection Literature Review",
-                                   "EDA Methodology, Visualisation and Evaluation Literature Review",
-                                   "Experimenting with SVM on Data",
-                                   "Experimenting with Logistic Regression and Perceptron on Data",
-                                   "Experimenting with Decision Trees and Random Forest on Data",
-                                   "Experimenting with SVM with Gausian Kernel and EM-Algorithms on Data",
-                                   "Experimenting with Bayesian Algorithms on Data", 1:20,
-                                   "R Markdown Process Notebook", 
-                                   "Final Presentation",
-                                   "Project Screencast", 
-                                   "Project Website"),
-                 
-                 Achievements = c(1:32))
-                 
+                  Date = c(rep("22.05.2020 - 28.05.2020", 3),
+                           rep("29.05.2020 - 04.06.2020", 5),
+                           rep("05.06.2020 - 19.06.2020", 5),
+                           rep("19.06.2020 - 02.07.2020", 5),
+                           rep("03.07.2020 - 09.07.2020", 4)),
+
+                  Deadline = c(rep("28.05.2020 -- 23:59", 3),
+                               rep("04.06.2020 -- 23:59", 5),
+                               rep("18.06.2020 -- 23:59", 5),
+                               rep("02.07.2020 -- 23:59", 5),
+                               rep("08.07.2020 -- 23:59", 4)),
+
+                  Member_Name = c("Jalaj and Subhankar", "Shivam and Subhajit", "Roshmitha",
+                                  "Jalaj", "Shivam", "Shubhankar", "Subhajit", "Roshmitha",
+                                  "Jalaj", "Subhajit", "Shivam", "Subhankar", "Roshmitha",
+                                  "Jalaj", "Subhajit", "Shivam", "Subhankar", "Roshmitha",
+                                  "Jalaj", "Subhajit", "Shivam", "Subhankar and Roshmitha"),
+
+                  Task_Assigned = c("Data Acquisitionand Data Pre-Processing Literature Reivew",
+                                    "Feature Engineering and Model Selection Literature Review",
+                                    "EDA Methodology, Visualisation and Evaluation Literature Review",
+                                    
+                                    "Experimenting with SVM on Data",
+                                    "Experimenting with Logistic Regression and Perceptron on Data",
+                                    "Experimenting with Decision Trees and Random Forest on Data",
+                                    "Experimenting with SVM with Gausian Kernel and EM-Algorithms on Data",
+                                    "Experimenting with Bayesian Algorithms on Data",
+                                    
+                                    rep("Literature Review and Implemetation of Interpretebility of features for covid-dataset",5),
+                                    
+                                    rep("Literature Review and Implemetation of Ensemble Classifier Setting",3),
+                                    rep("Evaluation Metrics on Intrinsically Interpretable Algorithms",2),
+                                    "R Markdown Process Notebook",
+                                    "Final Presentation",
+                                    "Project Screencast",
+                                    "Project Website"))
 
 library(knitr)
 library(kableExtra)
-kable(dt, align = "c") %>%
-  kable_styling("bordered", latex_options = "hold_position" , full_width = F, position = "center") %>%
-  column_spec(1, bold = T) %>% 
-  collapse_rows(columns = 1:4,6 , valign = "middle", latex_hline = "full")
-  
+kable(dt, "latex", booktabs = T, caption = "Timeline") %>%
+  kable_styling("bordered", latex_options = "scale_down" , full_width = F, position = "center") %>%
+  column_spec(1, bold = T) %>%
+  collapse_rows(columns = 1:5, latex_hline = "custom")
 ```
 
 
@@ -184,5 +183,9 @@ kable(dt, align = "c") %>%
 
 **Supervised by:** [M.Sc. Uli Niemann](http://www.kmd.ovgu.de/Team/Academic+Staff/Uli+Niemann.html)
 
+***
+
 
 # References
+
+
