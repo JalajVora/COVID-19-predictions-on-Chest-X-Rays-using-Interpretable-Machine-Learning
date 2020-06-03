@@ -13,188 +13,8 @@ references:
     year: 2020
     month: 1
 
-# @article{wang2020deep,
-#   title={A deep learning algorithm using CT images to screen for Corona Virus Disease (COVID-19)},
-#   author={Wang, Shuai and Kang, Bo and Ma, Jinlu and Zeng, Xianjun and Xiao, Mingming and Guo, Jia and Cai, Mengjiao and Yang, Jingyi and Li, Yaodong and Meng, Xiangfei and others},
-#   journal={MedRxiv},
-#   year={2020},
-#   publisher={Cold Spring Harbor Laboratory Press}
-# }
-# 
-# - id: 
-#   title: 
-#   author:
-#   - family: 
-#     given: 
-#   container-title: 
-#   volume: 
-#   URL: 
-#   DOI: 
-#   issue: 
-#   publisher: 
-#   page: 
-#   type: 
-#   issued:
-#     year: 
-#     month: 
-# 
-# 
-# - id: Zhao2020COVIDCTDatasetAC
-#   title: One-click science marketing
-#   author:
-#   - family: Zhao
-#     given: Martin
-#   container-title: Nature Materials
-#   volume: 11
-#   URL: 'http://dx.doi.org/10.1038/nmat3283'
-#   DOI: 10.1038/nmat3283
-#   issue: 4
-#   publisher: Nature Publishing Group
-#   page: 261-263
-#   type: article-journal
-#   issued:
-#     year: 2012
-#     month: 3
-# 
-# - id: DeepCOVIDExplainer
-#   title: One-click science marketing
-#   author:
-#   - family: George
-#     given: Martin
-#   container-title: Nature Materials
-#   volume: 11
-#   URL: 'http://dx.doi.org/10.1038/nmat3283'
-#   DOI: 10.1038/nmat3283
-#   issue: 4
-#   publisher: Nature Publishing Group
-#   page: 261-263
-#   type: article-journal
-#   issued:
-#     year: 2012
-#     month: 3
-# 
-# @article{wang2020deep,
-#   title={A deep learning algorithm using CT images to screen for Corona Virus Disease (COVID-19)},
-#   author={Wang, Shuai and Kang, Bo and Ma, Jinlu and Zeng, Xianjun and Xiao, Mingming and Guo, Jia and Cai, Mengjiao and Yang, Jingyi and Li, Yaodong and Meng, Xiangfei and others},
-#   journal={MedRxiv},
-#   year={2020},
-#   publisher={Cold Spring Harbor Laboratory Press}
-# }
-# 
-# - id: 
-#   title: 
-#   author:
-#   - family: 
-#     given: 
-#   container-title: 
-#   volume: 
-#   URL: 
-#   DOI: 
-#   issue: 
-#   publisher: 
-#   page: 
-#   type: 
-#   issued:
-#     year: 
-#     month: 
-#     
-# @article{li2020artificial,
-#   title={Artificial intelligence distinguishes COVID-19 from community acquired pneumonia on chest CT},
-#   author={Li, Lin and Qin, Lixin and Xu, Zeguo and Yin, Youbing and Wang, Xin and Kong, Bin and Bai, Junjie and Lu, Yi and Fang, Zhenghan and Song, Qi and others},
-#   journal={Radiology},
-#   pages={200905},
-#   year={2020},
-#   publisher={Radiological Society of North America}
-# }
-# - id: 
-#   title: 
-#   author:
-#   - family: 
-#     given: 
-#   container-title: 
-#   volume: 
-#   URL: ''
-#   DOI: 
-#   issue: 
-#   publisher: 
-#   page: 
-#   type: 
-#   issued:
-#     year: 
-#     month: 
-# 
-# @article{zhao2020covid,
-#   title={COVID-CT-Dataset: a CT scan dataset about COVID-19},
-#   author={Zhao, Jinyu and Zhang, Yichen and He, Xuehai and Xie, Pengtao},
-#   journal={arXiv preprint arXiv:2003.13865},
-#   year={2020}
-# }
-# 
-# - id: 
-#   title: 
-#   author:
-#   - family: 
-#     given: 
-#   container-title: 
-#   volume: 
-#   URL: 
-#   DOI: 
-#   issue: 
-#   publisher: 
-#   page: 
-#   type: 
-#   issued:
-#     year: 
-#     month: 
-# 
-# @article{karim2020deepcovidexplainer,
-#   title={Deepcovidexplainer: Explainable covid-19 predictions based on chest x-ray images},
-#   author={Karim, Md and D{\"o}hmen, Till and Rebholz-Schuhmann, Dietrich and Decker, Stefan and Cochez, Michael and Beyan, Oya and others},
-#   journal={arXiv preprint arXiv:2004.04582},
-#   year={2020}
-# }
-# 
-# - id: 
-#   title: 
-#   author:
-#   - family: 
-#     given: 
-#   container-title: 
-#   volume: 
-#   URL: 
-#   DOI: 
-#   issue: 
-#   publisher: 
-#   page: 
-#   type: 
-#   issued:
-#     year: 
-#     month: 
-#     
-# - id: 
-#   title: 
-#   author:
-#   - family: 
-#     given: 
-#   container-title: 
-#   volume: 
-#   URL: 
-#   DOI: 
-#   issue: 
-#   publisher: 
-#   page: 
-#   type: 
-#   issued:
-#     year: 
-#     month: 
-#     
-
 runtime: shiny
 ---
-
-
-
-
 
 
 
@@ -218,7 +38,7 @@ To answer the this question, we aim to answer few sub-questions:
 * How well could classifiers perform on Chest X-Rays?
 * Although @Zhao2020COVIDCTDatasetAC and @DeepCOVIDExplainer extensively works with Neural Networks (Black-Box Model) to classify, Can simple and intrinsically explainable classifiers achieve a base Accuracy, F~1~-Score and AUC of 85% using CXR?
 * How does different features of CXR contribute to the model prediction and Can we come up with few number of feature w.r.t their importance?
-* Which flavour of ~~multilabel transform~~ algorithm perform best among all, the one which considers label correlation or the one which does not?
+* Which flavour of algorithm perform best among all and is there possibility of Ensemble Classifier?
 * Can we come up with explaination of our model's decsision and prediction?
 
 ***
@@ -255,50 +75,27 @@ The `R` scripts, process notebook and other resources have been stored at the [r
 * **Classification**
   - The problem in hand is a classification problem where we would be classifying an image being COVID-19 positive or negative. 
   - Here, we would like to emphasize that the model won’t predict presence or absence or pneumonia, which is a result not only of COVID-19 but other kind of reasons also affect this.
-  - We intend to work on two kinds of algorithms:
-    1. One that can be trained based on features to be extracted such as:
-      + Clustering Algorithms
-        - k-Means
-        - kNN
-      + Support Vector Machines 
-      + Binary Classifiers
-        - Decision Trees
-        - Naive Bayes
-    - Mostly because the models are intrinsically explainable.
-
-    2. Neural Network based approaches, where the model is a black box model and we will use tools like saliency maps for description.
-    
-![](Picture1.png)
+  - We intend to work on following algorithms:
+    + Clustering Algorithms
+      - k-Means
+      - kNN
+    + Support Vector Machines 
+    + Binary Classifiers
+      - Decision Trees
+      - Naive Bayes
+  - Mostly because the models are intrinsically explainable.
   
-  - The above figure suggests the overall overview of an architecture of the system we would like to develop. 
-  - We will have images as data and we would pre-proccess by cropping of images and extract features from them. 
-  - Then after, the features or preprocessed images are fed to the classifier for training. 
-  - Once trained unknown instance is supplied for classification. 
-  - We will use late fusion; hence we accumulate the prediction of each of the classifier with certain confidence. 
-  - The confidence shall be extracted by calculating the MAP score [@Info_Retri]. 
-  - The Map score can be calculated on a test set that shall be segregated from the overall dataset before the training phase begins. 
-  - The ratio of the MAP score  shall give the confidence contribution of each of the systems.
+  ![](Picture1.png)
+  
+  - The above figure suggests the overall overview of an architecture of the system we would like to develop.
 
 * **Evaluation**
-  - Evaluation Metrics are used to calculate the performance of the model. 
-  - We have different type of evaluation methods but selecting a metric is an important step in the project. 
-  - Most commonly used metrics are Precision and Recall. 
-  - Precision and Recall are also used with other metrics like Accuracy, F1-Score, Area under ROC curve, MAP Score. 
   - The higher the metric value the better the performance.
   - *Accuracy:* Best and mostly used metric. Easily suited for binary as well as multiclass classification problem.
   - *Precision:* It is a best choice when we want to be very sure of our prediction.
   - *Recall:* Captures as many positives as possible
   - *F~1~-Score:* It is a harmonic mean between Precision and Recall.
-  - *MAP score:* Quantifies how good our model at performing the query. First we calculate the average of the precision for each query and then the mean of all these AP scores. Q – No.of queries in the set and AveP(q) – Average precision for a each query q
-  - *AUC & ROC:* Indicates how well the probabilities from the positive classes are separated from the negative classes. Mostly used to check or visualize the performance of the multi-class classification models. ROC is the probability curve and AUC represents degree or measure of separability.
-
-* **Visualization**
-  - Visualization is a computer generated image using a computer representation of data as primary source and a human as its primary targets. 
-  - It's an abstract of information. 
-  - Box Plot easily display data and we can see outliers as well. 
-  - It graphically displays the data in five statistics Minimum quartile, 25^th^ or lower quartile, 50^th^ or median quartile, 75^th^ or upper quartile and the maximum quartile, which summarizes the distribution of dataset.
-  - Our plan is to visualize our output in Box-plot diagram, for instance, we are gonna display probability of having COVID in quartiles.
-  - X-ray's without COVID as minimum quartile, X-ray's which has very less probability of getting COVID as the lower quartile and continues till X-ray's which has very strong probability of getting COVID as Maximum quartile. 
+  - *AUC & ROC:* Indicates how well the probabilities from the positive classes are separated from the negative classes. ROC is the probability curve and AUC represents degree or measure of separability.
 
 
 ***
