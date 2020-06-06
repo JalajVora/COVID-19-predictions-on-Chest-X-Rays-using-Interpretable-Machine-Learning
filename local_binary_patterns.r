@@ -79,21 +79,3 @@ library(e1071)
 # plot(p)
 # table(p, iris_test[,3])
 # mean(p == iris_test[,3])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
