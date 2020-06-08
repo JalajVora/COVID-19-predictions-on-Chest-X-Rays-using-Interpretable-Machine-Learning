@@ -12,6 +12,7 @@ extract_features <- function(fpath){
   #plot(im)
   img <- grayscale(im)
   #plot(img)
+  #rgb2gray(img, c(1,1,1))
   imgm <- data.matrix(img)
   lbpd <- lbp(imgm, 2)
   h_lbp = hist(lbpd$lbp.u2, breaks = 59)
@@ -29,7 +30,7 @@ extract_features <- function(fpath){
 #print(hist)
 
 
-files <- list.files("C:\\Users\\jalaj\\Documents\\DataSci with R\\covid-dataset", recursive = TRUE, full.names = TRUE, pattern = "*jpg")
+files <- list.files("C:\\Users\\jalaj\\Documents\\DataSci with R\\covid-data", recursive = TRUE, full.names = TRUE, pattern = "*jpg")
 
 covid_data = NULL
 
@@ -38,7 +39,7 @@ for (file in files)
   hist <- extract_features(file)
   
   x= 0
-  if(grepl("negative", file))
+  if(grepl("covid-positive", file))
     x = 1
   
   #dat <- list("filename"=file, "feature"=hist, "target"=1)
@@ -52,22 +53,34 @@ for (file in files)
 }
 
 covid_data = as.data.frame(covid_data)
-print(covid_data)
+dim(covid_data)
+str(covid_data)
+summary(covid_data)
+
 library(e1071)
+library(caret)
+library(mlr3)
 
 
-#Plotting Dataset to see how it looks like
-#plot(iris)
-s<- sample(150,100)
-#print(s)
-col<- c(covid_data[59])
-#print(col)
-train <- covid_data[s,col]
-test <- covid_data[-s,col]
+set.seed(3033)
+intrain <- createDataPartition(y=covid_data$V59, p = 0.7, list = FALSE)
+training <- covid_data[intrain,]
+testing <- covid_data[-intrain,]
+
+dim(training)
+dim(testing)
+
+anyNA(covid_data)
+
+summary(covid_data)
+
+training [["V59"]] = factor(training[["V59"]])
+
 
 #Building SVM-Linear Model
-svmfit <- svm(V59~., data=train, cost=0.1, scale=FALSE)
+svmfit <- svm(covid_data$V59~., data=training, cost=0.1, scale=FALSE)
 print(svmfit)
+summary(svmfit)
 plot(svmfit, train[,col])
 
 
