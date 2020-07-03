@@ -1,0 +1,97 @@
+---
+title: "SVM_Documentation"
+author: "Jalaj"
+date: "7/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##SVM
+
+This is shit! Some real Data Science shit dealing with Images and shit! We used `e1071` library for Support Vector Classifiers with Radial Basis function as kernel. With the hyper-parameter tuning, we found value of cost = 1 and gamma = 0.5 to be optimal w.r.t our ground truth.
+
+```{r SVM Implementation, echo=TRUE}
+#install.packages('e1071')
+library(e1071)
+#install.packages('ROSE')
+library(ROSE)
+#install.packages('tidyr')
+library(tidyr)
+
+
+
+setwd("C:\\Users\\jalaj\\Documents\\DataSci with R\\Project Files\\Classifiers")
+getwd()
+load('covid_data_new_masked')
+dataset <- covid_data
+summary(dataset)
+
+
+#Factoring the Target variable of (0,1)
+dataset$V59 = factor(dataset$V59, levels = c(0, 1))
+print(is.factor(dataset$V59))
+
+#Dataset Split
+index <- 1:nrow(dataset)
+testindex <- sample(index, trunc(length(index)/3))
+testset <- dataset[testindex,]
+trainset <- dataset[-testindex,]
+
+
+#Over-Sampling
+train_ov_sampled <- ovun.sample(V59 ~ ., trainset, method = "over")$data
+table(train_ov_sampled$V59)
+
+test_ov_sampled <- ovun.sample(V59 ~ ., testset, method = "over")$data
+table(test_ov_sampled$V59)
+
+
+set.seed(825)
+
+
+
+
+#fitting the Support Vector Machine to the Training set
+svm_fit_ovs <- svm(V59~., kernel = 'radial',
+               data = train_ov_sampled, scale=TRUE, cachesize = 200,
+               probability = TRUE, gamma = 0.5, cost = 1)
+
+summary(svm_fit_ovs)
+
+
+#Hyper-Parameter Tuning
+# obj <- tune.svm(V59~., data = train_ov_sampled, sampling = "cross",
+#           gamma = 2^c(-1:4), cost = c(1:10))
+# summary(obj)
+
+#Predicting the test set results
+svm.pred.ovs <- predict(svm_fit_ovs, test_ov_sampled[,-59], probability = TRUE)
+
+
+plot(svm.pred.ovs)
+
+summary(svm.pred.ovs)
+
+
+
+
+#Evaluation on Test_Set
+accuracy.meas(response = test_ov_sampled$V59, predicted = svm.pred.ovs)
+
+roc.curve(test_ov_sampled$V59, svm.pred.ovs, plotit = T)
+
+caret::confusionMatrix(svm.pred.ovs, test_ov_sampled$V59, positive = '1')
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
