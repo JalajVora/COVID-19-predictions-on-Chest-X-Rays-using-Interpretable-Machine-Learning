@@ -2,6 +2,7 @@
 title: "Data Science with `R` Project Proposal"
 author: "Team: COVID-19 Predictor"
 date: "20.05.2020"
+link-citations: yes
 bibliography: references.bib
 csl: data-and-knowledge-engineering.csl
 output: pdf_document
@@ -33,9 +34,10 @@ With this idea and motivation in hand, our work tries to experiment in building 
 
 ***
 ## Project Objective:
-From the motivation to help flattening the curve of COVID-19,
 
-> Can we use a Data Science for COVID-19 diagnosis? 
+With the motivation to help fight against and analyse COVID-19, we came up with a research question of whether
+
+> Can we use a Data-Science methods to diagonise and explain COVID-19 ? 
 
 To answer the this question, we aim to answer few sub-questions:
 
