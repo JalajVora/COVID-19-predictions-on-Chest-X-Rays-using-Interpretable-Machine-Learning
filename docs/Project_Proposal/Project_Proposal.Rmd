@@ -5,7 +5,7 @@ date: "20.05.2020"
 link-citations: yes
 bibliography: references.bib
 csl: data-and-knowledge-engineering.csl
-output: pdf_document
+output: html_document
 references:
 - id: WHO
   title: Novel Coronavirus – China 2020
@@ -157,7 +157,7 @@ dt <- data.frame(Work_Slot = c(rep("1", 3),
 
 library(knitr)
 library(kableExtra)
-kable(dt, "latex", booktabs = T, caption = "Timeline") %>%
+kable(dt, "html", booktabs = T, caption = "Timeline") %>%
   kable_styling("bordered", latex_options = "scale_down" , full_width = F, position = "center") %>%
   column_spec(1, bold = T) %>%
   collapse_rows(columns = 1:5, latex_hline = "custom")
