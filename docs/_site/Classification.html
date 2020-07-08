@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Classification</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 45px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h2 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h3 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h4 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h5 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h6 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">COVID-19 Prediction using Explainable Machine Learning</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Exploratory-Data-Analysis.html">Exploratory Data Analysis</a>
+</li>
+<li>
+  <a href="Classification.html">Classification</a>
+</li>
+<li>
+  <a href="Results.html">Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Classification</h1>
+
+</div>
+
+
+<p>     </p>
+<div id="data-set" class="section level2 tabset">
+<h2 class="tabset">Data-Set</h2>
+<p>Our dataset is a collection of 1313 CXR images containing COVID-19 positive and negative samples. There is a problem of class imbalance as we had 1000 negative samples compared to only 313 positive samples. The local binary patterns that we extracted from the CXR images have 58 dimensions. For class imbalance, we have implemented an oversampling technique that is provided by the R package ‘ROSE’, which basically means Random Over Sampling Examples. It’s a resampling function that generates synthetic balanced samples using holdout, bootstrap or cross-validation methods. After oversampling our dataset consisted of 1000 negative and 1031 positive examples.</p>
+<pre class="r"><code>#Visualizing distribution of each class
+barplot(prop.table(table(covid_data$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/plots-1.png" width="672" /></p>
+<pre class="r"><code>barplot(prop.table(table(train$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/plots-2.png" width="672" /></p>
+<pre class="r"><code>barplot(prop.table(table(test$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/plots-3.png" width="672" /></p>
+<pre class="r"><code>#Training Models
+library(randomForest)</code></pre>
+<pre><code>## randomForest 4.6-14</code></pre>
+<pre><code>## Type rfNews() to see new features/changes/bug fixes.</code></pre>
+<pre class="r"><code>library(rpart)
+library(rpart.plot)
+#Random Forest
+rftrain &lt;- randomForest(V59~.,data = train)
+#Decision Tree
+dttrain &lt;- rpart(V59~.,data = train, method = &quot;class&quot;)
+dttrain_criteria &lt;- rpart(V59~.,data = train, method = &quot;class&quot;, minsplit = 20, minbucket = 10)
+rpart.plot(dttrain)
+rpart.plot(dttrain_criteria)</code></pre>
+<p><img src="Classification_files/figure-html/plots-4.png" width="672" /></p>
+<div id="random-forest" class="section level3">
+<h3>Random Forest</h3>
+<p>Random forest is one of the algorithms we tried to apply on the lbp features that was extracted from the X-ray images. The implementation was done through the ‘randomForest’ package that is available in R. The package uses Breiman’s method of random forests for classification. But this package has the flexibility to be applied in a regression problem as well. In the default parameter setting, the no. of trees that the algorithm learns is 200. With that, we achieved an accuracy of about 89.67% with an F1 score of 0.74 in our dataset. The area under the ROC curve in this case was 0.802. On the over-sampled data, the accuracy dropped to 81.84% with an F1 score of 0.78. The area under the ROC curve in this case is 0.819.</p>
+<p>You can also embed plots, for example:</p>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;ggplot2&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:randomForest&#39;:
+## 
+##     margin</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 245  38
+##          1   5  41
+##                                          
+##                Accuracy : 0.8693         
+##                  95% CI : (0.828, 0.9038)
+##     No Information Rate : 0.7599         
+##     P-Value [Acc &gt; NIR] : 5.411e-07      
+##                                          
+##                   Kappa : 0.5822         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 1.061e-06      
+##                                          
+##             Sensitivity : 0.5190         
+##             Specificity : 0.9800         
+##          Pos Pred Value : 0.8913         
+##          Neg Pred Value : 0.8657         
+##               Precision : 0.8913         
+##                  Recall : 0.5190         
+##                      F1 : 0.6560         
+##              Prevalence : 0.2401         
+##          Detection Rate : 0.1246         
+##    Detection Prevalence : 0.1398         
+##       Balanced Accuracy : 0.7495         
+##                                          
+##        &#39;Positive&#39; Class : 1              
+## </code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 244  36
+##          1   6  43
+##                                           
+##                Accuracy : 0.8723          
+##                  95% CI : (0.8314, 0.9064)
+##     No Information Rate : 0.7599          
+##     P-Value [Acc &gt; NIR] : 2.509e-07       
+##                                           
+##                   Kappa : 0.598           
+##                                           
+##  Mcnemar&#39;s Test P-Value : 7.648e-06       
+##                                           
+##             Sensitivity : 0.5443          
+##             Specificity : 0.9760          
+##          Pos Pred Value : 0.8776          
+##          Neg Pred Value : 0.8714          
+##               Precision : 0.8776          
+##                  Recall : 0.5443          
+##                      F1 : 0.6719          
+##              Prevalence : 0.2401          
+##          Detection Rate : 0.1307          
+##    Detection Prevalence : 0.1489          
+##       Balanced Accuracy : 0.7602          
+##                                           
+##        &#39;Positive&#39; Class : 1               
+## </code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 244  36
+##          1   6  43
+##                                           
+##                Accuracy : 0.8723          
+##                  95% CI : (0.8314, 0.9064)
+##     No Information Rate : 0.7599          
+##     P-Value [Acc &gt; NIR] : 2.509e-07       
+##                                           
+##                   Kappa : 0.598           
+##                                           
+##  Mcnemar&#39;s Test P-Value : 7.648e-06       
+##                                           
+##             Sensitivity : 0.5443          
+##             Specificity : 0.9760          
+##          Pos Pred Value : 0.8776          
+##          Neg Pred Value : 0.8714          
+##               Precision : 0.8776          
+##                  Recall : 0.5443          
+##                      F1 : 0.6719          
+##              Prevalence : 0.2401          
+##          Detection Rate : 0.1307          
+##    Detection Prevalence : 0.1489          
+##       Balanced Accuracy : 0.7602          
+##                                           
+##        &#39;Positive&#39; Class : 1               
+## </code></pre>
+<pre><code>## Loaded ROSE 0.0-3</code></pre>
+<pre><code>## 
+##   0   1 
+##  60 234</code></pre>
+<pre><code>## 
+##  0  1 
+## 21 79</code></pre>
+<p><img src="Classification_files/figure-html/pressure-1.png" width="672" /><img src="Classification_files/figure-html/pressure-2.png" width="672" /><img src="Classification_files/figure-html/pressure-3.png" width="672" /></p>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction  0  1
+##          0  9  1
+##          1 12 78
+##                                          
+##                Accuracy : 0.87           
+##                  95% CI : (0.788, 0.9289)
+##     No Information Rate : 0.79           
+##     P-Value [Acc &gt; NIR] : 0.027919       
+##                                          
+##                   Kappa : 0.5149         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 0.005546       
+##                                          
+##             Sensitivity : 0.9873         
+##             Specificity : 0.4286         
+##          Pos Pred Value : 0.8667         
+##          Neg Pred Value : 0.9000         
+##              Prevalence : 0.7900         
+##          Detection Rate : 0.7800         
+##    Detection Prevalence : 0.9000         
+##       Balanced Accuracy : 0.7080         
+##                                          
+##        &#39;Positive&#39; Class : 1              
+## </code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction  0  1
+##          0  8 11
+##          1 13 68
+##                                           
+##                Accuracy : 0.76            
+##                  95% CI : (0.6643, 0.8398)
+##     No Information Rate : 0.79            
+##     P-Value [Acc &gt; NIR] : 0.8067          
+##                                           
+##                   Kappa : 0.2505          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.8383          
+##                                           
+##             Sensitivity : 0.8608          
+##             Specificity : 0.3810          
+##          Pos Pred Value : 0.8395          
+##          Neg Pred Value : 0.4211          
+##              Prevalence : 0.7900          
+##          Detection Rate : 0.6800          
+##    Detection Prevalence : 0.8100          
+##       Balanced Accuracy : 0.6209          
+##                                           
+##        &#39;Positive&#39; Class : 1               
+## </code></pre>
+<pre><code>## 
+##   0   1 
+## 750 750</code></pre>
+<pre><code>## 
+##   0   1 
+## 250 252</code></pre>
+<p><img src="Classification_files/figure-html/pressure-4.png" width="672" /><img src="Classification_files/figure-html/pressure-5.png" width="672" /><img src="Classification_files/figure-html/pressure-6.png" width="672" /><img src="Classification_files/figure-html/pressure-7.png" width="672" /></p>
+</div>
+<div id="decision-trees" class="section level3">
+<h3>Decision Trees</h3>
+<p>For decision trees, we used the R library ‘rpart’ which is generally used to learn classification or regression trees. We ran this algorithm in its default setting (minsplit = 20 and minbucket = round(minsplit/3)) where minsplit is the minimum number of observations that must exist in a node for a split to occur and min bucket is the minimum number of observations in any leaf node. The accuracy that we obtained on the original dataset was 85.71% with an F1 score of 0.67. The area under the ROC curve in this case is 0.772. In the over-sampled dataset, the accuracy dropped to 74.49% with 0.72 as F1 score. The area under the ROC curve also dropped to 0.732.</p>
+<pre class="r"><code>library(caret)
+confusionMatrix(predict(rftrain_over, over_test), over_test$V59, positive = &#39;1&#39;, mode = &quot;everything&quot;)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 243 103
+##          1   7 149
+##                                           
+##                Accuracy : 0.7809          
+##                  95% CI : (0.7421, 0.8163)
+##     No Information Rate : 0.502           
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.5624          
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt; 2.2e-16       
+##                                           
+##             Sensitivity : 0.5913          
+##             Specificity : 0.9720          
+##          Pos Pred Value : 0.9551          
+##          Neg Pred Value : 0.7023          
+##               Precision : 0.9551          
+##                  Recall : 0.5913          
+##                      F1 : 0.7304          
+##              Prevalence : 0.5020          
+##          Detection Rate : 0.2968          
+##    Detection Prevalence : 0.3108          
+##       Balanced Accuracy : 0.7816          
+##                                           
+##        &#39;Positive&#39; Class : 1               
+## </code></pre>
+<pre class="r"><code>confusionMatrix(predict(object=dttrain_over,over_test,type=&quot;class&quot;), over_test$V59, positive = &#39;1&#39;, mode = &quot;everything&quot;)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 202  71
+##          1  48 181
+##                                           
+##                Accuracy : 0.7629          
+##                  95% CI : (0.7233, 0.7995)
+##     No Information Rate : 0.502           
+##     P-Value [Acc &gt; NIR] : &lt; 2e-16         
+##                                           
+##                   Kappa : 0.5261          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.04372         
+##                                           
+##             Sensitivity : 0.7183          
+##             Specificity : 0.8080          
+##          Pos Pred Value : 0.7904          
+##          Neg Pred Value : 0.7399          
+##               Precision : 0.7904          
+##                  Recall : 0.7183          
+##                      F1 : 0.7526          
+##              Prevalence : 0.5020          
+##          Detection Rate : 0.3606          
+##    Detection Prevalence : 0.4562          
+##       Balanced Accuracy : 0.7631          
+##                                           
+##        &#39;Positive&#39; Class : 1               
+## </code></pre>
+<pre class="r"><code>confusionMatrix(predict(object=dttrain_over_criteria,test,type=&quot;class&quot;), test$V59, positive = &#39;1&#39;, mode = &quot;everything&quot;)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 244  36
+##          1   6  43
+##                                           
+##                Accuracy : 0.8723          
+##                  95% CI : (0.8314, 0.9064)
+##     No Information Rate : 0.7599          
+##     P-Value [Acc &gt; NIR] : 2.509e-07       
+##                                           
+##                   Kappa : 0.598           
+##                                           
+##  Mcnemar&#39;s Test P-Value : 7.648e-06       
+##                                           
+##             Sensitivity : 0.5443          
+##             Specificity : 0.9760          
+##          Pos Pred Value : 0.8776          
+##          Neg Pred Value : 0.8714          
+##               Precision : 0.8776          
+##                  Recall : 0.5443          
+##                      F1 : 0.6719          
+##              Prevalence : 0.2401          
+##          Detection Rate : 0.1307          
+##    Detection Prevalence : 0.1489          
+##       Balanced Accuracy : 0.7602          
+##                                           
+##        &#39;Positive&#39; Class : 1               
+## </code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
