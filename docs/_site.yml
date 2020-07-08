@@ -5,7 +5,7 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "Exploratory Data Analysis"
-      href: Exploratory Data Analysis.html
+      href: Exploratory-Data-Analysis.html
     - text: "Classification"
       href: Classification.html
     - text: "Results"
