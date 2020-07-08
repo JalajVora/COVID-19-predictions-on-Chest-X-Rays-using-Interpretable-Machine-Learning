@@ -30,8 +30,31 @@ load('covid_data_new_masked')
 dataset <- covid_data
 ```
 
-
-
+```{r packages}
+library(magick)
+library(ggplot2)
+library(funModeling)
+library(DataExplorer)
+library(e1071)
+library(imbalance)
+library(caret)
+library(wvtool)
+library(imager)
+library(ROSE)
+library(tidyverse)       
+library(repr)
+library(factoextra)
+library(pander)
+library(klaR)
+library(janitor)
+library(mlbench)
+library(MLmetrics)
+library(randomForest)
+library(rpart)
+library(rpart.plot)
+library(pROC)
+library(plotROC)
+```
 ## Background and Motivation
 
 The COVID-19 or the SARS-CoV-2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide [@WHO]. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits [@Zhao2020COVIDCTDatasetAC]; which usually takes upto 4-6 hours to reproduce the results is not very optimal way to move forward as the rate of COVID-19 patients registered grows exponentially. With this problem in scientific community, it motivated the aim of Machine Learning methods be brought to be a part in helping flattening the curve [@Respond]. So, this lead to a goal of building classifiers which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images [@wang2020covid; @narin2020automatic]. As this approach is less time and resource consuming; it is expected to achieve more streamlined performance compared to RT-PCR kits. Also in addition to a good prediction, we needed reasons that could justify what could be the features that are responsible in the diagonistic process [@karim2020deepcovidexplainer]. 
@@ -79,7 +102,7 @@ Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected f
 
 The original dataset used for the experiment contains total of 1313 CXR images. The image below is an instance of COVID negative image. The figure above shows an instance of a COVID-19 negative images. Similar to this image, all the images in the dataset are in Standard RGB color space. The dataset contains files in `.jpg`, `.jpeg` and `.png` formats. All the files are standardised to `.png` format for the ease of further processing.
 ``` {r cropped, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
-library(magick)
+
 covid.neg <- image_read('C:/Users/jalaj/Documents/DataSci with R/Project Files/covid-dataset/covid-negative/1.jpg')
 print(covid.neg)
 ```
@@ -90,7 +113,7 @@ There are several methods to deal with this problem in classification setting, w
 
 The figure below shows a high skew towards positives in the dataset just for the reason of less availability of negatives in comparision to positives. 
 ```{r distribution_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
-library(ggplot2)
+
 qplot(covid_data$V59, binwidth=0.1, main = 'Data Distribution Histogram', xlab = 'Target Variable', ylab = 'Number of Samples')
 ```
 
@@ -99,7 +122,7 @@ The figure above shows the skewness of the distribution of the data. The plot st
 
 
 ``` {r data-frequency, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
-library(funModeling)
+
 freq(covid_data$V59)
 ```
 
@@ -162,7 +185,7 @@ lbpd <- lbp(imgm, 2)
 
 Thereafter, it forms a dataframe of 1313 rows and 59 columns where 59th column being the Target Class with values `0` for COVID negatives and `1` for COVID positives.
 ```{r data-explorer, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
-library(DataExplorer)
+
 #DataExplorer::create_report(data)
 introduce(dataset)
 plot_intro(dataset)
@@ -220,9 +243,6 @@ plot_prcomp(pca_df, variance_cap = 0.9, nrow = 2L, ncol = 2L)
 We experimented with Support Vector Classifiers with Radial Basis function as kernel. The following diagram shows the data before over-sampling.
 
 ``` {r lib-load, echo = TRUE, warning = FALSE, message = FALSE}
-library(e1071)
-library(imbalance)
-library(DataExplorer)
 
 load('covid_data_new_masked')
 dataset <- covid_data
@@ -258,7 +278,7 @@ svm.pred.ovs <- predict(svm_fit_ovs, testset[,-59], probability = TRUE)
 
 
 For the evaluation part, we calculated Accuracy, F~1~-Score, Precision, Recall and AUC/ROC. The confusion matrix shows that SVM performs with approx. 53% of accuracy whereas the Area Under ROC is approx. 54% as well.
-``` {r evaluation, echo = TRUE, warning = FALSE, message = FALSE}
+``` {r eval, echo = TRUE, warning = FALSE, message = FALSE}
 #Evaluation
 ROSE::accuracy.meas(response = testset$V59, predicted = svm.pred.ovs)
 ROSE::roc.curve(testset$V59, svm.pred.ovs, plotit = T)
@@ -269,35 +289,735 @@ caret::confusionMatrix(svm.pred.ovs, testset$V59, positive = '1')
 
 ### kNN
 
-(content)
+K-Neigherst Neighbour is one of the models used for classification. kNN has been successfully used in tasks where texture-based descriptors are used [@sorensen2008texture]. In kNN classification, we expect that the classifier will examine the k nearest neighbors and return the class labels associated with the majority of k nearest neighbor. The accuracy of the model depends heavily on k, i.e. the number of nearest neighbors to consider for classification purpose. So, each neighbor adds a vote or a confidence towards the classification of a query instance. We use this model, in hope that the features extracted above captures the specific discriminatory properties of the lung area and on similar note the nearest neighbors will capture the same properties.
+
+We initially split the data by a proportion of 30:70 distributed among both the classes for test and training purpose.
+
+```{r wd, echo=FALSE}
+#setwd('C:/Users/SHIVAM/Downloads/DataSwR')
+#getwd()
+load("covid_data_new_masked")
+glass.df = covid_data
+```
+
+```{r data-dim, echo=TRUE}
+dim(glass.df)
+```
+
+
+```{r pre-process, echo=TRUE}
+# all the independent variables are numbers
+# we will convert the type variable which is the response variable as factor
+glass.df$V59<- as.factor(glass.df$V59) # 7 labels
+
+# training and test data 70:30
+set.seed(123)
+ind = sample(2, nrow(glass.df), replace = TRUE, prob=c(0.7,0.3))
+train.df = glass.df[ind == 1,]
+test.df = glass.df[ind == 2,]
+```
+
+
+
+
+```{r pre-process1, data, echo=TRUE}
+
+#Visualizing distribution of each class
+barplot(prop.table(table(glass.df$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "COVID dataset Class Distribution")
+
+
+resTable <- glass.df %>% tabyl(V59)
+resTable$labels <- paste0(resTable$V59, " (", scales::percent(resTable$percent), ") ") 
+
+resTable %>%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat='identity')+
+  coord_polar("y")+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = 'none')+
+  labs(y='', x='')
+
+
+
+```
+
+
+```{r pre-process2, train data, echo=TRUE}
+
+
+barplot(prop.table(table(train.df$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Train Class Distribution")
+
+
+
+resTable <- train.df %>% tabyl(V59)
+resTable$labels <- paste0(resTable$V59, " (", scales::percent(resTable$percent), ") ") 
+
+resTable %>%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat='identity')+
+  coord_polar("y")+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = 'none')+
+  labs(y='', x='')
+
+# Create data for the graph.
+
+```
+
+
+
+
+```{r pre-process3, test data, echo=TRUE}
+
+barplot(prop.table(table(test.df$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Test Class Distribution")
+```
+
+For training, to tackle the class imbalance problem and we use 10 cross validation with 3 repeats. That is data will be split entirely 3 times, and for each of the 3 times, 10-fold cross validation is done for validation.
+
+``` {r echo=TRUE}
+trctrl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
+```
+
+For evaluation of K, we decide at train time, the number that gives the highest accuracy. In our case, k=9 gave us the best accuracy.
+``` {r results='hide', warning = FALSE, message=FALSE}
+
+knn_fit <- train(V59 ~., data = train.df, method = "knn",
+                 trControl=trctrl,
+                 preProcess = c("center", "scale"),
+                 tuneLength = 15)
+
+```
+
+
+```{r}
+
+summary(knn_fit)
+plot(knn_fit)
+
+```
+
+
+The pipeline of KNN model we use, additionally centers and scales the data. The unseen instances are also subject to the same fit.
+
+
+We also use a setting where the response is not a discrete  positive or negative output but, gives the prediction confidence(probability) of the classifier for both of the classes.
+
+
+**Results:** We test the model with the test data that was initially split out from the overall dataset
+
+``` {r prediction, echo = TRUE}
+test_pred <- predict(knn_fit, newdata = test.df)
+summary(test_pred)
+confusionMatrix(test_pred, test.df$V59)
+roc.curve(test.df$V59, test_pred, plotit = T)
+```
 
 ### Tree Classifiers {.tabset}
 
-(content)
 
 ***
 
 #### Random Forest
 
-(content)
+Random forest is one of the algorithms we tried to apply on the lbp features that was extracted from the X-ray images. The implementation was done through the ‘randomForest’ package that is available in R. The package uses Breiman’s method of random forests for classification. But this package has the flexibility to be applied in a regression problem as well. In the default parameter setting, the no. of trees that the algorithm learns is 200. With that, we achieved an accuracy of about 87.84% with an F1 score of 0.6825 in our dataset. The area under the ROC curve in this case was 0.764. On the over-sampled data, the accuracy dropped to 75.00% with an F1 score of 0.6771. The area under the ROC curve in this case is 0.748.
+
+```{r Random Forest dataset, include=FALSE}
+#set directory
+#load dataset
+
+load('covid_data_new_masked')
+
+data = covid_data
+
+#Setting V59 as factor variable as that is the target
+data$V59 <- as.factor(data$V59)
+summary(data)
+
+#Split Dataset to train and test
+set.seed(123) # Set Seed so that same sample can be reproduced in future also
+# Now Selecting 75% of data as sample from total 'n' rows of the data  
+sample <- sample.int(n = nrow(data), size = floor(.75*nrow(data)), replace = F)
+train <- data[sample, ]
+test  <- data[-sample, ]
+```
+
+
+
+```{r  data visualization plots, echo = TRUE}
+
+#Visualizing distribution of each class
+barplot(prop.table(table(covid_data$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Dataset Class Distribution ")
+barplot(prop.table(table(train$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Training Class Distribution ")
+barplot(prop.table(table(test$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Test Class Distribution")
+
+
+
+```
+
+
+
+```{r rf over sampling}
+
+#Over Sampling
+over_train = ovun.sample(V59~., data = train, method = "over")$data
+table(over_train$V59)
+over_test = ovun.sample(V59~., data = test, method = "over")$data
+table(over_test$V59)
+
+barplot(prop.table(table(over_train$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Oversampled training class Distribution")
+barplot(prop.table(table(over_test$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Oversampled testing class Distribution")
+
+
+```
+
+
+```{r random forest model}
+
+#Random Forest
+rftrain <- randomForest(V59~.,data = train)
+
+
+rftrain.pred <- predict(rftrain, test)
+
+
+
+```
+
+
+
+
+
+
+```{r pressure, echo=FALSE}
+#Evaluation with test
+confusionMatrix(predict(rftrain, test), test$V59, positive = '1', mode = "everything")
+```
+```{r rf raw data, echo =TRUE }
+
+roc.curve(test$V59, rftrain.pred, plotit = T, main="ROC curve for Raw dataset")
+
+```
+
+```{r rf oversampled dataset}
+
+rftrain_over <- randomForest(V59~.,data = over_train)
+rftrain_over.pred <- predict(rftrain_over, over_test)
+
+```
+
+
+```{r rf  Oversampled CM, echo =TRUE}
+#Evaluation with test
+confusionMatrix(predict(rftrain_over, over_test), over_test$V59, positive = '1', mode = "everything")
+
+```
+
+
+```{r rf ROC curve RAW data, echo =TRUE }
+
+roc.curve(over_test$V59, rftrain_over.pred, plotit = T, main ="ROC curve for Oversampled dataset" )
+
+```
 
 ***
 
 #### Decision Trees
 
-(content)
+For decision trees, we used the R library ‘rpart’ which is generally used to learn classification or regression trees. We ran this algorithm in its default setting (minsplit = 20 and minbucket = round(minsplit/3)) where minsplit is the minimum number of observations that must exist in a node for a split to occur and min bucket is the minimum number of observations in any leaf node. The accuracy that we obtained on the original dataset was 87.23% with an F1 score of 0.6719. The area under the ROC curve in this case is 0.760. In the over-sampled dataset, the accuracy dropped to 70.36% with 0.6667 as F1 score. The area under the ROC curve also dropped to 0.703.
+
+
+``` {r r-code, message = FALSE, warning = FALSE, include = TRUE}
+load("covid_data_new_masked")
+data = covid_data
+
+#Setting V59 as factor variable as that is the target
+data$V59 <- as.factor(data$V59)
+#summary(data)
+
+#Split Dataset to train and test
+set.seed(123) # Set Seed so that same sample can be reproduced in future also
+# Now Selecting 75% of data as sample from total 'n' rows of the data  
+sample <- sample.int(n = nrow(data), size = floor(.75*nrow(data)), replace = F)
+train <- data[sample, ]
+test  <- data[-sample, ]
+
+#Visualizing distribution of each class
+barplot(prop.table(table(covid_data$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Dataset Class Distribution ")
+barplot(prop.table(table(train$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Training Class Distribution ")
+barplot(prop.table(table(test$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Test Class Distribution")
+
+
+```
+
+
+
+```{r over sampling-rf}
+
+#Over Sampling
+over_train = ovun.sample(V59~., data = train, method = "over")$data
+table(over_train$V59)
+over_test = ovun.sample(V59~., data = test, method = "over")$data
+table(over_test$V59)
+
+barplot(prop.table(table(over_train$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Oversampled training class Distribution")
+barplot(prop.table(table(over_test$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = "Oversampled testing class Distribution")
+
+
+```
+
+
+
+``` {r model decison tree, echo= TRUE}
+
+#Decision Tree
+dttrain <- rpart(V59~.,data = train, method = "class")
+
+
+dttrain_over <- rpart(V59~.,data = over_train, method = "class")
+
+
+rpart.plot(dttrain, main = "Decision Tree for Raw Dataset " )
+
+
+rpart.plot(dttrain_over, main = "Decision Tree for Oversampled Dataset ")
+
+
+
+
+#save(dttrain, file = "DT_model")
+#save(dttrain_over, file = "DT_model_over")
+
+confusionMatrix(predict(object=dttrain,test,type="class"), test$V59, positive = '1', mode = "everything")
+
+
+confusionMatrix(predict(object=dttrain_over,over_test,type="class"), over_test$V59, positive = '1', mode = "everything")
+```
+
+
+```{r ROC curve decison tree, echo= TRUE}
+#ROC Curves
+dttrain.pred <- predict(dttrain, test, type = "class")
+roc.curve(test$V59, dttrain.pred, plotit = T , main ="ROC curve for Raw dataset")
+
+dttrain_over.pred <- predict(dttrain_over, over_test, type = "class")
+roc.curve(over_test$V59, dttrain_over.pred, plotit = T ,main =" ROC curve for Oversampled dataset")
+
+
+```
 
 ***
 
 ### Logistic Regression
 
-(content)
+>If linear regression serves to predict continuous Y variables, logistic regression is used for binary classification.
+
+
+Logistic Regression is one of the basic algorithms used for binary classification.The regression model is used to function with the lbp features that was extracted from the X-ray images. The implementation was done through the ‘caret’ package that is available in R.This package has the flexibility to be applied in a regression problem extensively. For classification and regression with no tuning parameters. We achieved an accuracy of about 90.34% with an F1 score of 0.6792 in our dataset. The area under the ROC curve in this case was 0.794.
+
+
+
+```{r data-load-lr, echo=TRUE, results='hide', warning = FALSE, message=FALSE}
+load("covid_data_benchmark")
+glass.df = covid_data
+```
+
+
+
+Ideally, the proportion of events and non-events in the Y variable should approximately be the same. So, lets first check the proportion of classes 
+```{r pre-process-lr, echo=TRUE, results='hide', warning = FALSE, message=FALSE}
+# all the independent variables are numbers
+# we will convert the type variable which is the response variable as factor
+
+glass.df$V59<- as.factor(glass.df$V59) # 7 labels
+table(glass.df$V59)
+#   0    1 
+# 1000  197 
+```
+```{r pre-process data, echo=TRUE}
+
+#Visualizing distribution of each class
+barplot(prop.table(table(glass.df$V59)),
+        col = "coral",
+        ylim = c(0,1),
+        main = "COVID dataset Class Distribution")
+
+
+resTable <- glass.df %>% tabyl(V59)
+resTable$labels <- paste0(resTable$V59, " (", scales::percent(resTable$percent), ") ") 
+
+resTable %>%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat='identity')+
+  coord_polar("y")+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = 'none')+
+  labs(y='', x='')
+
+
+
+```
+
+
+**Parameters and Settings:** We initially split the data by a proportion of 30:70 distributed among both the classes for test and training purpose.
+You can also embed plots, for example:
+
+```{r pre-pro1 data spliting, echo=TRUE, results='hide', warning = FALSE, message=FALSE}
+# training and test data 70:30
+set.seed(123)
+ind = sample(2, nrow(glass.df), replace = TRUE, prob=c(0.7,0.3))
+train.df = glass.df[ind == 1,]
+test.df = glass.df[ind == 2,]
+dim(train.df)
+dim(test.df)
+
+table(train.df$V59)
+
+table(test.df$V59)
+```
+
+```{r pre-pro2 train data, echo=TRUE, results='hide', warning = FALSE, message=FALSE}
+
+
+barplot(prop.table(table(train.df$V59)),
+        col = "coral",
+        ylim = c(0,1),
+        main = "Training Class Distribution")
+
+
+
+resTable <- train.df %>% tabyl(V59)
+resTable$labels <- paste0(resTable$V59, " (", scales::percent(resTable$percent), ") ") 
+
+resTable %>%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat='identity')+
+  coord_polar("y")+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = 'none')+
+  labs(y='', x='')
+  
+
+# Create data for the graph.
+
+```
+
+
+
+
+For training, to tackle the class imbalance problem and we use 10 cross validation with 3 repeats. That is data will be split entirely 3 times, and for each of the 3 times, 10-fold cross validation is done for validation.
+
+
+
+``` {r logistic model, results='hide', warning = FALSE, message=FALSE}
+fitControl <- trainControl(## 10-fold CV
+  method = "cv",
+  number = 10,
+  savePredictions = TRUE
+)
+
+## Logistic Regression MODEL
+logistic_fit<-train(V59 ~.,data=train.df,method="glm",
+                     preProcess = c("center", "scale"),
+                    family=binomial(),trControl=fitControl, 
+                    tuneLength=20)
+
+
+
+importance <- varImp(logistic_fit,scale= FALSE)
+plot(importance)
+
+
+test_pred <- predict(logistic_fit, newdata = test.df)
+
+table(test_pred,test.df$V59)
+
+#test_pred   0   1
+#        0 282  21
+#        1  13  36
+
+
+```
+
+
+``` {r prediction matrix, echo = TRUE, warning = FALSE, message=FALSE}
+
+
+#confusion matrix
+
+confusionMatrix(test_pred, test.df$V59 , positive = '1', mode = "everything")
+mean(test_pred == test.df$V59)
+
+```
+
+
+```{r model plot, echo= FALSE}
+
+print(logistic_fit)
+
+```
+
+
+```{r ROC curve-lr , echo=FALSE}
+roc.curve(test.df$V59, test_pred, plotit = T)
+
+```
+
+
+
+
+**Results:** We test the model with the test data that was initially split out from the overall dataset
 
 ***
 
 ### Naive Bayes
 
-(content)
+```{r setup-nb, include=FALSE}
+knitr::opts_chunk$set(warning = F, message = F,echo = T,
+                      tidy =  T,highlight = TRUE,
+                      error=F, fig.width=12, fig.height = 6)
+options(scipen = 999)
+```
+
+
+
+```{r, fig.width=12, fig.height=6}
+load('covid_data_new_masked')
+
+masked <- covid_data %>% 
+  mutate(V59 = factor(V59, labels   = c('Normal','COVID19')))
+
+sum(colSums(is.na(masked)))
+
+resTable <- masked %>% tabyl(V59)
+resTable$labels <- paste0(resTable$V59, " (", scales::percent(resTable$percent), ") ") 
+
+resTable %>%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat='identity')+
+  coord_polar("y")+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = 'none')+
+  labs(y='', x='')
+```
+
+**Filtering near-zero variance predictors**
+
+To filter for near-zero variance predictors, the caret package function `nearZeroVar` will return the column numbers of any predictors with 0 variance
+
+```{r}
+## When predictors should be removed, a vector of integers is
+## returned that indicates which columns should be removed.
+ZeroVar <- nearZeroVar(masked)
+ZeroVar
+var(masked$V35)
+length(ZeroVar)
+```
+
+The function returns column numbers denoting the predictors that are recommended for deletion:
+
+```{r}
+filtered.dataset <- masked[, -ZeroVar]
+```
+
+**Feature Selection**
+```{r}
+set.seed(690)
+
+# prepare training scheme
+control <- trainControl(method = "cv", number = 10)
+# train the model
+model <- train(V59~. , data=filtered.dataset, 
+               method = "lvq", 
+               trControl = control)
+
+# estimate variable importance
+importance <- varImp(model, scale=FALSE)
+# summarize importance
+#print(importance)
+
+# plot importance
+plot(importance)
+```
+
+
+
+```{r , include=FALSE}
+fiveStats <- function(...) c(twoClassSummary(...),
+                              defaultSummary(...))
+set.seed(104)
+index <- createMultiFolds(filtered.dataset$V59, times = 5)
+
+## The built-in random forest functions are in rfFuncs.
+str(rfFuncs)
+newRF <- rfFuncs
+newRF$summary <- fiveStats
+subsets <- c(1:5, 10, 15, 20, 25)
+# define the control using a random forest selection function
+ctrl <- rfeControl(method = "cv", number=10,
+                   functions = newRF,
+                   verbose = T)
+# run the RFE algorithm
+set.seed(721)
+rfRFE <- rfe(V59~., data= filtered.dataset,
+             metric = "ROC",
+             rfeControl = ctrl,
+             sizes= subsets,
+            tuneLength = 12,
+             ## now pass options to randomForest()
+             ntree = 1000)
+
+# summarize the results
+print(rfRFE)
+
+# list the chosen features
+predictors(rfRFE)
+
+# plot the results
+plot(rfRFE, type=c("g", "o"))
+```
+
+
+
+```{r}
+significant_features <- c(predictors(rfRFE)[1:15], 'V59')
+dataset_after_fs <- filtered.dataset[, significant_features]
+```
+
+**Spliting Data**
+
+The training and test sets were created using stratified random sampling:
+
+```{r}
+
+# Create Training and Test data 
+set.seed(1234)
+training_data <- dataset_after_fs %>%
+    dplyr::select(V59) %>%
+    unlist() %>%
+    createDataPartition(p = 0.75, list = FALSE)
+X_train <- dataset_after_fs %>%
+    dplyr::select(-V59) %>%
+    slice(training_data) %>%
+    data.frame()
+Y_train <- dataset_after_fs %>%
+    dplyr::select(V59) %>%
+    slice(training_data) %>%
+    unlist()
+X_test <- dataset_after_fs %>%
+    dplyr::select(-V59) %>%
+    slice(-training_data) %>%
+    data.frame()
+Y_test <- dataset_after_fs %>%
+    dplyr::select(V59) %>%
+    slice(-training_data) %>%
+    unlist()
+
+```
+
+downSample and upSample functions from the caret package, that readjust the class frequencies. Each takes arguments for the predictors (called x) and the outcome class (y). Both functions return a data frame with the sampled version of the training set:
+
+**Naive bayes on data_masking**
+
+Naive Bayes is a classification technique based on Bayes’ theorem with an assumption of independence between predictors. In simple terms, a Naive Bayes classifier assumes that the presence of a particular feature in a class is unrelated to the presence of any other feature.
+
+```{r}
+train_control <- trainControl(method = "cv", number = 10,
+                    search = 'random',
+                   summaryFunction = twoClassSummary,classProbs = TRUE)
+#Naive algorithm
+set.seed(1234)
+nb_fit <- train(X_train, Y_train, 
+                    method = "nb",
+                    metric = "ROC",
+                    preProcess=c("scale","center"),
+                    trControl= train_control)
+nb_fit_full <- train(V59~.,masked, 
+                    method = "nb",
+                    metric = "ROC",
+                    preProcess=c("scale","center"),
+                    trControl= train_control)
+
+# results
+table(predict(nb_fit, X_train), Y_train)
+```
+
+The confusion matrix shows that Naive Bayes classifier predicted 704 Normal cases correctly and 102 wrong predictions. Similarly, the model predicted 133 COVID19 cases correctly and 46 wrong predictions.
+
+```{r}
+confusionMatrix(nb_fit)
+confusionMatrix(nb_fit_full)
+```
+
+```{r}
+#Predicting the test set results
+nb.pred <- predict(nb_fit, X_test)
+
+accuracy.meas(response = Y_test, predicted = nb.pred)
+
+confusionMatrix(nb.pred, Y_test, positive = 'COVID19')
+```
+
+The ROC and lift curves are created from these objects. For example:
+
+```{r}
+roc.curve(Y_test, nb.pred, plotit = T)
+```
+
+
+```{r}
+# Visualize Naive Bayes clustering
+
+fviz_cluster(list(data=X_test, cluster=nb.pred),
+             ellipse.type = 'norm',geom = 'point',
+             stand = F, palette='jco', 
+             main='Cluster Analysis for COVID19 Using Naive Bayes  classifier',
+             ggtheme = theme_classic())
+```
+
 
 ***
 
