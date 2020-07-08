@@ -24,9 +24,8 @@ references:
     month: 1
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-setwd("C:\\Users\\jalaj\\Documents\\GitHub\\Data-Science-with-R-Project\\covid-dataset")
+```{r setup, echo=FALSE}
+#setwd("C:\\Users\\jalaj\\Documents\\GitHub\\Data-Science-with-R-Project\\covid-dataset")
 load('covid_data_new_masked')
 dataset <- covid_data
 ```
@@ -82,31 +81,31 @@ In particular we have used the [COVID-19 Dataset-Repo](https://shorturl.at/qwLR0
 ### <span class="sub-header">Data</span>
 
 The dataset consists of 1313 Chest X-rays images. These images are grayscale images
-
+``` {r cropped, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+library(magick)
+covid.neg <- image_read('C:/Users/jalaj/Documents/DataSci with R/Project Files/covid-dataset/covid-negative/1.jpg')
+cropped <- image_crop(covid.neg, width = 256, height = 256)
+```
 ***
 
 ### <span class="sub-header">Data Exploration</span>
 The original dataset used for the experiment contains total of 1313 CXR images. These are 1000 COVID-19 negative and 313 COVID-19 positive CXR images. This shows a high skew towards positives in the dataset just for the reason of less availability of negatives in comparision to positives.
 
 ``` {r dataset, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
-library(magick)
-
-covid.neg <- image_read('C:/Users/jalaj/Documents/DataSci with R/Project Files/covid-dataset/covid-negative/1.jpg')
-
 print(covid.neg)
 ```
 
 The figure above shows an instance of a COVID-19 negative images. Similar to this image, all the images in the dataset are in Standard RGB color space. The dataset contains files in `.jpg`, `.jpeg` and `.png` formats. All the files are standardised to `.png` format for the ease of further processing.
 
 <center> ![Class Distribution](distribution.png) </center>
-```{r distribution_plot}
+```{r distribution_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
 library(ggplot2)
 qplot(covid_data$V59, binwidth=0.1, main = 'Data Distribution Histogram', xlab = 'Target Variable', ylab = 'Number of Samples')
 ```
 
 The figure above shows the skewness of the distribution of the data. The plot states the frequency of the positive and negative images in the dataset. Here, for the interpretation; 0 is taken as COVID negative and 1 as COVID positive. The figure delineates the ratio of images as being approx. 3:1. This signifies the data being skewed towards the positive instances.
 
-``` {r data-frequency}
+``` {r data-frequency, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
 
 library(funModeling)
 freq(covid_data$V59)
