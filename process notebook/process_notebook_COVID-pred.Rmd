@@ -32,7 +32,7 @@ dataset <- covid_data
 
 
 
-## Background and Motivation:
+## Background and Motivation
 
 The COVID-19 or the SARS-CoV-2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide [@WHO]. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits [@Zhao2020COVIDCTDatasetAC]; which usually takes upto 4-6 hours to reproduce the results is not very optimal way to move forward as the rate of COVID-19 patients registered grows exponentially. With this problem in scientific community, it motivated the aim of Machine Learning methods be brought to be a part in helping flattening the curve [@Respond]. So, this lead to a goal of building classifiers which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images [@wang2020covid; @narin2020automatic]. As this approach is less time and resource consuming; it is expected to achieve more streamlined performance compared to RT-PCR kits. Also in addition to a good prediction, we needed reasons that could justify what could be the features that are responsible in the diagonistic process [@karim2020deepcovidexplainer]. 
 
@@ -40,7 +40,7 @@ With this idea and motivation in hand, our work tries to experiment in building 
 
 
 ***
-## Project Objective:
+## Project Objective
 
 With the motivation to help fight against and analyse COVID-19, we came up with a research question of whether
 
@@ -56,7 +56,7 @@ To answer the this question, we aim to answer few sub-questions:
 
 
 ***
-## Dataset:
+## Dataset
 
 Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @karim2020deepcovidexplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @cohen2020covid. 
 
@@ -71,7 +71,7 @@ In particular we have used the [COVID-19 Dataset-Repo](https://shorturl.at/qwLR0
 
 ***
 
-## Exploratory Data Analysis:
+## Exploratory Data Analysis
 
 ### <span class="sub-header">Data Exploration</span>
 The original dataset used for the experiment contains total of 1313 CXR images. The image below is an instance of COVID negative image. The figure above shows an instance of a COVID-19 negative images. Similar to this image, all the images in the dataset are in Standard RGB color space. The dataset contains files in `.jpg`, `.jpeg` and `.png` formats. All the files are standardised to `.png` format for the ease of further processing.
@@ -317,7 +317,8 @@ As a part of preprocessing of the images to be fed to the lime model, we do grey
 Number of features to find is set to 10. 
 
 Only “positive” areas are marked in the explanation image.
-## Final Analysis: {.tabset}
+
+## Final Analysis
 
 Based on our approach, we initially tried to extract the features out of the CXR images without any segmentation. However, we found that the area of interest i.e., the lung area is a very small segment of the whole image. Hence, the noise around the lung area dominates the outcome of the classification. Moreover, we found that quality of CXR images highly affects the feature vectors. For this reason, we segmented the images to find the area of interest and extract our features on corresponding lung-segment. The results were better in that case. However, we could not deal with quality of images in terms of light exposure. 
 
