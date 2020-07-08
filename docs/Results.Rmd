@@ -28,6 +28,8 @@ csl: data-and-knowledge-engineering.csl
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+#Models {.tabset}
+
 ## SVM
 
 We used Support Vector Classifiers with Radial Basis function as kernel. With the hyper-parameter tuning, we found value of cost = 1 and gamma = 0.5 to be optimal w.r.t our ground truth.

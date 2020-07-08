@@ -78,66 +78,219 @@ In particular we have used the [COVID-19 Dataset-Repo](https://shorturl.at/qwLR0
 
 ## Exploratory Data Analysis:
 
-### <span class="sub-header">Data</span>
-
-The dataset consists of 1313 Chest X-rays images. These images are grayscale images
+### <span class="sub-header">Data Exploration</span>
+The original dataset used for the experiment contains total of 1313 CXR images. The image below is an instance of COVID negative image. The figure above shows an instance of a COVID-19 negative images. Similar to this image, all the images in the dataset are in Standard RGB color space. The dataset contains files in `.jpg`, `.jpeg` and `.png` formats. All the files are standardised to `.png` format for the ease of further processing.
 ``` {r cropped, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
 library(magick)
 covid.neg <- image_read('C:/Users/jalaj/Documents/DataSci with R/Project Files/covid-dataset/covid-negative/1.jpg')
-resized <- image_scale(covid.neg, "256x256")
-print(resized)
+print(covid.neg)
 ```
+
+
+These are 1000 COVID-19 negative and 313 COVID-19 positive CXR images. This shows a high skew towards positives in the dataset just for the reason of less availability of negatives in comparision to positives. 
+```{r distribution_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
+library(ggplot2)
+qplot(covid_data$V59, binwidth=0.1, main = 'Data Distribution Histogram', xlab = 'Target Variable', ylab = 'Number of Samples')
+```
+
+
+The figure above shows the skewness of the distribution of the data. The plot states the frequency of the positive and negative images in the dataset. Here, for the interpretation; 0 is taken as COVID negative and 1 as COVID positive. The figure delineates the ratio of images as being approx. 3:1. This signifies the data being skewed towards the positive instances.
+
+
+``` {r data-frequency, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
+library(funModeling)
+freq(covid_data$V59)
+```
+
+Pie chart is the simplest representation of the dataset. This shows amount of images in percentage.
+``` {r pie-chart, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
+
+mytable <- table(covid_data$V59)
+lbls <- c("0", "1")
+piepercent<- round(100*mytable/sum(mytable), 1)
+pie(mytable, labels =  piepercent, col=rainbow(length(lbls)), main = "Percentage of positives and negatives")
+```
+
+
+
+### <span class="sub-header">Data Pre-processing</span>
+
+The raw images are fed into the Local Binary Pattern Algorithm. The Algorithm takes the images and resizes into 256*256 height to width format.
+
+```{r resizing, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
+scaled <- image_scale(covid.neg, "256x256")
+print(scaled)
+```
+
+All the images are converted into grayscale because the Local Binary Pattern works only with grayscale images.
+
+```
+img <- grayscale(img)
+```
+
+The Algorithm converts the images into a data matrix and feds it into local binary function which creates the lbp vectors for the corresponding image.
+
+```
+imgm <- data.matrix(img)
+lbpd <- lbp(imgm, 2)
+```
+
+Thereafter, it forms a dataframe of 1313 rows and 59 columns where 59th column being the Target Class with values `0` for COVID negatives and `1` for COVID positives.
+```{r data-explorer, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+library(DataExplorer)
+#DataExplorer::create_report(data)
+introduce(dataset)
+plot_intro(dataset)
+```
+
+
+The figure below shows the structure of the data frame.
+```{r fram-struct, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_str(dataset)
+```
+
+Since the real world data can be messy, the following plot below shows the missing values in columns. All the columns are kept nameless and are therefore by default named **"V#"** with its repective column number.
+
+```{r plot, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_missing(dataset)
+```
+
+
+The figures below shows column-wise vector representation:
+``` {r bar, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_bar(dataset$V59)
+
+```
+
+The following plot shows visualisation of distribution of lbp vector column-wise:
+```{r hist, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_histogram(dataset)
+```
+
+
+The figure below shows that very few columns vectors appears to be correlated. This is the case because the data has been masked.
+``` {r bar1, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_correlation(na.omit(dataset))
+```
+
+The figure shows Quantile-Quantile plot showing distribution of all the columns compared to normal distribution.
+``` {r qq-plot, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_qq(dataset, sampled_rows = 1000L)
+```
+
+
+
+
+***
+
+## Final Analysis: {.tabset}
+
+### SVM {.tabset}
+
+We used Support Vector Classifiers with Radial Basis function as kernel. With the hyper-parameter tuning, we found value of cost = 1 and gamma = 0.5 to be optimal w.r.t our ground truth.
+
+
+#### Library Imports
+
+The CRAN packages `e1071` for classification using Support Vector Classifiers with Radial Basis Function kernel and hyper-parameter tuning and `ROSE` for over-sampling of data are being used.
+```{r library, echo=TRUE}
+library(e1071)
+library(ROSE)
+```
+
+
+#### Pre-Processing
+```{r preprocessing, echo=FALSE}
+
+load('covid_data_new_masked')
+dataset <- covid_data
+summary(dataset)
+
+
+#Factoring the Target variable of (0,1)
+dataset$V59 = factor(dataset$V59, levels = c(0, 1))
+print(is.factor(dataset$V59))
+
+#Dataset Split
+index <- 1:nrow(dataset)
+testindex <- sample(index, trunc(length(index)/3))
+testset <- dataset[testindex,]
+trainset <- dataset[-testindex,]
+
+
+#Over-Sampling
+train_ov_sampled <- ovun.sample(V59 ~ ., trainset, method = "over")$data
+table(train_ov_sampled$V59)
+
+test_ov_sampled <- ovun.sample(V59 ~ ., testset, method = "over")$data
+table(test_ov_sampled$V59)
+
+```
+
+#### Classification
+``` {r classification, echo=TRUE}
+set.seed(825)
+
+#fitting the Support Vector Machine to the Training set
+svm_fit_ovs <- svm(V59~., kernel = 'radial',
+               data = train_ov_sampled, scale=TRUE, cachesize = 200,
+               probability = TRUE, gamma = 0.5, cost = 1)
+
+summary(svm_fit_ovs)
+
+
+#Hyper-Parameter Tuning
+# obj <- tune.svm(V59~., data = train_ov_sampled, sampling = "cross",
+#           gamma = 2^c(-1:4), cost = c(1:10))
+# summary(obj)
+```
+
+#### Prediction
+```{r prediction, echo=FALSE}
+#Predicting the test set results
+svm.pred.ovs <- predict(svm_fit_ovs, test_ov_sampled[,-59], probability = TRUE)
+
+
+plot(svm.pred.ovs)
+
+summary(svm.pred.ovs)
+```
+
+
+#### Evaluation
+```{r evaluation, echo=FALSE}
+#Evaluation on Test_Set
+accuracy.meas(response = test_ov_sampled$V59, predicted = svm.pred.ovs)
+
+roc.curve(test_ov_sampled$V59, svm.pred.ovs, plotit = T)
+
+caret::confusionMatrix(svm.pred.ovs, test_ov_sampled$V59, positive = '1')
+```
+
+***
+
+#### <span class="sub-header">Conclusion:</span>
 <center> 
 ![original image](1.jpg_plot.png)
 ![Masked image](1-mask.png) 
 ![image](1.jpgtmp.png)
 ![image2](1.png)
 </center>
-
-```{r data-explorer, echo=FALSE, warning=FALSE, message=FALSE}
-library(DataExplorer)
-data <- dataset
-#DataExplorer::create_report(data)
-plot_bar(data)
-plot_histogram(data)
-plot_correlation(na.omit(data), maxcat = 5L)
-```
 ***
 
-### <span class="sub-header">Data Exploration</span>
-The original dataset used for the experiment contains total of 1313 CXR images. These are 1000 COVID-19 negative and 313 COVID-19 positive CXR images. This shows a high skew towards positives in the dataset just for the reason of less availability of negatives in comparision to positives.
-
-``` {r dataset, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
-print(covid.neg)
-```
-
-The figure above shows an instance of a COVID-19 negative images. Similar to this image, all the images in the dataset are in Standard RGB color space. The dataset contains files in `.jpg`, `.jpeg` and `.png` formats. All the files are standardised to `.png` format for the ease of further processing.
-
-<center> ![Class Distribution](distribution.png) </center>
-```{r distribution_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
-library(ggplot2)
-qplot(covid_data$V59, binwidth=0.1, main = 'Data Distribution Histogram', xlab = 'Target Variable', ylab = 'Number of Samples')
-```
-
-The figure above shows the skewness of the distribution of the data. The plot states the frequency of the positive and negative images in the dataset. Here, for the interpretation; 0 is taken as COVID negative and 1 as COVID positive. The figure delineates the ratio of images as being approx. 3:1. This signifies the data being skewed towards the positive instances.
-
-``` {r data-frequency, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
-
-library(funModeling)
-freq(covid_data$V59)
-mytable <- table(covid_data$V59)
-lbls <- c("0", "1")
-piepercent<- round(100*mytable/sum(mytable), 1)
-pie(mytable, labels =  piepercent, col=rainbow(length(lbls)), main = "Pie Chart for number of positives and negatives")
-```
+### Random Forest
 
 ***
 
-## Final Analysis:
+### kNN
 
 ***
 
-### <span class="sub-header">Conclusion:</span>
+### Naive Bayes
+
+***
+
+### Multi-layer Perceptron
 
 ***
 
