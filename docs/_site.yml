@@ -5,9 +5,9 @@ navbar:
     - text: "Home"
       href: index.html
     - text: "Exploratory Data Analysis"
-      href: subhajit-s-progress.html
+      href: Exploratory Data Analysis.html
     - text: "Classification"
-      href: subhankar-s-progress.html
+      href: Classification.html
     - text: "Results"
-      href: SVM_Documentation.html
+      href: Results.html
     
