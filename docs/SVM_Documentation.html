@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jalaj" />
+
+
+<title>SVM Documentation</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 45px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h2 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h3 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h4 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h5 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h6 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">COVID-19 Prediction using Explainable Machine Learning</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="subhajit-s-progress.html">Exploratory Data Analysis</a>
+</li>
+<li>
+  <a href="subhankar-s-progress.html">Classification</a>
+</li>
+<li>
+  <a href="SVM_Documentation.html">Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">SVM Documentation</h1>
+<h4 class="author">Jalaj</h4>
+
+</div>
+
+
+<p>     </p>
+<div id="svm" class="section level2">
+<h2>SVM</h2>
+<p>We used Support Vector Classifiers with Radial Basis function as kernel. With the hyper-parameter tuning, we found value of cost = 1 and gamma = 0.5 to be optimal w.r.t our ground truth.</p>
+<div id="library-imports" class="section level3">
+<h3>Library Imports</h3>
+<p>The CRAN packages <code>e1071</code> for classification using Support Vector Classifiers with Radial Basis Function kernel and hyper-parameter tuning and <code>ROSE</code> for over-sampling of data are being used.</p>
+<pre class="r"><code>library(e1071)
+library(ROSE)</code></pre>
+<pre><code>## Loaded ROSE 0.0-3</code></pre>
+</div>
+<div id="pre-processing" class="section level3">
+<h3>Pre-Processing</h3>
+<pre><code>##        V1                V2                V3               V4         
+##  Min.   :      0   Min.   :      0   Min.   :     0   Min.   :      0  
+##  1st Qu.:1095008   1st Qu.: 560166   1st Qu.: 24092   1st Qu.: 338044  
+##  Median :1421973   Median : 860980   Median : 55360   Median : 594510  
+##  Mean   :1475117   Mean   :1031130   Mean   : 63767   Mean   : 596393  
+##  3rd Qu.:1834942   3rd Qu.:1318568   3rd Qu.: 94668   3rd Qu.: 830550  
+##  Max.   :4446528   Max.   :6340033   Max.   :401556   Max.   :2090907  
+##        V5               V6               V7               V8         
+##  Min.   :     0   Min.   :     0   Min.   :     0   Min.   :      0  
+##  1st Qu.: 37808   1st Qu.:     0   1st Qu.:     0   1st Qu.: 218172  
+##  Median : 80880   Median : 27719   Median : 37098   Median : 435603  
+##  Mean   : 89719   Mean   : 36925   Mean   : 49901   Mean   : 483330  
+##  3rd Qu.:131688   3rd Qu.: 57210   3rd Qu.: 77091   3rd Qu.: 670221  
+##  Max.   :328031   Max.   :614955   Max.   :370502   Max.   :1814066  
+##        V9              V10              V11              V12        
+##  Min.   :     0   Min.   :     0   Min.   :     0   Min.   :     0  
+##  1st Qu.: 24325   1st Qu.:     0   1st Qu.:     0   1st Qu.:     0  
+##  Median : 56706   Median :     0   Median :     0   Median : 24331  
+##  Mean   : 63292   Mean   : 18742   Mean   :  9109   Mean   : 28857  
+##  3rd Qu.: 95504   3rd Qu.: 29095   3rd Qu.: 18166   3rd Qu.: 48344  
+##  Max.   :273870   Max.   :155845   Max.   :273028   Max.   :468048  
+##       V13              V14              V15               V16         
+##  Min.   :     0   Min.   :     0   Min.   :      0   Min.   :      0  
+##  1st Qu.: 16351   1st Qu.:     0   1st Qu.:      0   1st Qu.:  67146  
+##  Median : 41948   Median :     0   Median :  35977   Median : 159173  
+##  Mean   : 54049   Mean   : 14207   Mean   : 114882   Mean   : 267047  
+##  3rd Qu.: 80607   3rd Qu.: 26228   3rd Qu.:  95132   3rd Qu.: 316470  
+##  Max.   :342023   Max.   :132165   Max.   :2684936   Max.   :3409900  
+##       V17               V18                V19              V20        
+##  Min.   :      0   Min.   :       0   Min.   :     0   Min.   :     0  
+##  1st Qu.: 568440   1st Qu.:  159250   1st Qu.:     0   1st Qu.: 46640  
+##  Median : 879072   Median :  286545   Median :     0   Median : 94060  
+##  Mean   :1025878   Mean   :  465573   Mean   : 19870   Mean   :109127  
+##  3rd Qu.:1293583   3rd Qu.:  483375   3rd Qu.: 29920   3rd Qu.:152802  
+##  Max.   :5184326   Max.   :14411810   Max.   :153810   Max.   :465584  
+##       V21              V22              V23              V24        
+##  Min.   :     0   Min.   :     0   Min.   :     0   Min.   :     0  
+##  1st Qu.:     0   1st Qu.:     0   1st Qu.:     0   1st Qu.: 29914  
+##  Median : 27978   Median :     0   Median :     0   Median : 70002  
+##  Mean   : 36317   Mean   : 21106   Mean   : 15880   Mean   : 75837  
+##  3rd Qu.: 54292   3rd Qu.: 29821   3rd Qu.: 26917   3rd Qu.:110559  
+##  Max.   :463822   Max.   :633590   Max.   :131336   Max.   :285192  
+##       V25               V26              V27              V28        
+##  Min.   :      0   Min.   :     0   Min.   :     0   Min.   :     0  
+##  1st Qu.: 340509   1st Qu.: 43600   1st Qu.:     0   1st Qu.: 51126  
+##  Median : 532350   Median : 88816   Median : 24752   Median : 98440  
+##  Mean   : 553534   Mean   :101550   Mean   : 29203   Mean   :106956  
+##  3rd Qu.: 739025   3rd Qu.:149495   3rd Qu.: 47274   3rd Qu.:154510  
+##  Max.   :2264850   Max.   :430668   Max.   :468048   Max.   :780080  
+##       V29               V30              V31               V32         
+##  Min.   :      0   Min.   :     0   Min.   :      0   Min.   :      0  
+##  1st Qu.: 237432   1st Qu.: 27988   1st Qu.:  82797   1st Qu.: 353073  
+##  Median : 429495   Median : 64822   Median : 184686   Median : 540540  
+##  Mean   : 468205   Mean   : 71144   Mean   : 286418   Mean   : 566503  
+##  3rd Qu.: 652132   3rd Qu.:103932   3rd Qu.: 333664   3rd Qu.: 714104  
+##  Max.   :1834487   Max.   :401280   Max.   :3035669   Max.   :4494390  
+##       V33              V34              V35         V36         V37   
+##  Min.   :     0   Min.   :     0   Min.   :0   Min.   :0   Min.   :0  
+##  1st Qu.: 35637   1st Qu.:     0   1st Qu.:0   1st Qu.:0   1st Qu.:0  
+##  Median : 74452   Median : 32069   Median :0   Median :0   Median :0  
+##  Mean   : 85330   Mean   : 32288   Mean   :0   Mean   :0   Mean   :0  
+##  3rd Qu.:129440   3rd Qu.: 44749   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0  
+##  Max.   :459918   Max.   :211535   Max.   :0   Max.   :0   Max.   :0  
+##       V38         V39         V40         V41         V42         V43   
+##  Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :0  
+##  1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0  
+##  Median :0   Median :0   Median :0   Median :0   Median :0   Median :0  
+##  Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   :0  
+##  3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0  
+##  Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :0  
+##       V44         V45         V46         V47         V48         V49         
+##  Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :      0  
+##  1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.: 207804  
+##  Median :0   Median :0   Median :0   Median :0   Median :0   Median : 324270  
+##  Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   : 356536  
+##  3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.: 476641  
+##  Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :1522620  
+##       V50              V51         V52         V53         V54         V55   
+##  Min.   :     0   Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :0  
+##  1st Qu.:     0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0  
+##  Median : 40735   Median :0   Median :0   Median :0   Median :0   Median :0  
+##  Mean   : 55231   Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   :0  
+##  3rd Qu.: 84624   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0  
+##  Max.   :305350   Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :0  
+##       V56         V57         V58         V59        
+##  Min.   :0   Min.   :0   Min.   :0   Min.   :0.0000  
+##  1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0.0000  
+##  Median :0   Median :0   Median :0   Median :0.0000  
+##  Mean   :0   Mean   :0   Mean   :0   Mean   :0.2384  
+##  3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0.0000  
+##  Max.   :0   Max.   :0   Max.   :0   Max.   :1.0000</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre><code>## 
+##   0   1 
+## 670 673</code></pre>
+<pre><code>## 
+##   0   1 
+## 330 337</code></pre>
+</div>
+<div id="classification" class="section level3">
+<h3>Classification</h3>
+<pre class="r"><code>set.seed(825)
+
+#fitting the Support Vector Machine to the Training set
+svm_fit_ovs &lt;- svm(V59~., kernel = &#39;radial&#39;,
+               data = train_ov_sampled, scale=TRUE, cachesize = 200,
+               probability = TRUE, gamma = 0.5, cost = 1)</code></pre>
+<pre><code>## Warning in svm.default(x, y, scale = scale, ..., na.action = na.action):
+## Variable(s) &#39;V35&#39; and &#39;V36&#39; and &#39;V37&#39; and &#39;V38&#39; and &#39;V39&#39; and &#39;V40&#39; and &#39;V41&#39;
+## and &#39;V42&#39; and &#39;V43&#39; and &#39;V44&#39; and &#39;V45&#39; and &#39;V46&#39; and &#39;V47&#39; and &#39;V48&#39; and &#39;V51&#39;
+## and &#39;V52&#39; and &#39;V53&#39; and &#39;V54&#39; and &#39;V55&#39; and &#39;V56&#39; and &#39;V57&#39; and &#39;V58&#39; constant.
+## Cannot scale data.</code></pre>
+<pre class="r"><code>summary(svm_fit_ovs)</code></pre>
+<pre><code>## 
+## Call:
+## svm(formula = V59 ~ ., data = train_ov_sampled, kernel = &quot;radial&quot;, 
+##     cachesize = 200, probability = TRUE, gamma = 0.5, cost = 1, scale = TRUE)
+## 
+## 
+## Parameters:
+##    SVM-Type:  C-classification 
+##  SVM-Kernel:  radial 
+##        cost:  1 
+## 
+## Number of Support Vectors:  1005
+## 
+##  ( 636 369 )
+## 
+## 
+## Number of Classes:  2 
+## 
+## Levels: 
+##  0 1</code></pre>
+<pre class="r"><code>#Hyper-Parameter Tuning
+# obj &lt;- tune.svm(V59~., data = train_ov_sampled, sampling = &quot;cross&quot;,
+#           gamma = 2^c(-1:4), cost = c(1:10))
+# summary(obj)</code></pre>
+</div>
+<div id="prediction" class="section level3">
+<h3>Prediction</h3>
+<p><img src="SVM_Documentation_files/figure-html/prediction-1.png" width="672" /></p>
+<pre><code>##   0   1 
+## 630  37</code></pre>
+</div>
+<div id="evaluation" class="section level3">
+<h3>Evaluation</h3>
+<pre><code>## 
+## Call: 
+## accuracy.meas(response = test_ov_sampled$V59, predicted = svm.pred.ovs)
+## 
+## Examples are labelled as positive when predicted is greater than 0.5 
+## 
+## precision: 0.505
+## recall: 1.000
+## F: 0.336</code></pre>
+<pre><code>## Area under the curve (AUC): 0.555</code></pre>
+<p><img src="SVM_Documentation_files/figure-html/evaluation-1.png" width="672" /></p>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 330 300
+##          1   0  37
+##                                           
+##                Accuracy : 0.5502          
+##                  95% CI : (0.5116, 0.5884)
+##     No Information Rate : 0.5052          
+##     P-Value [Acc &gt; NIR] : 0.01112         
+##                                           
+##                   Kappa : 0.1088          
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt; 2e-16         
+##                                           
+##             Sensitivity : 0.10979         
+##             Specificity : 1.00000         
+##          Pos Pred Value : 1.00000         
+##          Neg Pred Value : 0.52381         
+##              Prevalence : 0.50525         
+##          Detection Rate : 0.05547         
+##    Detection Prevalence : 0.05547         
+##       Balanced Accuracy : 0.55490         
+##                                           
+##        &#39;Positive&#39; Class : 1               
+## </code></pre>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

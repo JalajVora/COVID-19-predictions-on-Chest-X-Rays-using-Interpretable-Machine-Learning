@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>COVID-19 Prediction using Explainable Machine Learning</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 45px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h2 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h3 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h4 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h5 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h6 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">COVID-19 Prediction using Explainable Machine Learning</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="subhajit-s-progress.html">Exploratory Data Analysis</a>
+</li>
+<li>
+  <a href="subhankar-s-progress.html">Classification</a>
+</li>
+<li>
+  <a href="SVM_Documentation.html">Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">COVID-19 Prediction using Explainable Machine Learning</h1>
+
+</div>
+
+
+<p>     </p>
+<div id="background-and-motivation" class="section level2">
+<h2>Background and Motivation:</h2>
+<p>The COVID-19 or the SARS-CoV-2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide <span class="citation">[<a href="#ref-WHO" role="doc-biblioref">1</a>]</span>. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits <span class="citation">[<a href="#ref-Zhao2020COVIDCTDatasetAC" role="doc-biblioref">2</a>]</span>; which usually takes upto 4-6 hours to reproduce the results is not very optimal way to move forward as the rate of COVID-19 patients registered grows exponentially. With this problem in scientific community, it motivated the aim of Machine Learning methods be brought to be a part in helping flattening the curve <span class="citation">[<a href="#ref-Respond" role="doc-biblioref">3</a>]</span>. So, this lead to a goal of building classifiers which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images <span class="citation">[<a href="#ref-wang2020covid" role="doc-biblioref">4</a>,<a href="#ref-narin2020automatic" role="doc-biblioref">5</a>]</span>. As this approach is less time and resource consuming; it is expected to achieve more streamlined performance compared to RT-PCR kits. Also in addition to a good prediction, we needed reasons that could justify what could be the features that are responsible in the diagonistic process <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">6</a>]</span>.</p>
+<p>With this idea and motivation in hand, our work tries to experiment in building classifiers with CXR (Chest X-Rays) as Ground Truth that predicts whether an X-Ray image is COVID-19 negative or positive. Along with, we try to come up with features that contributes to the detection of an image and also with an explaination delineating why was such a behaviour observed.</p>
+<hr />
+</div>
+<div id="project-objective" class="section level2">
+<h2>Project Objective:</h2>
+<p>With the motivation to help fight against and analyse COVID-19, we came up with a research question of whether</p>
+<blockquote>
+<p>Can we use Machine Learning methods to diagonise COVID-19 and explain the prediction?</p>
+</blockquote>
+<p>To answer the this question, we aim to answer few sub-questions:</p>
+<ul>
+<li>How well could classifiers perform on Chest X-Rays?</li>
+<li>Although <span class="citation">[<a href="#ref-Zhao2020COVIDCTDatasetAC" role="doc-biblioref">2</a>]</span> and <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">6</a>]</span> extensively works with Neural Networks (Black-Box Model) to classify, Can simple and intrinsically explainable classifiers achieve a base Accuracy, F<sub>1</sub>-Score and AUC of 85% using CXR?</li>
+<li>How does different features of CXR contribute to the model prediction and Can we come up with few number of feature w.r.t their importance?</li>
+<li>Which flavour of algorithm perform best among all and is there a possibility of Classification in Ensemble setting?</li>
+<li>Can we come up with explaination of our model’s decsision and prediction?</li>
+</ul>
+<hr />
+</div>
+<div id="dataset" class="section level2">
+<h2>Dataset:</h2>
+<p>Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">6</a>]</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, Kaggle CXR Pneumonia dataset by Paul Mooney,<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> CXR images of adult subjects from the RSNA Pneumonia Detection Challenge,<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> original and augmented versions of COVID-19 examples<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> from <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">7</a>]</span>.</p>
+<p>According to <span class="citation">[<a href="#ref-Zhao2020COVIDCTDatasetAC" role="doc-biblioref">2</a>,<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">6</a>,<a href="#ref-wang2020deep" role="doc-biblioref">8</a>–<a href="#ref-singh2020classification" role="doc-biblioref">10</a>]</span> CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F<sub>1</sub>-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won’t be that competible in terms of quality w.r.t CT-Scans but <span class="citation">[<a href="#ref-KERMANY20181122" role="doc-biblioref">11</a>]</span> suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.</p>
+<p>In particular we have used the <a href="https://shorturl.at/qwLR0">COVID-19 Dataset-Repo</a> as our Ground Truth.</p>
+<div id="github-url" class="section level3">
+<h3><span class="sub-header">GitHub URL</span></h3>
+<p>The <code>R</code> scripts, process notebook and other resources have been stored at the <a href="https://github.com/JalajVora/Data-Science-with-R-Project.git">repository</a>.</p>
+<hr />
+</div>
+</div>
+<div id="design-overview-algorithms-and-methods" class="section level2">
+<h2>Design Overview (Algorithms and Methods):</h2>
+<p>We followed a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding Descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor’s results. The details are delineated in the following sections:</p>
+<ul>
+<li><strong>Pre-Processing</strong>
+<ul>
+<li><strong>Cropping</strong>
+<ul>
+<li>We are dealing with higly skewed dataset of CXR imgaes.</li>
+<li>These imgaes are initally cropped and normalised to 256*256 fashion.</li>
+</ul></li>
+<li><strong>Masking</strong>
+<ul>
+<li>The normalised images are then masked for the lung segment using CNN.</li>
+</ul></li>
+<li><strong>Segmentation</strong>
+<ul>
+<li>These masked images are then formed in a manner where the masked portion is deducted from the orginal image and the background as been colored black for the ease to processing.</li>
+<li>These segmented images are just the lung-segment from the original CXR with a black background.</li>
+</ul></li>
+</ul></li>
+<li><strong>Feature Extraction</strong>
+<ul>
+<li><strong>Local Binary Pattern</strong>
+<ul>
+<li>There exist several texture-based vision algorithms. We combined features before training and train our model on a combined feature set; Or else we can train models on individual features, and then combine prediction results might be combined and thus one feature might only not be selected but multiple features can be selected <span class="citation">[<a href="#ref-pereira2020covid" role="doc-biblioref">12</a>]</span>.</li>
+<li>As Literature survey suggests, we found Local Binary Patterns <span class="citation">[<a href="#ref-nanni2010local" role="doc-biblioref">13</a>]</span> as a good choice for texture-based descriptor.</li>
+<li>Local Binary Patterns inputs pre-processed image and outputs corresponding lbp vector.</li>
+<li>Local Binary Pattern works only with grayscale images. The dataset contains RGB and RGBa images which are intrinsincally normalised to grayscale before converting it into a vector.</li>
+</ul></li>
+</ul></li>
+<li><strong>Re-sampling</strong>
+<ul>
+<li>The LPB vectors are then oversampled as the dataset contains highly skewed distribution of target class.</li>
+<li>Re-sampling techniques tried:
+<ul>
+<li>Random Under-Sampling</li>
+<li>Over-Sampling:
+<ul>
+<li>Random Over-Sampling</li>
+<li>Density Based-SMOTE <span class="citation">[<a href="#ref-bunkhumpornpat2012dbsmote" role="doc-biblioref">14</a>]</span></li>
+<li>Borderline-SMOTE <span class="citation">[<a href="#ref-han2005borderline" role="doc-biblioref">15</a>]</span></li>
+<li>AdaSyn <span class="citation">[<a href="#ref-he2008adasyn" role="doc-biblioref">16</a>]</span></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><strong>Classification</strong>
+<ul>
+<li>The problem is an imbalance learning for a binary classification for images being COVID-19 positive or negative <span class="citation">[<a href="#ref-fernandez2013analysing" role="doc-biblioref">17</a>]</span>.</li>
+<li>Here, we would like to emphasize that the model won’t predict presence or absence or pneumonia, which is a result not only of COVID-19 but other kind of reasons also affect this.</li>
+<li>We implemented following algorithms <span class="citation">[<a href="#ref-albahri2020role" role="doc-biblioref">18</a>]</span>:
+<ul>
+<li>k-nearest neighbours</li>
+<li>Logistic Regression</li>
+<li>Support Vector Machines</li>
+<li>Tree-based Classifiers
+<ul>
+<li>Decision Trees</li>
+<li>Naive Bayes</li>
+</ul></li>
+<li>Multi-layer Perceptron</li>
+</ul></li>
+</ul></li>
+</ul>
+<center>
+<img src="Picture1.png" title="fig:" alt="Pipeline Architecture" />
+</center>
+<ul>
+<li><strong>Evaluation</strong>
+<ul>
+<li>The higher the metric value the better the performance.
+<ul>
+<li><em>Accuracy</em></li>
+<li><em>Precision</em></li>
+<li><em>Recall</em></li>
+<li><em>F<sub>1</sub>-Score</em></li>
+<li><em>AUC &amp; ROC</em></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<div id="screencast" class="section level2">
+<h2>Screencast</h2>
+<p>(space for screencast)</p>
+</div>
+<div id="team" class="section level2">
+<h2>Team</h2>
+<ol style="list-style-type: decimal">
+<li>Subhajit Mondal</li>
+<li>Jalaj Vora</li>
+<li>Subhankar Patra</li>
+<li>Shivam Singh</li>
+<li>Roshmitha Thummala</li>
+</ol>
+</div>
+<div id="r-packages" class="section level2">
+<h2>R packages</h2>
+<p>The following packages must be installed in R-Studio:</p>
+<pre class="r"><code>## The script installs the necessary packages if not already installed, and then loads them
+
+packages &lt;- c(
+  &quot;caret&quot;,
+  &quot;imbalance&quot;,
+  &quot;e1071&quot;,
+  &quot;randomForest&quot;,
+  &quot;imager&quot;,
+  &quot;wvtool&quot;,
+  &quot;rpart&quot;,
+  &quot;ROSE&quot;,
+  &quot;dplyr&quot;,
+  &quot;tidyr&quot;,
+  &quot;ggplot2&quot;,
+  &quot;rmarkdown&quot;,
+  &quot;tidyverse&quot;,
+  &quot;kableExtra&quot;,
+  &quot;knitr&quot;
+  &quot;jsonlite&quot;
+  &quot;crul&quot;
+)
+
+verify.packages &lt;- function(pkg) {
+  new.pkg &lt;- pkg[!(pkg %in% installed.packages()[, &quot;Package&quot;])]
+  if (length(new.pkg))
+    install.packages(new.pkg, dependencies = TRUE)
+  sapply(pkg, library, character.only = TRUE)
+}
+
+verify.packages(packages)</code></pre>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references">
+<div id="ref-WHO">
+<p>[1] World Health Organisation, Novel Coronavirus – China 2020, (2020). <a href="https://www.who.int/csr/don/12-january-2020-novel-coronavirus-china/en/">https://www.who.int/csr/don/12-january-2020-novel-coronavirus-china/en/</a>.</p>
+</div>
+<div id="ref-Zhao2020COVIDCTDatasetAC">
+<p>[2] J. Zhao, Y. Zhang, X. He, P. Xie, COVID-ct-dataset: A ct scan dataset about covid-19, ArXiv. abs/2003.13865 (2020).</p>
+</div>
+<div id="ref-Respond">
+<p>[3] M. Wiberg, A. Taylor, D. Rosner, Responding to the covid-19 pandemic: An invitation, Interactions. 27 (2020) 5. <a href="https://doi.org/10.1145/3392538">https://doi.org/10.1145/3392538</a>.</p>
+</div>
+<div id="ref-wang2020covid">
+<p>[4] L. Wang, A. Wong, COVID-net: A tailored deep convolutional neural network design for detection of covid-19 cases from chest x-ray images, arXiv Preprint arXiv:2003.09871. (2020).</p>
+</div>
+<div id="ref-narin2020automatic">
+<p>[5] A. Narin, C. Kaya, Z. Pamuk, Automatic detection of coronavirus disease (covid-19) using x-ray images and deep convolutional neural networks, arXiv Preprint arXiv:2003.10849. (2020).</p>
+</div>
+<div id="ref-karim2020deepcovidexplainer">
+<p>[6] M. Karim, T. Döhmen, D. Rebholz-Schuhmann, S. Decker, M. Cochez, O. Beyan, others, Deepcovidexplainer: Explainable covid-19 predictions based on chest x-ray images, arXiv Preprint arXiv:2004.04582. (2020).</p>
+</div>
+<div id="ref-cohen2020covid">
+<p>[7] J.P. Cohen, P. Morrison, L. Dao, COVID-19 image data collection, arXiv 2003.11597. (2020). <a href="https://github.com/ieee8023/covid-chestxray-dataset">https://github.com/ieee8023/covid-chestxray-dataset</a>.</p>
+</div>
+<div id="ref-wang2020deep">
+<p>[8] S. Wang, B. Kang, J. Ma, X. Zeng, M. Xiao, J. Guo, M. Cai, J. Yang, Y. Li, X. Meng, others, A deep learning algorithm using ct images to screen for corona virus disease (covid-19), MedRxiv. (2020).</p>
+</div>
+<div id="ref-li2020artificial">
+<p>[9] L. Li, L. Qin, Z. Xu, Y. Yin, X. Wang, B. Kong, J. Bai, Y. Lu, Z. Fang, Q. Song, others, Artificial intelligence distinguishes covid-19 from community acquired pneumonia on chest ct, Radiology. (2020) 200905.</p>
+</div>
+<div id="ref-singh2020classification">
+<p>[10] D. Singh, V. Kumar, M. Kaur, Classification of covid-19 patients from chest ct images using multi-objective differential evolution–based convolutional neural networks, European Journal of Clinical Microbiology &amp; Infectious Diseases. (2020) 1–11.</p>
+</div>
+<div id="ref-KERMANY20181122">
+<p>[11] D.S. Kermany, M. Goldbaum, W. Cai, C.C.S. Valentim, H. Liang, S.L. Baxter, A. McKeown, G. Yang, X. Wu, F. Yan, J. Dong, M.K. Prasadha, J. Pei, M.Y.L. Ting, J. Zhu, C. Li, S. Hewett, J. Dong, I. Ziyar, A. Shi, R. Zhang, L. Zheng, R. Hou, W. Shi, X. Fu, Y. Duan, V.A.N. Huu, C. Wen, E.D. Zhang, C.L. Zhang, O. Li, X. Wang, M.A. Singer, X. Sun, J. Xu, A. Tafreshi, M.A. Lewis, H. Xia, K. Zhang, Identifying medical diagnoses and treatable diseases by image-based deep learning, Cell. 172 (2018) 1122–1131.e9. <a href="https://doi.org/https://doi.org/10.1016/j.cell.2018.02.010">https://doi.org/https://doi.org/10.1016/j.cell.2018.02.010</a>.</p>
+</div>
+<div id="ref-pereira2020covid">
+<p>[12] R.M. Pereira, D. Bertolini, L.O. Teixeira, C.N. Silla Jr, Y.M. Costa, COVID-19 identification in chest x-ray images on flat and hierarchical classification scenarios, Computer Methods and Programs in Biomedicine. (2020) 105532.</p>
+</div>
+<div id="ref-nanni2010local">
+<p>[13] L. Nanni, A. Lumini, S. Brahnam, Local binary patterns variants as texture descriptors for medical image analysis, Artificial Intelligence in Medicine. 49 (2010) 117–125.</p>
+</div>
+<div id="ref-bunkhumpornpat2012dbsmote">
+<p>[14] C. Bunkhumpornpat, K. Sinapiromsaran, C. Lursinsap, DBSMOTE: Density-based synthetic minority over-sampling technique, Applied Intelligence. 36 (2012) 664–684.</p>
+</div>
+<div id="ref-han2005borderline">
+<p>[15] H. Han, W.-Y. Wang, B.-H. Mao, Borderline-smote: A new over-sampling method in imbalanced data sets learning, in: International Conference on Intelligent Computing, Springer, 2005: pp. 878–887.</p>
+</div>
+<div id="ref-he2008adasyn">
+<p>[16] H. He, Y. Bai, E.A. Garcia, S. Li, ADASYN: Adaptive synthetic sampling approach for imbalanced learning, in: 2008 Ieee International Joint Conference on Neural Networks (Ieee World Congress on Computational Intelligence), IEEE, 2008: pp. 1322–1328.</p>
+</div>
+<div id="ref-fernandez2013analysing">
+<p>[17] A. FernáNdez, V. LóPez, M. Galar, M.J. Del Jesus, F. Herrera, Analysing the classification of imbalanced data-sets with multiple classes: Binarization techniques and ad-hoc approaches, Knowledge-Based Systems. 42 (2013) 97–110.</p>
+</div>
+<div id="ref-albahri2020role">
+<p>[18] A. Albahri, R.A. Hamid, others, Role of biological data mining and machine learning techniques in detecting and diagnosing the novel coronavirus (covid-19): A systematic review, Journal of Medical Systems. 44 (2020).</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://github.com/rezacsedu/DeepCOVIDExplainer" class="uri">https://github.com/rezacsedu/DeepCOVIDExplainer</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia" class="uri">https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p><a href="https://www.kaggle.com/c/rsna-pneumonia-detection-challenge" class="uri">https://www.kaggle.com/c/rsna-pneumonia-detection-challenge</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://github.com/ieee8023/covid-chestxray-dataset" class="uri">https://github.com/ieee8023/covid-chestxray-dataset</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
