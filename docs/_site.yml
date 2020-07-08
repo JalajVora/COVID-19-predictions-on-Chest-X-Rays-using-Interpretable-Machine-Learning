@@ -3,11 +3,11 @@ navbar:
   title: "COVID-19 Prediction using Explainable Machine Learning"
   left:
     - text: "Home"
-      href: index.html
+      href: _site/index.html
     - text: "Exploratory Data Analysis"
-      href: Exploratory-Data-Analysis.html
+      href: _site/Exploratory-Data-Analysis.html
     - text: "Classification"
-      href: Classification.html
+      href: _site/Classification.html
     - text: "Results"
-      href: Results.html
+      href: _site/Results.html
     
