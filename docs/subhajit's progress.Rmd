@@ -75,14 +75,8 @@ library(ROSE)
 ```
 
 ```{r wd, echo=FALSE}
-setwd("C:\\Users\\jalaj\\Documents\\GitHub\\Data-Science-with-R-Project\\covid-dataset")
-getwd()
 load("covid_data_new_masked")
 glass.df = covid_data
-```
-
-```{r data-dim, echo=TRUE}
-dim(glass.df)
 ```
 
 
@@ -96,12 +90,6 @@ set.seed(123)
 ind = sample(2, nrow(glass.df), replace = TRUE, prob=c(0.7,0.3))
 train.df = glass.df[ind == 1,]
 test.df = glass.df[ind == 2,]
-dim(train.df)
-dim(test.df)
-
-table(train.df$V59)
-
-table(test.df$V59)
 ```
 
 
