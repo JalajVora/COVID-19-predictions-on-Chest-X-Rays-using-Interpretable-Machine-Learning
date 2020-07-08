@@ -84,7 +84,23 @@ The dataset consists of 1313 Chest X-rays images. These images are grayscale ima
 ``` {r cropped, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
 library(magick)
 covid.neg <- image_read('C:/Users/jalaj/Documents/DataSci with R/Project Files/covid-dataset/covid-negative/1.jpg')
-cropped <- image_crop(covid.neg, width = 256, height = 256)
+resized <- image_scale(covid.neg, "256x256")
+print(resized)
+```
+<center> 
+![original image](1.jpg_plot.png)
+![Masked image](1-mask.png) 
+![image](1.jpgtmp.png)
+![image2](1.png)
+</center>
+
+```{r data-explorer, echo=FALSE}
+library(DataExplorer)
+data <- dataset
+#DataExplorer::create_report(data)
+plot_bar(data)
+plot_histogram(data)
+plot_correlation(na.omit(data), maxcat = 5L)
 ```
 ***
 
