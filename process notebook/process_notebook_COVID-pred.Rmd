@@ -112,7 +112,8 @@ library(funModeling)
 freq(covid_data$V59)
 mytable <- table(covid_data$V59)
 lbls <- c("0", "1")
-pie(mytable, labels =  lbls, col=rainbow(length(lbls)), main = "Pie Chart for number of positives and negatives" )
+piepercent<- round(100*mytable/sum(mytable), 1)
+pie(mytable, labels =  piepercent, col=rainbow(length(lbls)), main = "Pie Chart for number of positives and negatives")
 ```
 
 ***
