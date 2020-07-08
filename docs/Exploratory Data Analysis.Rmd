@@ -45,9 +45,7 @@ In particular we have used the [COVID-19 Dataset-Repo](https://shorturl.at/qwLR0
 
 ***
 
-## Exploratory Data Analysis:
-
-### <span class="sub-header">Data Exploration</span>
+## Data Exploration:
 
 Real world datasets are mostly imbalanced. The COVID-19 CXR (Chest X-Rays) dataset we used has around 1000 to 313 negative to positive ratio. That there are nearly three times more negative cases than that of positive. The classification algorithms in this case tends to favor the majority class. The distribution of the classes in the dataset in reality refers to the actual class distribution of the covid affected cases. Hence, the learning task in hand is a imbalanced learning task because there are more people with healthy lungs than that of with COVID-19.
 
@@ -191,102 +189,6 @@ plot_prcomp(pca_df, variance_cap = 0.9, nrow = 2L, ncol = 2L)
 
 
 ***
-
-# Model {.tabset}
-
-## kNN
-
-K-Neigherst Neighbour is one of the models used for classification. kNN has been successfully used in tasks where texture-based descriptors are used [@sorensen2008texture]. In kNN classification, we expect that the classifier will examine the k nearest neighbors and return the class labels associated with the majority of k nearest neighbor. The accuracy of the model depends heavily on k, i.e. the number of nearest neighbors to consider for classification purpose. So, each neighbor adds a vote or a confidence towards the classification of a query instance. We use this model, in hope that the features extracted above captures the specific discriminatory properties of the lung area and on similar note the nearest neighbors will capture the same properties. 
-
-### Parameters and Settings 
-
-We initially split the data by a proportion of 30:70 distributed among both the classes for test and training purpose.
-You can also embed plots, for example:
-
-```{r libraries, results='hide', warning = FALSE, message=FALSE}
-
-library(caret)
-library(ggplot2)
-library(wvtool)
-library(imager)
-library(ROSE)
-```
-
-```{r wd, echo=FALSE}
-load("covid_data_new_masked")
-glass.df = covid_data
-```
-
-
-```{r pre-process, echo=TRUE}
-# all the independent variables are numbers
-# we will convert the type variable which is the response variable as factor
-glass.df$V59<- as.factor(glass.df$V59) # 7 labels
-
-# training and test data 70:30
-set.seed(123)
-ind = sample(2, nrow(glass.df), replace = TRUE, prob=c(0.7,0.3))
-train.df = glass.df[ind == 1,]
-test.df = glass.df[ind == 2,]
-```
-
-
-For training, to tackle the class imbalance problem and we use 10 cross validation with 3 repeats. That is data will be split entirely 3 times, and for each of the 3 times, 10-fold cross validation is done for validation.
-
-``` {r echo=TRUE}
-trctrl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
-```
-
-For evaluation of K, we decide at train time, the number that gives the highest accuracy. In our case, k=9 gave us the best accuracy.
-``` {r results='hide', warning = FALSE, message=FALSE}
-
-knn_fit <- train(V59 ~., data = train.df, method = "knn",
-                 trControl=trctrl,
-                 preProcess = c("center", "scale"),
-                 tuneLength = 15)
-
-```
-
-
-```{r}
-
-summary(knn_fit)
-plot(knn_fit)
-
-```
-The pipeline of KNN model we use, additionally centers and scales the data. The unseen instances are also subject to the same fit.
-
-
-We also use a setting where the response is not a discrete  positive or negative output but, gives the prediction confidence(probability) of the classifier for both of the classes.
-
-
-**Results:** We test the model with the test data that was initially split out from the overall dataset
-
-``` {r prediction, echo = TRUE}
-test_pred <- predict(knn_fit, newdata = test.df)
-summary(test_pred)
-confusionMatrix(test_pred, test.df$V59)
-roc.curve(test.df$V59, test_pred, plotit = T)
-```
-## SVM with Rbf kernel
-
-(tab content)
-
-## Logitistic Regression
-
-(tab content)
-
-## Random Forest
-
-(tab content)
-
-### Decision Trees
-
-(tab content)
-
-## Naive Bayes
-
-(tab content)
 
 
 # References
