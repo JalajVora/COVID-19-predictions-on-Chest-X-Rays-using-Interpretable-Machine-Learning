@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Exploratory Data Analysis</title>
+
+<script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 45px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h2 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h3 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h4 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h5 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.section h6 {
+  padding-top: 50px;
+  margin-top: -50px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">COVID-19 Prediction using Explainable Machine Learning</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Exploratory-Data-Analysis.html">Exploratory Data Analysis</a>
+</li>
+<li>
+  <a href="Classification.html">Classification</a>
+</li>
+<li>
+  <a href="Results.html">Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Exploratory Data Analysis</h1>
+
+</div>
+
+
+<p>     </p>
+<div id="data-imbalance" class="section level1">
+<h1>Data Imbalance</h1>
+<p>Real world datasets are mostly imbalanced. The COVID-19 CXR (Chest X-Rays) dataset we used has around 1000 to 313 negative to positive ratio. That there are nearly three times more negative cases than that of positive. The classification algorithms in this case tends to favor the majority class. The distribution of the classes in the dataset in reality refers to the actual class distribution of the covid affected cases. Hence, the learning task in hand is a imbalanced learning task because there are more people with healthy lungs than that of with COVID-19.</p>
+<p>There are several methods to deal with this problem in classification setting, where the main objective is to rebalance the distribution by resampling the data to reduce the class imbalance problem, namely oversampling and under sampling. For our purpose we have used k fold cross-validation to train our model, where the data is split into multiple portions, and then (k-1) splits are used for training and 1 split for validation. And then this process is repeated several times.</p>
+</div>
+<div id="feature-extraction" class="section level1">
+<h1>Feature Extraction</h1>
+<p>For CXR images, the visual attribute that shows the most promising results are the texture based descriptors. There are several texture based descriptors that are available, both handcrafted and non handcrafted, however, we have focused mostly on the widely used Local Binary Patterns, formularized by <span class="citation">[<a href="#ref-ojala1996comparative" role="doc-biblioref">1</a>]</span>.</p>
+<p>LBP is a powerful texture descriptor, that has been applied on several classification tasks involving the texture. The LBP is calculated on a pixel to pixel basis by considering a center pixel(c) and its neighbourhood pixels (n) with some radius. Each neighbour pixel n is compared with center pixel c by means of substracting the grey values say g(c) and g(n) to get a distance d, such that if the d is negative then 0 is substituted in the place of the neighbour pixel else 1.</p>
+<p><span class="math display">\[d = 1~~iff~~g(c)-g(n)≥0\]</span> <span class="math display">\[d=0~otherwise\]</span></p>
+<p>The descriptor is then the histogram of such which counts the occurrence of binary pattens. The histogram depends on the setup of the radius and the obviously the pixel neighborhood. LBP has been successfully tried on several classification techniques <span class="citation">[<a href="#ref-paula2014forest" role="doc-biblioref">2</a>]</span></p>
+<p><strong>Parameters:</strong> Parameters used for the purpose are LBP <sub>8,2</sub> with 58 dimensions. The details of the parameters can be found in <span class="citation">[<a href="#ref-ojala1996comparative" role="doc-biblioref">1</a>]</span>.</p>
+<p><strong>Vectors:</strong> As is previously explained there are total of 58 dimensions, to the descriptor. For a given CXR image we initially ran the descriptor on the complete image, and thus the descriptors obtained were very rich.</p>
+<p>For the given image:</p>
+<center>
+<img src="1.jpgtmp.png" alt="cxr" /> <img src="lbp_without_mask.png" alt="lbp_without_mask" />
+</center>
+<p>However, with this setting there is a problem, that the CXR image not only captures the area of the lungs but the whole rib cage, which includes other organs too. Hence there is much noise considering out aim of getting the features our of the are of the lungs. For that purpose we used segmentation (details in segmentation area), to segment the area of the lungs our by means of a mask and then calculate the LBP for the masked area.</p>
+<center>
+<img src="1.jpgtmp.png" alt="1.jpgtmp.png" /> <img src="1-mask.png" alt="1-mask.png" /> <img src="lbp_with_mask.png" alt="lbp_with_mask.png" />
+</center>
+<p>As expected in this case, some of the bins of the histogram are empty due to the usage of masking of the image.</p>
+</div>
+<div id="model" class="section level1 tabset">
+<h1 class="tabset">Model</h1>
+<div id="knn" class="section level2">
+<h2>kNN</h2>
+<p>K-Neigherst Neighbour is one of the models used for classification. kNN has been successfully used in tasks where texture-based descriptors are used <span class="citation">[<a href="#ref-sorensen2008texture" role="doc-biblioref">3</a>]</span>. In kNN classification, we expect that the classifier will examine the k nearest neighbors and return the class labels associated with the majority of k nearest neighbor. The accuracy of the model depends heavily on k, i.e. the number of nearest neighbors to consider for classification purpose. So, each neighbor adds a vote or a confidence towards the classification of a query instance. We use this model, in hope that the features extracted above captures the specific discriminatory properties of the lung area and on similar note the nearest neighbors will capture the same properties.</p>
+<div id="parameters-and-settings" class="section level3">
+<h3>Parameters and Settings</h3>
+<p>We initially split the data by a proportion of 30:70 distributed among both the classes for test and training purpose. You can also embed plots, for example:</p>
+<pre class="r"><code>library(caret)
+library(ggplot2)
+library(wvtool)
+library(imager)
+library(ROSE)</code></pre>
+<pre class="r"><code># all the independent variables are numbers
+# we will convert the type variable which is the response variable as factor
+glass.df$V59&lt;- as.factor(glass.df$V59) # 7 labels
+
+# training and test data 70:30
+set.seed(123)
+ind = sample(2, nrow(glass.df), replace = TRUE, prob=c(0.7,0.3))
+train.df = glass.df[ind == 1,]
+test.df = glass.df[ind == 2,]</code></pre>
+<p>For training, to tackle the class imbalance problem and we use 10 cross validation with 3 repeats. That is data will be split entirely 3 times, and for each of the 3 times, 10-fold cross validation is done for validation.</p>
+<pre class="r"><code>trctrl &lt;- trainControl(method = &quot;repeatedcv&quot;, number = 10, repeats = 3)</code></pre>
+<p>For evaluation of K, we decide at train time, the number that gives the highest accuracy. In our case, k=9 gave us the best accuracy.</p>
+<pre class="r"><code>knn_fit &lt;- train(V59 ~., data = train.df, method = &quot;knn&quot;,
+                 trControl=trctrl,
+                 preProcess = c(&quot;center&quot;, &quot;scale&quot;),
+                 tuneLength = 15)</code></pre>
+<pre class="r"><code>summary(knn_fit)</code></pre>
+<pre><code>##             Length Class      Mode     
+## learn        2     -none-     list     
+## k            1     -none-     numeric  
+## theDots      0     -none-     list     
+## xNames      58     -none-     character
+## problemType  1     -none-     character
+## tuneValue    1     data.frame list     
+## obsLevels    2     -none-     character
+## param        0     -none-     list</code></pre>
+<pre class="r"><code>plot(knn_fit)</code></pre>
+<p><img src="Exploratory-Data-Analysis_files/figure-html/unnamed-chunk-3-1.png" width="672" /> The pipeline of KNN model we use, additionally centers and scales the data. The unseen instances are also subject to the same fit.</p>
+<p>We also use a setting where the response is not a discrete positive or negative output but, gives the prediction confidence(probability) of the classifier for both of the classes.</p>
+<p><strong>Results:</strong> We test the model with the test data that was initially split out from the overall dataset</p>
+<pre class="r"><code>test_pred &lt;- predict(knn_fit, newdata = test.df)
+summary(test_pred)</code></pre>
+<pre><code>##   0   1 
+## 334  53</code></pre>
+<pre class="r"><code>confusionMatrix(test_pred, test.df$V59)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 286  48
+##          1   9  44
+##                                           
+##                Accuracy : 0.8527          
+##                  95% CI : (0.8134, 0.8865)
+##     No Information Rate : 0.7623          
+##     P-Value [Acc &gt; NIR] : 7.525e-06       
+##                                           
+##                   Kappa : 0.5242          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 4.823e-07       
+##                                           
+##             Sensitivity : 0.9695          
+##             Specificity : 0.4783          
+##          Pos Pred Value : 0.8563          
+##          Neg Pred Value : 0.8302          
+##              Prevalence : 0.7623          
+##          Detection Rate : 0.7390          
+##    Detection Prevalence : 0.8630          
+##       Balanced Accuracy : 0.7239          
+##                                           
+##        &#39;Positive&#39; Class : 0               
+## </code></pre>
+<pre class="r"><code>roc.curve(test.df$V59, test_pred, plotit = T)</code></pre>
+<p><img src="Exploratory-Data-Analysis_files/figure-html/prediction-1.png" width="672" /></p>
+<pre><code>## Area under the curve (AUC): 0.724</code></pre>
+</div>
+</div>
+<div id="svm-with-rbf-kernel" class="section level2">
+<h2>SVM with Rbf kernel</h2>
+<p>(tab content)</p>
+</div>
+<div id="logitistic-regression" class="section level2">
+<h2>Logitistic Regression</h2>
+<p>(tab content)</p>
+</div>
+<div id="random-forest" class="section level2">
+<h2>Random Forest</h2>
+<p>(tab content)</p>
+<div id="decision-trees" class="section level3">
+<h3>Decision Trees</h3>
+<p>(tab content)</p>
+</div>
+</div>
+<div id="naive-bayes" class="section level2">
+<h2>Naive Bayes</h2>
+<p>(tab content)</p>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references">
+<div id="ref-ojala1996comparative">
+<p>[1] T. Ojala, M. Pietikäinen, D. Harwood, A comparative study of texture measures with classification based on featured distributions, Pattern Recognition. 29 (1996) 51–59.</p>
+</div>
+<div id="ref-paula2014forest">
+<p>[2] P.L. Paula Filho, L.S. Oliveira, S. Nisgoski, A.S. Britto, Forest species recognition using macroscopic images, Machine Vision and Applications. 25 (2014) 1019–1031.</p>
+</div>
+<div id="ref-sorensen2008texture">
+<p>[3] L. Sørensen, S.B. Shaker, M. De Bruijne, Texture classification in lung ct using local binary patterns, in: International Conference on Medical Image Computing and Computer-Assisted Intervention, Springer, 2008: pp. 934–941.</p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
