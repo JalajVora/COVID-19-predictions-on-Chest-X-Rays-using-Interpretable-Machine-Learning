@@ -25,16 +25,80 @@ csl: data-and-knowledge-engineering.csl
 &nbsp;
 &nbsp;
 
-# Data Imbalance
+```{r setup, echo=FALSE}
+#setwd("C:\\Users\\jalaj\\Documents\\GitHub\\Data-Science-with-R-Project\\covid-dataset")
+load('covid_data_new_masked')
+dataset <- covid_data
+```
+
+
+
+## Dataset:
+According to [@Zhao2020COVIDCTDatasetAC; @wang2020deep; @li2020artificial; @karim2020deepcovidexplainer; @singh2020classification] CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F~1~-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won't be that competible in terms of quality w.r.t CT-Scans but @KERMANY20181122 suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.
+
+In particular we have used the [COVID-19 Dataset-Repo](https://shorturl.at/qwLR0) as our Ground Truth.
+
+[^1]: https://github.com/rezacsedu/DeepCOVIDExplainer
+[^2]: https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia
+[^3]: https://www.kaggle.com/c/rsna-pneumonia-detection-challenge
+[^4]: https://github.com/ieee8023/covid-chestxray-dataset
+
+***
+
+## Exploratory Data Analysis:
+
+### <span class="sub-header">Data Exploration</span>
 
 Real world datasets are mostly imbalanced. The COVID-19 CXR (Chest X-Rays) dataset we used has around 1000 to 313 negative to positive ratio. That there are nearly three times more negative cases than that of positive. The classification algorithms in this case tends to favor the majority class. The distribution of the classes in the dataset in reality refers to the actual class distribution of the covid affected cases. Hence, the learning task in hand is a imbalanced learning task because there are more people with healthy lungs than that of with COVID-19.
 
 
 There are several methods to deal with this problem in classification setting, where the main objective is to rebalance the distribution by resampling the data to reduce the class imbalance problem, namely oversampling and under sampling. For our purpose we have used k fold cross-validation to train our model, where the data is split into multiple portions, and then (k-1) splits are used for training and 1 split for validation. And then this process is repeated several times.
+Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @karim2020deepcovidexplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @cohen2020covid. 
+
+The image below is an instance of COVID negative image. The figure above shows an instance of a COVID-19 negative images. Similar to this image, all the images in the dataset are in Standard RGB color space. The dataset contains files in `.jpg`, `.jpeg` and `.png` formats. All the files are standardised to `.png` format for the ease of further processing.
+``` {r cropped, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+library(magick)
+covid.neg <- image_read('C:/Users/jalaj/Documents/DataSci with R/Project Files/covid-dataset/covid-negative/1.jpg')
+print(covid.neg)
+```
 
 
-# Feature Extraction
+These are 1000 COVID-19 negative and 313 COVID-19 positive CXR images. This shows a high skew towards positives in the dataset just for the reason of less availability of negatives in comparision to positives. 
+```{r distribution_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
+library(ggplot2)
+qplot(covid_data$V59, binwidth=0.1, main = 'Data Distribution Histogram', xlab = 'Target Variable', ylab = 'Number of Samples')
+```
 
+
+The figure above shows the skewness of the distribution of the data. The plot states the frequency of the positive and negative images in the dataset. Here, for the interpretation; 0 is taken as COVID negative and 1 as COVID positive. The figure delineates the ratio of images as being approx. 3:1. This signifies the data being skewed towards the positive instances.
+
+
+``` {r data-frequency, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
+library(funModeling)
+freq(covid_data$V59)
+```
+
+Pie chart is the simplest representation of the dataset. This shows amount of images in percentage.
+``` {r pie-chart, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
+
+mytable <- table(covid_data$V59)
+lbls <- c("0", "1")
+piepercent<- round(100*mytable/sum(mytable), 1)
+pie(mytable, labels =  piepercent, col=rainbow(length(lbls)), main = "Percentage of positives and negatives")
+```
+
+
+
+### <span class="sub-header">Data Pre-processing</span>
+
+The raw images are fed into the Local Binary Pattern Algorithm. The Algorithm takes the images and resizes into 256*256 height to width format.
+
+```{r resizing, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
+scaled <- image_scale(covid.neg, "256x256")
+print(scaled)
+```
+
+### <span class="sub-header">Feature Extraction</span>
 For CXR images, the visual attribute that shows the most promising results are the texture based descriptors. There are several texture based descriptors that are available, both handcrafted and non handcrafted, however, we have focused mostly on the widely used Local Binary Patterns, formularized by [@ojala1996comparative].
 
 
@@ -49,19 +113,84 @@ The descriptor is then the histogram of such which counts the occurrence of bina
 
 **Vectors:** As is previously explained there are total of 58 dimensions, to the descriptor. For a given CXR image we initially ran the descriptor on the complete image, and thus the descriptors obtained were very rich.
 
-For the given image:
+However, with this setting there is a problem, that the CXR image not only captures the area of the lungs but the whole rib cage, which includes other organs too. Hence there is much noise considering out aim of getting the features our of the are of the lungs. For that purpose we used [segmentations](https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/), to segment the area of the lungs our by means of a mask and then calculate the LBP for the masked area.
 
+```{r resize, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'left'}
+print(scaled)
+```
 <center>
-![cxr](1.jpgtmp.png)  ![lbp_without_mask](lbp_without_mask.png)
+![1.jpgtmp.png](1.jpgtmp.png)  ![1-mask.png](1-mask.png)
 </center>
 
-However, with this setting there is a problem, that the CXR image not only captures the area of the lungs but the whole rib cage, which includes other organs too. Hence there is much noise considering out aim of getting the features our of the are of the lungs. For that purpose we used segmentation (details in segmentation area), to segment the area of the lungs our by means of a mask and then calculate the LBP for the masked area.
+As expected in this case, the figure below shows some of the bins of the histogram are empty due to the usage of masking of the image.
 
-<center>
-![1.jpgtmp.png](1.jpgtmp.png)  ![1-mask.png](1-mask.png) ![lbp_with_mask.png](lbp_with_mask.png)
-</center>
+![Histogram of Image after LBP](Histogram_after_lbp.png)
 
-As expected in this case, some of the bins of the histogram are empty due to the usage of masking of the image.
+All the images are converted into grayscale because the Local Binary Pattern works only with grayscale images.
+
+```
+img <- grayscale(img)
+```
+
+The Algorithm converts the images into a data matrix and feds it into local binary function which creates the lbp vectors for the corresponding image.
+
+```
+imgm <- data.matrix(img)
+lbpd <- lbp(imgm, 2)
+```
+
+Thereafter, it forms a dataframe of 1313 rows and 59 columns where 59th column being the Target Class with values `0` for COVID negatives and `1` for COVID positives.
+```{r data-explorer, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+library(DataExplorer)
+#DataExplorer::create_report(data)
+introduce(dataset)
+plot_intro(dataset)
+```
+
+
+The figure below shows the structure of the data frame.
+```{r fram-struct, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_str(dataset)
+```
+
+Since the real world data can be messy, the following plot below shows the missing values in columns. All the columns are kept nameless and are therefore by default named **"V#"** with its repective column number.
+
+```{r plot, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_missing(dataset)
+```
+
+
+The figures below shows column-wise vector representation:
+``` {r bar, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_bar(dataset$V59)
+
+```
+
+The following plot shows visualisation of distribution of lbp vector column-wise:
+```{r hist, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_histogram(dataset)
+```
+
+
+The figure below shows that very few columns vectors appears to be correlated. This is the case because the data has been masked.
+``` {r bar1, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_correlation(na.omit(dataset))
+```
+
+The figure shows Quantile-Quantile plot showing distribution of all the columns compared to normal distribution.
+``` {r qq-plot, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+plot_qq(dataset, sampled_rows = 1000L)
+```
+
+
+The following shows the variance in percentage for all the lbp vectors by **Principal Component Analysis**.
+``` {r scatter, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+pca_df <- na.omit(dataset)
+plot_prcomp(pca_df, variance_cap = 0.9, nrow = 2L, ncol = 2L)
+```
+
+
+***
 
 # Model {.tabset}
 

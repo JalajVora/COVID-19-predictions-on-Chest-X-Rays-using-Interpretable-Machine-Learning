@@ -9,7 +9,7 @@ output:
       collapsed: true
       smooth_scroll: true
     theme: yeti
-    highlight: 
+    highlight: default
 link-citations: yes
 bibliography: references.bib
 csl: data-and-knowledge-engineering.csl
@@ -54,11 +54,6 @@ To answer the this question, we aim to answer few sub-questions:
 * Which flavour of algorithm perform best among all and is there a possibility of Classification in Ensemble setting?
 * Can we come up with explaination of our model's decsision and prediction?
 
-***
-
-## Related Work:
-
-(content)
 
 ***
 ## Dataset:
@@ -122,6 +117,30 @@ scaled <- image_scale(covid.neg, "256x256")
 print(scaled)
 ```
 
+### <span class="sub-header">Feature Extraction</span>
+For CXR images, the visual attribute that shows the most promising results are the texture based descriptors. There are several texture based descriptors that are available, both handcrafted and non handcrafted, however, we have focused mostly on the widely used Local Binary Patterns, formularized by [@ojala1996comparative].
+
+
+LBP is a powerful texture descriptor, that has been applied on several classification tasks involving the texture. The LBP is calculated on a pixel to pixel basis by considering a center pixel(c) and its neighbourhood pixels (n) with some radius. Each neighbour pixel n is compared with center pixel c by means of substracting the grey values say g(c) and g(n)  to get a distance d, such that if the d is negative then 0 is substituted in the place of the neighbour pixel else 1.
+
+$$d = 1~~iff~~g(c)-g(n)≥0$$
+$$d=0~otherwise$$
+
+The descriptor is then the histogram of such which counts the occurrence of binary pattens. The histogram depends on the setup of the radius and the obviously the pixel neighborhood. LBP has been successfully tried on several classification techniques [@paula2014forest]
+
+**Parameters:** Parameters used for the purpose are LBP ~8,2~ with 58 dimensions. The details of the parameters can be found in [@ojala1996comparative].
+
+**Vectors:** As is previously explained there are total of 58 dimensions, to the descriptor. For a given CXR image we initially ran the descriptor on the complete image, and thus the descriptors obtained were very rich.
+
+However, with this setting there is a problem, that the CXR image not only captures the area of the lungs but the whole rib cage, which includes other organs too. Hence there is much noise considering out aim of getting the features our of the are of the lungs. For that purpose we used [segmentations](https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/) [@10.1007/978-3-319-24574-4_28], to segment the area of the lungs our by means of a mask and then calculate the LBP for the masked area.
+<center>
+![original](1.jpg_plot.png)![1-mask.png](1-mask.png) ![1.jpgtmp.png](1.jpgtmp.png)  
+</center>
+
+As expected in this case, the figure below shows some of the bins of the histogram are empty due to the usage of masking of the image.
+
+<center>![Histogram of Image after LBP](Histogram_after_lbp.png)</center>
+
 All the images are converted into grayscale because the Local Binary Pattern works only with grayscale images.
 
 ```
@@ -179,6 +198,11 @@ plot_qq(dataset, sampled_rows = 1000L)
 ```
 
 
+The following shows the variance in percentage for all the lbp vectors by **Principal Component Analysis**.
+``` {r scatter, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
+pca_df <- na.omit(dataset)
+plot_prcomp(pca_df, variance_cap = 0.9, nrow = 2L, ncol = 2L)
+```
 
 
 ***
