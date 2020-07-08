@@ -1,11 +1,20 @@
 ---
+header-includes:
+   - \usepackage{bbm}
+always_allow_html: yes
+
 title: "Subhajit's Progress"
 author: "Subhajit"
-date: "7/4/2020"
+
+bookdown::html_document2: default
 output: html_document
 bibliography: references.bib
 csl: data-and-knowledge-engineering.csl
 ---
+
+&nbsp;
+&nbsp;
+&nbsp;
 
 # Data Imbalance
 

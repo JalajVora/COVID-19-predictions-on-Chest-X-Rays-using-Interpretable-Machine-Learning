@@ -9,7 +9,9 @@ output:
       collapsed: true
       smooth_scroll: true
     theme: yeti
-    highlight: 
+    highlight: default
+    
+bookdown::html_document2: default
 link-citations: yes
 bibliography: references.bib
 csl: data-and-knowledge-engineering.csl
@@ -23,6 +25,11 @@ references:
     year: 2020
     month: 1
 ---
+
+
+&nbsp;
+&nbsp;
+&nbsp;
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -157,6 +164,8 @@ packages <- c(
   "tidyverse",
   "kableExtra",
   "knitr"
+  "jsonlite"
+  "crul"
 )
 
 verify.packages <- function(pkg) {

@@ -1,10 +1,16 @@
 ---
+header-includes:
+   - \usepackage{bbm}
+always_allow_html: yes
 title: "SVM Documentation"
 author: "Jalaj"
-date: "7/2/2020"
+bookdown::html_document2: default
 output: html_document
 ---
 
+&nbsp;
+&nbsp;
+&nbsp;
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```

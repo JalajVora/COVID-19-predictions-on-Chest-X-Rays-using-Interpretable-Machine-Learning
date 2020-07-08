@@ -1,10 +1,16 @@
 ---
+header-includes:
+   - \usepackage{bbm}
+always_allow_html: yes
 title: "subhankar's Progress"
 author: "Jalaj"
-date: "7/4/2020"
+bookdown::html_document2: default
 output: html_document
 ---
 
+&nbsp;
+&nbsp;
+&nbsp;
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
