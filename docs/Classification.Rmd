@@ -37,7 +37,10 @@ references:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Data-Set
+
+
+
+## Data-Set {.tabset}
 
 Our dataset is a collection of 1313 CXR images containing COVID-19 positive and negative samples. There is a problem of class imbalance as we had 1000 negative samples compared to only 313 positive samples. The local binary patterns that we extracted from the CXR images have 58 dimensions. For class imbalance, we have implemented an oversampling technique that is provided by the R package ‘ROSE’, which basically means Random Over Sampling Examples. It’s a resampling function that generates synthetic balanced samples using holdout, bootstrap or cross-validation methods. After oversampling our dataset consisted of 1000 negative and 1031 positive examples.
 
@@ -89,7 +92,7 @@ rpart.plot(dttrain)
 rpart.plot(dttrain_criteria)
 ```
 
-## Random Forest
+### Random Forest
 
 Random forest is one of the algorithms we tried to apply on the lbp features that was extracted from the X-ray images. The implementation was done through the ‘randomForest’ package that is available in R. The package uses Breiman’s method of random forests for classification. But this package has the flexibility to be applied in a regression problem as well. In the default parameter setting, the no. of trees that the algorithm learns is 200. With that, we achieved an accuracy of about 89.67% with an F1 score of 0.74 in our dataset. The area under the ROC curve in this case was 0.802. On the over-sampled data, the accuracy dropped to 81.84% with an F1 score of 0.78. The area under the ROC curve in this case is 0.819.
 
@@ -155,7 +158,7 @@ rpart.plot(dttrain_over_criteria)
 rpart.plot(dttrain_over)
 ```
 
-## Decision Trees
+### Decision Trees
 
 For decision trees, we used the R library ‘rpart’ which is generally used to learn classification or regression trees. We ran this algorithm in its default setting (minsplit = 20 and minbucket = round(minsplit/3)) where minsplit is the minimum number of observations that must exist in a node for a split to occur and min bucket is the minimum number of observations in any leaf node. The accuracy that we obtained on the original dataset was 85.71% with an F1 score of 0.67. The area under the ROC curve in this case is 0.772. In the over-sampled dataset, the accuracy dropped to 74.49% with 0.72 as F1 score. The area under the ROC curve also dropped to 0.732.
 

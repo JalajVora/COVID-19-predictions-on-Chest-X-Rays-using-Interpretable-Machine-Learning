@@ -160,34 +160,4 @@ roc.curve(test.df$V59, test_pred, plotit = T)
 (tab content)
 
 
-
-
-
-
-
-# Explanations
-
-Apart from prediction of positive and negative for Covid-19 cases from CXR images, we try providing an explanation of which areas of the image contributes towards the predicted results. Local interpretable model-agnostic explanations (LIME) [@ribeiro2016should] is a local surrogate model. That is instead of explaining the global prediction, it only explains the local prediction. Therefore once the predictions are available, the LIME model can be run, in hope that, the model finds the areas of the image that contributes most towards the prediction.
-
-
-Given any(black box/transparent) model, the Lime model probes the model and gets the output any number of time(theoritically). Lime creates a data set consist of permutated samples of the images, and feed those images to the model and tries to predict what happens to the predictions for the permutated samples.
-
-
-We initially ran our application, while feeding the whole image. However, as expected the areas where the lime model is trying to explain, is outside the intended region. For that reason, we give the model, the masked lungs image as input, while the other parts of the image is black. We thus, force the lime model to do any changes in the model on the intended area. This time, as expected the lime model focuses more on the parts of the lungs and thus gives a better performance.
-
-<center>
-
-![1-mask.png](1-mask.png) ![1.jpgtmp.png](1.jpgtmp.png)  ![1.png](1.png)
-
-</center>
-
-
-
-**Parameters and settings:**
-As a part of preprocessing of the images to be fed to the lime model, we do greyscaling of the image. While no resizing is done, the image is processed so that the 1 channel greyscaled masked image is fed to the LIME model. 
-
-Number of features to find is set to 10. 
-
-Only “positive” areas are marked in the explanation image.
-
 # References

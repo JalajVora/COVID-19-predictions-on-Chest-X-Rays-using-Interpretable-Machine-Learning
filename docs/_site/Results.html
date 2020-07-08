@@ -486,10 +486,10 @@ library(ROSE)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre><code>## 
 ##   0   1 
-## 663 655</code></pre>
+## 668 657</code></pre>
 <pre><code>## 
 ##   0   1 
-## 337 341</code></pre>
+## 332 331</code></pre>
 </div>
 <div id="classification" class="section level3">
 <h3>Classification</h3>
@@ -516,9 +516,9 @@ svm_fit_ovs &lt;- svm(V59~., kernel = &#39;radial&#39;,
 ##  SVM-Kernel:  radial 
 ##        cost:  1 
 ## 
-## Number of Support Vectors:  992
+## Number of Support Vectors:  987
 ## 
-##  ( 620 372 )
+##  ( 631 356 )
 ## 
 ## 
 ## Number of Classes:  2 
@@ -534,7 +534,7 @@ svm_fit_ovs &lt;- svm(V59~., kernel = &#39;radial&#39;,
 <h3>Prediction</h3>
 <p><img src="Results_files/figure-html/prediction-1.png" width="672" /></p>
 <pre><code>##   0   1 
-## 656  22</code></pre>
+## 644  19</code></pre>
 </div>
 <div id="evaluation" class="section level3">
 <h3>Evaluation</h3>
@@ -544,39 +544,51 @@ svm_fit_ovs &lt;- svm(V59~., kernel = &#39;radial&#39;,
 ## 
 ## Examples are labelled as positive when predicted is greater than 0.5 
 ## 
-## precision: 0.503
+## precision: 0.499
 ## recall: 1.000
-## F: 0.335</code></pre>
-<pre><code>## Area under the curve (AUC): 0.532</code></pre>
+## F: 0.333</code></pre>
+<pre><code>## Area under the curve (AUC): 0.529</code></pre>
 <p><img src="Results_files/figure-html/evaluation-1.png" width="672" /></p>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction   0   1
-##          0 337 319
-##          1   0  22
-##                                           
-##                Accuracy : 0.5295          
-##                  95% CI : (0.4911, 0.5676)
-##     No Information Rate : 0.5029          
-##     P-Value [Acc &gt; NIR] : 0.08941         
-##                                           
-##                   Kappa : 0.0642          
-##                                           
-##  Mcnemar&#39;s Test P-Value : &lt; 2e-16         
-##                                           
-##             Sensitivity : 0.06452         
-##             Specificity : 1.00000         
-##          Pos Pred Value : 1.00000         
-##          Neg Pred Value : 0.51372         
-##              Prevalence : 0.50295         
-##          Detection Rate : 0.03245         
-##    Detection Prevalence : 0.03245         
-##       Balanced Accuracy : 0.53226         
-##                                           
-##        &#39;Positive&#39; Class : 1               
+##          0 332 312
+##          1   0  19
+##                                          
+##                Accuracy : 0.5294         
+##                  95% CI : (0.4906, 0.568)
+##     No Information Rate : 0.5008         
+##     P-Value [Acc &gt; NIR] : 0.07533        
+##                                          
+##                   Kappa : 0.0575         
+##                                          
+##  Mcnemar&#39;s Test P-Value : &lt; 2e-16        
+##                                          
+##             Sensitivity : 0.05740        
+##             Specificity : 1.00000        
+##          Pos Pred Value : 1.00000        
+##          Neg Pred Value : 0.51553        
+##              Prevalence : 0.49925        
+##          Detection Rate : 0.02866        
+##    Detection Prevalence : 0.02866        
+##       Balanced Accuracy : 0.52870        
+##                                          
+##        &#39;Positive&#39; Class : 1              
 ## </code></pre>
 </div>
+</div>
+<div id="explanations" class="section level1">
+<h1>Explanations</h1>
+<p>Apart from prediction of positive and negative for Covid-19 cases from CXR images, we try providing an explanation of which areas of the image contributes towards the predicted results. Local interpretable model-agnostic explanations (LIME) <span class="citation">[@ribeiro2016should]</span> is a local surrogate model. That is instead of explaining the global prediction, it only explains the local prediction. Therefore once the predictions are available, the LIME model can be run, in hope that, the model finds the areas of the image that contributes most towards the prediction.</p>
+<p>Given any(black box/transparent) model, the Lime model probes the model and gets the output any number of time(theoritically). Lime creates a data set consist of permutated samples of the images, and feed those images to the model and tries to predict what happens to the predictions for the permutated samples.</p>
+<p>We initially ran our application, while feeding the whole image. However, as expected the areas where the lime model is trying to explain, is outside the intended region. For that reason, we give the model, the masked lungs image as input, while the other parts of the image is black. We thus, force the lime model to do any changes in the model on the intended area. This time, as expected the lime model focuses more on the parts of the lungs and thus gives a better performance.</p>
+<center>
+<p><img src="1-mask.png" alt="1-mask.png" /> <img src="1.jpgtmp.png" alt="1.jpgtmp.png" /> <img src="1.png" alt="1.png" /></p>
+</center>
+<p><strong>Parameters and settings:</strong> As a part of preprocessing of the images to be fed to the lime model, we do greyscaling of the image. While no resizing is done, the image is processed so that the 1 channel greyscaled masked image is fed to the LIME model.</p>
+<p>Number of features to find is set to 10.</p>
+<p>Only “positive” areas are marked in the explanation image.</p>
 </div>
 
 

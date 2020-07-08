@@ -504,18 +504,6 @@ summary(test_pred)</code></pre>
 <p>(tab content)</p>
 </div>
 </div>
-<div id="explanations" class="section level1">
-<h1>Explanations</h1>
-<p>Apart from prediction of positive and negative for Covid-19 cases from CXR images, we try providing an explanation of which areas of the image contributes towards the predicted results. Local interpretable model-agnostic explanations (LIME) <span class="citation">[<a href="#ref-ribeiro2016should" role="doc-biblioref">4</a>]</span> is a local surrogate model. That is instead of explaining the global prediction, it only explains the local prediction. Therefore once the predictions are available, the LIME model can be run, in hope that, the model finds the areas of the image that contributes most towards the prediction.</p>
-<p>Given any(black box/transparent) model, the Lime model probes the model and gets the output any number of time(theoritically). Lime creates a data set consist of permutated samples of the images, and feed those images to the model and tries to predict what happens to the predictions for the permutated samples.</p>
-<p>We initially ran our application, while feeding the whole image. However, as expected the areas where the lime model is trying to explain, is outside the intended region. For that reason, we give the model, the masked lungs image as input, while the other parts of the image is black. We thus, force the lime model to do any changes in the model on the intended area. This time, as expected the lime model focuses more on the parts of the lungs and thus gives a better performance.</p>
-<center>
-<p><img src="1-mask.png" alt="1-mask.png" /> <img src="1.jpgtmp.png" alt="1.jpgtmp.png" /> <img src="1.png" alt="1.png" /></p>
-</center>
-<p><strong>Parameters and settings:</strong> As a part of preprocessing of the images to be fed to the lime model, we do greyscaling of the image. While no resizing is done, the image is processed so that the 1 channel greyscaled masked image is fed to the LIME model.</p>
-<p>Number of features to find is set to 10.</p>
-<p>Only “positive” areas are marked in the explanation image.</p>
-</div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references">
@@ -527,9 +515,6 @@ summary(test_pred)</code></pre>
 </div>
 <div id="ref-sorensen2008texture">
 <p>[3] L. Sørensen, S.B. Shaker, M. De Bruijne, Texture classification in lung ct using local binary patterns, in: International Conference on Medical Image Computing and Computer-Assisted Intervention, Springer, 2008: pp. 934–941.</p>
-</div>
-<div id="ref-ribeiro2016should">
-<p>[4] M.T. Ribeiro, S. Singh, C. Guestrin, " Why should i trust you?" Explaining the predictions of any classifier, in: Proceedings of the 22nd Acm Sigkdd International Conference on Knowledge Discovery and Data Mining, 2016: pp. 1135–1144.</p>
 </div>
 </div>
 </div>
