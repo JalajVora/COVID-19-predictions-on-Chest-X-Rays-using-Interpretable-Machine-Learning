@@ -7,7 +7,16 @@ title: "Subhajit's Progress"
 author: "Subhajit"
 
 bookdown::html_document2: default
-output: html_document
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_depth: 4
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+    theme: yeti
+    highlight: default
 bibliography: references.bib
 csl: data-and-knowledge-engineering.csl
 ---

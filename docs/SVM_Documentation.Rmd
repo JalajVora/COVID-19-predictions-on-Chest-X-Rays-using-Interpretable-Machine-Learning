@@ -5,7 +5,16 @@ always_allow_html: yes
 title: "SVM Documentation"
 author: "Jalaj"
 bookdown::html_document2: default
-output: html_document
+output:
+  html_document:
+    df_print: paged
+    toc: true
+    toc_depth: 4
+    toc_float: 
+      collapsed: true
+      smooth_scroll: true
+    theme: yeti
+    highlight: default
 ---
 
 &nbsp;
@@ -31,9 +40,6 @@ library(ROSE)
 
 ### Pre-Processing
 ```{r preprocessing, echo=FALSE}
-
-setwd("C:\\Users\\jalaj\\Documents\\DataSci with R\\Project Files\\Classifiers")
-getwd()
 
 load('covid_data_new_masked')
 dataset <- covid_data

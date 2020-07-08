@@ -110,7 +110,9 @@ The figure above shows the skewness of the distribution of the data. The plot st
 
 library(funModeling)
 freq(covid_data$V59)
-
+mytable <- table(covid_data$V59)
+lbls <- c("0", "1")
+pie(mytable, labels =  lbls, col=rainbow(length(lbls)), main = "Pie Chart for number of positives and negatives" )
 ```
 
 ***
