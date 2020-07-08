@@ -209,6 +209,21 @@ plot_prcomp(pca_df, variance_cap = 0.9, nrow = 2L, ncol = 2L)
 
 ## Final Analysis: {.tabset}
 
+Based on our approach, we initially tried to extract the features out of the CXR images without any segmentation. However, we found that the area of interest i.e., the lung area is a very small segment of the whole image. Hence, the noise around the lung area dominates the outcome of the classification. Moreover, we found that quality of CXR images highly affects the feature vectors. For this reason, we segmented the images to find the area of interest and extract our features on corresponding lung-segment. The results were better in that case. However, we could not deal with quality of images in terms of light exposure. 
+
+We tried explaining our prediction using `LIME` image module. Intially, we tried applying LIME on the whole image. However, the results were not good. All the areas highlighted by LIME were outside of lung-portion. So, we tried applying LIME on segmented image by applying black background on the non-lung area hoping that the LIME super-pixels will ignore the black backgrounded regions. We manually confirmed that any perturbed image outside the lung-segment area doesn't get a different prediction. However, we partially succeded on this approach where we noticed that only the negative COVID images (False Negatives too) were correctly marked by LIME. However, positive images could not be properly annotated by LIME within the area of interest.
+
+We also applied classification algorithms, on benchmark dataset and compared the performaces of simple intrinsically explainable models we used and found that some of the very simple models such as kNN, Naive Bayes and Random Forest are giving high accuracy. To our astonishment, SVM couldn't perform well in comparsion to these simpler models. 
+
+We proposed to work on an ensemble architecture where we use our simpler models to boost our confidence in prediction. However, such an approach couldn't give us the kind of robustness we expected. Hence, after seeing results with the ensemble approach, we dropped the idea of ensemble classification.
+
+We found Local Binary Pattern to be a powerful texture based descriptor, where the only justification of its usefulness can be seen when we compare our results with Neural Network based approaches in the benchmark section.
+
+## Conclusion
+We applied intrinsically explainable models and LIME explainer on CXR images, for COVID detection and explaination. The results obtained by the classifiers were of higher accuracy whereas LIME failed to perform the similarly. We observed that LBP are good dicriminatory feature vectors for CXR images, however we cannot mitigate the effect of luminosity, brightness and quality to the images. These factors add bias to our classifiers.
+
+It implies the features which we have used might not have behaved as discriminatory as expected, but we cannot rule out the bias of the annotators, which might have prevented us to get good results. The annotators categorizing the document might have been influenced by various aspects as mentioned in literature [9] while assigning them to the categories. Therefore it seems challenging for the machine learning algorithms to match with the human annotated categories.
+
 ### SVM {.tabset}
 
 We used Support Vector Classifiers with Radial Basis function as kernel. With the hyper-parameter tuning, we found value of cost = 1 and gamma = 0.5 to be optimal w.r.t our ground truth.
