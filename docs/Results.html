@@ -486,10 +486,10 @@ library(ROSE)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre><code>## 
 ##   0   1 
-## 667 655</code></pre>
+## 650 653</code></pre>
 <pre><code>## 
 ##   0   1 
-## 333 332</code></pre>
+## 350 360</code></pre>
 </div>
 <div id="classification" class="section level3">
 <h3>Classification</h3>
@@ -516,9 +516,9 @@ svm_fit_ovs &lt;- svm(V59~., kernel = &#39;radial&#39;,
 ##  SVM-Kernel:  radial 
 ##        cost:  1 
 ## 
-## Number of Support Vectors:  981
+## Number of Support Vectors:  991
 ## 
-##  ( 632 349 )
+##  ( 615 376 )
 ## 
 ## 
 ## Number of Classes:  2 
@@ -534,7 +534,7 @@ svm_fit_ovs &lt;- svm(V59~., kernel = &#39;radial&#39;,
 <h3>Prediction</h3>
 <p><img src="Results_files/figure-html/prediction-1.png" width="672" /></p>
 <pre><code>##   0   1 
-## 656   9</code></pre>
+## 694  16</code></pre>
 </div>
 <div id="evaluation" class="section level3">
 <h3>Evaluation</h3>
@@ -544,37 +544,37 @@ svm_fit_ovs &lt;- svm(V59~., kernel = &#39;radial&#39;,
 ## 
 ## Examples are labelled as positive when predicted is greater than 0.5 
 ## 
-## precision: 0.499
+## precision: 0.507
 ## recall: 1.000
-## F: 0.333</code></pre>
-<pre><code>## Area under the curve (AUC): 0.514</code></pre>
+## F: 0.336</code></pre>
+<pre><code>## Area under the curve (AUC): 0.522</code></pre>
 <p><img src="Results_files/figure-html/evaluation-1.png" width="672" /></p>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction   0   1
-##          0 333 323
-##          1   0   9
-##                                           
-##                Accuracy : 0.5143          
-##                  95% CI : (0.4756, 0.5529)
-##     No Information Rate : 0.5008          
-##     P-Value [Acc &gt; NIR] : 0.2549          
-##                                           
-##                   Kappa : 0.0271          
-##                                           
-##  Mcnemar&#39;s Test P-Value : &lt;2e-16          
-##                                           
-##             Sensitivity : 0.02711         
-##             Specificity : 1.00000         
-##          Pos Pred Value : 1.00000         
-##          Neg Pred Value : 0.50762         
-##              Prevalence : 0.49925         
-##          Detection Rate : 0.01353         
-##    Detection Prevalence : 0.01353         
-##       Balanced Accuracy : 0.51355         
-##                                           
-##        &#39;Positive&#39; Class : 1               
+##          0 350 344
+##          1   0  16
+##                                          
+##                Accuracy : 0.5155         
+##                  95% CI : (0.478, 0.5528)
+##     No Information Rate : 0.507          
+##     P-Value [Acc &gt; NIR] : 0.3399         
+##                                          
+##                   Kappa : 0.0438         
+##                                          
+##  Mcnemar&#39;s Test P-Value : &lt;2e-16         
+##                                          
+##             Sensitivity : 0.04444        
+##             Specificity : 1.00000        
+##          Pos Pred Value : 1.00000        
+##          Neg Pred Value : 0.50432        
+##              Prevalence : 0.50704        
+##          Detection Rate : 0.02254        
+##    Detection Prevalence : 0.02254        
+##       Balanced Accuracy : 0.52222        
+##                                          
+##        &#39;Positive&#39; Class : 1              
 ## </code></pre>
 </div>
 </div>
