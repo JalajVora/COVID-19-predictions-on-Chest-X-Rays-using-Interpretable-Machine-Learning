@@ -74,6 +74,9 @@ In particular we have used the [COVID-19 Dataset-Repo](https://shorturl.at/qwLR0
 ## Exploratory Data Analysis
 
 ### <span class="sub-header">Data Exploration</span>
+
+Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @karim2020deepcovidexplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @cohen2020covid.
+
 The original dataset used for the experiment contains total of 1313 CXR images. The image below is an instance of COVID negative image. The figure above shows an instance of a COVID-19 negative images. Similar to this image, all the images in the dataset are in Standard RGB color space. The dataset contains files in `.jpg`, `.jpeg` and `.png` formats. All the files are standardised to `.png` format for the ease of further processing.
 ``` {r cropped, echo=FALSE, warning=FALSE, message=FALSE, fig.align = 'center'}
 library(magick)
@@ -81,8 +84,11 @@ covid.neg <- image_read('C:/Users/jalaj/Documents/DataSci with R/Project Files/c
 print(covid.neg)
 ```
 
+Real world datasets are mostly imbalanced. The COVID-19 CXR (Chest X-Rays) dataset we used has around 1000 to 313 negative to positive ratio. That there are nearly three times more negative cases than that of positive. The classification algorithms in this case tends to favor the majority class. The distribution of the classes in the dataset in reality refers to the actual class distribution of the covid affected cases. Hence, the learning task in hand is a imbalanced learning task because there are more people with healthy lungs than that of with COVID-19.
 
-These are 1000 COVID-19 negative and 313 COVID-19 positive CXR images. This shows a high skew towards positives in the dataset just for the reason of less availability of negatives in comparision to positives. 
+There are several methods to deal with this problem in classification setting, where the main objective is to rebalance the distribution by resampling the data to reduce the class imbalance problem, namely oversampling and under sampling. For our purpose we have used k fold cross-validation to train our model, where the data is split into multiple portions, and then (k-1) splits are used for training and 1 split for validation. And then this process is repeated several times.
+
+The figure below shows a high skew towards positives in the dataset just for the reason of less availability of negatives in comparision to positives. 
 ```{r distribution_plot, echo=FALSE, message=FALSE, warning=FALSE, fig.align = 'center'}
 library(ggplot2)
 qplot(covid_data$V59, binwidth=0.1, main = 'Data Distribution Histogram', xlab = 'Target Variable', ylab = 'Number of Samples')
@@ -209,93 +215,95 @@ plot_prcomp(pca_df, variance_cap = 0.9, nrow = 2L, ncol = 2L)
 
 ## Classification {.tabset}
 
-### SVM 
+### SVM
 
-We used Support Vector Classifiers with Radial Basis function as kernel. With the hyper-parameter tuning, we found value of cost = 1 and gamma = 0.5 to be optimal w.r.t our ground truth.
+We experimented with Support Vector Classifiers with Radial Basis function as kernel. The following diagram shows the data before over-sampling.
 
-
-#### Library Imports
-
-The CRAN packages `e1071` for classification using Support Vector Classifiers with Radial Basis Function kernel and hyper-parameter tuning and `ROSE` for over-sampling of data are being used.
-```{r library, echo=TRUE}
+``` {r lib-load, echo = TRUE, warning = FALSE, message = FALSE}
 library(e1071)
-library(ROSE)
-```
-
-
-#### Pre-Processing
-```{r preprocessing, echo=FALSE}
+library(imbalance)
+library(DataExplorer)
 
 load('covid_data_new_masked')
 dataset <- covid_data
-summary(dataset)
+plot_bar(dataset$V59)
+```
 
+Before feeding data onto the classifier, we oversampled with AdaSyn method.
 
-#Factoring the Target variable of (0,1)
-dataset$V59 = factor(dataset$V59, levels = c(0, 1))
-print(is.factor(dataset$V59))
+``` {r over-smpl, echo = TRUE, warning = FALSE, message = FALSE}
+#Over-sampling
+df.adasyn <- oversample(dataset, method = "ADASYN", classAttr = "V59")
+df.adasyn$V59 = factor(df.adasyn$V59, levels = c(0, 1))
+plot_bar(df.adasyn$V59)
 
-#Dataset Split
-index <- 1:nrow(dataset)
+#train-test split
+index <- 1:nrow(df.adasyn)
 testindex <- sample(index, trunc(length(index)/3))
-testset <- dataset[testindex,]
-trainset <- dataset[-testindex,]
-
-
-#Over-Sampling
-train_ov_sampled <- ovun.sample(V59 ~ ., trainset, method = "over")$data
-table(train_ov_sampled$V59)
-
-test_ov_sampled <- ovun.sample(V59 ~ ., testset, method = "over")$data
-table(test_ov_sampled$V59)
-
+testset <- df.adasyn[testindex,]
+trainset <- df.adasyn[-testindex,]
 ```
 
-#### Classification
-``` {r classification, echo=TRUE}
+For hyper-parameter tuning, we have kept value of cost = 1 and gamma = 0.5 following a similar approach to [@pereira2020covid].
+``` {r clf-train, echo = TRUE, warning = FALSE, message = FALSE}
 set.seed(825)
-
-#fitting the Support Vector Machine to the Training set
+#Training the model to the Training set
 svm_fit_ovs <- svm(V59~., kernel = 'radial',
-               data = train_ov_sampled, scale=TRUE, cachesize = 200,
-               probability = TRUE, gamma = 0.5, cost = 1)
+               data = trainset, scale=TRUE, cachesize = 200,
+               probability = TRUE, gamma = 0.1, cost = 1)
 
-summary(svm_fit_ovs)
-
-
-#Hyper-Parameter Tuning
-# obj <- tune.svm(V59~., data = train_ov_sampled, sampling = "cross",
-#           gamma = 2^c(-1:4), cost = c(1:10))
-# summary(obj)
-```
-
-#### Prediction
-```{r prediction, echo=FALSE}
 #Predicting the test set results
-svm.pred.ovs <- predict(svm_fit_ovs, test_ov_sampled[,-59], probability = TRUE)
-
-
-plot(svm.pred.ovs)
-
-summary(svm.pred.ovs)
+svm.pred.ovs <- predict(svm_fit_ovs, testset[,-59], probability = TRUE)
 ```
 
 
-#### Evaluation
-```{r evaluation, echo=FALSE}
-#Evaluation on Test_Set
-accuracy.meas(response = test_ov_sampled$V59, predicted = svm.pred.ovs)
-
-roc.curve(test_ov_sampled$V59, svm.pred.ovs, plotit = T)
-
-caret::confusionMatrix(svm.pred.ovs, test_ov_sampled$V59, positive = '1')
+For the evaluation part, we calculated Accuracy, F~1~-Score, Precision, Recall and AUC/ROC. The confusion matrix shows that SVM performs with approx. 53% of accuracy whereas the Area Under ROC is approx. 54% as well.
+``` {r evaluation, echo = TRUE, warning = FALSE, message = FALSE}
+#Evaluation
+ROSE::accuracy.meas(response = testset$V59, predicted = svm.pred.ovs)
+ROSE::roc.curve(testset$V59, svm.pred.ovs, plotit = T)
+caret::confusionMatrix(svm.pred.ovs, testset$V59, positive = '1')
 ```
+
+***
+
+### kNN
+
+(content)
+
+### Tree Classifiers {.tabset}
+
+(content)
+
+***
+
+#### Random Forest
+
+(content)
+
+***
+
+#### Decision Trees
+
+(content)
+
+***
+
+### Logistic Regression
+
+(content)
+
+***
+
+### Naive Bayes
+
+(content)
 
 ***
 
 ## Explanations
 
-Apart from prediction of positive and negative for Covid-19 cases from CXR images, we try providing an explanation of which areas of the image contributes towards the predicted results. Local interpretable model-agnostic explanations (LIME) [@ribeiro2016should] is a local surrogate model. That is instead of explaining the global prediction, it only explains the local prediction. Therefore once the predictions are available, the LIME model can be run, in hope that, the model finds the areas of the image that contributes most towards the prediction.
+Apart from prediction of positive and negative for COVID-19 cases from CXR images, we try providing an explanation of which areas of the image contributes towards the predicted results. Local interpretable model-agnostic explanations (LIME) [@ribeiro2016should] is a local surrogate model. That is instead of explaining the global prediction, it only explains the local prediction. Therefore once the predictions are available, the LIME model can be run, in hope that, the model finds the areas of the image that contributes most towards the prediction.
 
 
 Given any(black box/transparent) model, the Lime model probes the model and gets the output any number of time(theoritically). Lime creates a data set consist of permutated samples of the images, and feed those images to the model and tries to predict what happens to the predictions for the permutated samples.
@@ -332,7 +340,5 @@ We found Local Binary Pattern to be a powerful texture based descriptor, where t
 
 ## Conclusion
 We applied intrinsically explainable models and LIME explainer on CXR images, for COVID detection and explaination. The results obtained by the classifiers were of higher accuracy whereas LIME failed to perform the similarly. We observed that LBP are good dicriminatory feature vectors for CXR images, however we cannot mitigate the effect of luminosity, brightness and quality to the images. These factors add bias to our classifiers.
-
-It implies the features which we have used might not have behaved as discriminatory as expected, but we cannot rule out the bias of the annotators, which might have prevented us to get good results. The annotators categorizing the document might have been influenced by various aspects as mentioned in literature [9] while assigning them to the categories. Therefore it seems challenging for the machine learning algorithms to match with the human annotated categories.
 
 ## References
