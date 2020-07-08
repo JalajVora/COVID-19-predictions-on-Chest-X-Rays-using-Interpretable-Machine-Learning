@@ -94,7 +94,7 @@ print(resized)
 ![image2](1.png)
 </center>
 
-```{r data-explorer, echo=FALSE}
+```{r data-explorer, echo=FALSE, warning=FALSE, message=FALSE}
 library(DataExplorer)
 data <- dataset
 #DataExplorer::create_report(data)
