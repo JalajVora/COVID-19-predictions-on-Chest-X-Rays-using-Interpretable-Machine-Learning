@@ -1,0 +1,13 @@
+name: "COVID-19 Prediction using Explainable Machine Learning"
+navbar:
+  title: "COVID-19 Prediction using Explainable Machine Learning"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Exploratory Data Analysis"
+      href: subhajit-s-progress.html
+    - text: "Classification"
+      href: subhankar-s-progress.html
+    - text: "Results"
+      href: SVM_Documentation.html
+    

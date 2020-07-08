@@ -27,7 +27,7 @@ references:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 setwd("C:\\Users\\jalaj\\Documents\\GitHub\\Data-Science-with-R-Project\\covid-dataset")
-load('covid_data')
+load('covid_data_new_masked')
 dataset <- covid_data
 ```
 
@@ -62,9 +62,8 @@ To answer the this question, we aim to answer few sub-questions:
 (content)
 
 ***
-## Ground Truth:
+## Dataset:
 
-### <span class="sub-header">Dataset</span>
 Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @karim2020deepcovidexplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @cohen2020covid. 
 
 According to [@Zhao2020COVIDCTDatasetAC; @wang2020deep; @li2020artificial; @karim2020deepcovidexplainer; @singh2020classification] CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F~1~-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won't be that competible in terms of quality w.r.t CT-Scans but @KERMANY20181122 suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.
@@ -105,7 +104,7 @@ library(ggplot2)
 qplot(covid_data$V59, binwidth=0.1, main = 'Data Distribution Histogram', xlab = 'Target Variable', ylab = 'Number of Samples')
 ```
 
-The figure above shows the skewness of the distribution of the data. The plot states the frequency of the positive and negative images in the dataset. Here, for the interpretation; 0 is taken as COVID negative and 1 as COVID positive. The figure delineates the ratio of images as being approx. 84:16. This signifies the data being skewed towards the positive instances.
+The figure above shows the skewness of the distribution of the data. The plot states the frequency of the positive and negative images in the dataset. Here, for the interpretation; 0 is taken as COVID negative and 1 as COVID positive. The figure delineates the ratio of images as being approx. 3:1. This signifies the data being skewed towards the positive instances.
 
 ``` {r data-frequency}
 
