@@ -2857,14 +2857,11 @@ div.tocify {
 </ul>
 <hr />
 </div>
-<div id="ground-truth" class="section level2">
-<h2>Ground Truth:</h2>
-<div id="dataset" class="section level3">
-<h3><span class="sub-header">Dataset</span></h3>
+<div id="dataset" class="section level2">
+<h2>Dataset:</h2>
 <p>Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">6</a>]</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, Kaggle CXR Pneumonia dataset by Paul Mooney,<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> CXR images of adult subjects from the RSNA Pneumonia Detection Challenge,<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> original and augmented versions of COVID-19 examples<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> from <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">7</a>]</span>.</p>
 <p>According to <span class="citation">[<a href="#ref-Zhao2020COVIDCTDatasetAC" role="doc-biblioref">2</a>,<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">6</a>,<a href="#ref-wang2020deep" role="doc-biblioref">8</a>–<a href="#ref-singh2020classification" role="doc-biblioref">10</a>]</span> CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F<sub>1</sub>-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won’t be that competible in terms of quality w.r.t CT-Scans but <span class="citation">[<a href="#ref-KERMANY20181122" role="doc-biblioref">11</a>]</span> suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.</p>
 <p>In particular we have used the <a href="https://shorturl.at/qwLR0">COVID-19 Dataset-Repo</a> as our Ground Truth.</p>
-</div>
 <div id="github-url" class="section level3">
 <h3><span class="sub-header">GitHub URL</span></h3>
 <p>The <code>R</code> scripts, process notebook and other resources have been stored at the <a href="https://github.com/JalajVora/Data-Science-with-R-Project.git">repository</a>.</p>
@@ -2902,13 +2899,13 @@ div.tocify {
 <li>Local Binary Pattern works only with grayscale images. The dataset contains RGB and RGBa images which are intrinsincally normalised to grayscale before converting it into a vector.</li>
 </ul></li>
 </ul></li>
-<li><strong>Over-sampling</strong>
+<li><strong>Re-sampling</strong>
 <ul>
 <li>The LPB vectors are then oversampled as the dataset contains highly skewed distribution of target class.</li>
-<li>Over-sampling techniques tried:
+<li>Re-sampling techniques tried:
 <ul>
 <li>Random Under-Sampling</li>
-<li>Over-Sampling
+<li>Over-Sampling:
 <ul>
 <li>Random Over-Sampling</li>
 <li>Density Based-SMOTE <span class="citation">[<a href="#ref-bunkhumpornpat2012dbsmote" role="doc-biblioref">14</a>]</span></li>

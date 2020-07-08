@@ -60,9 +60,8 @@ To answer the this question, we aim to answer few sub-questions:
 * Can we come up with explaination of our model's decsision and prediction?
 
 ***
-## Ground Truth:
+## Dataset:
 
-### <span class="sub-header">Dataset</span>
 Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @karim2020deepcovidexplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @cohen2020covid. 
 
 According to [@Zhao2020COVIDCTDatasetAC; @wang2020deep; @li2020artificial; @karim2020deepcovidexplainer; @singh2020classification] CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F~1~-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won't be that competible in terms of quality w.r.t CT-Scans but @KERMANY20181122 suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.
@@ -98,11 +97,11 @@ We followed a typical Data Science pipeline starting with Pre-Processing of the 
     - As Literature survey suggests, we found Local Binary Patterns [@nanni2010local] as a good choice for texture-based descriptor.
     - Local Binary Patterns inputs pre-processed image and outputs corresponding lbp vector.
     - Local Binary Pattern works only with grayscale images. The dataset contains RGB and RGBa images which are intrinsincally normalised to grayscale before converting it into a vector.
-* **Over-sampling**
+* **Re-sampling**
   - The LPB vectors are then oversampled as the dataset contains highly skewed distribution of target class.
-  - Over-sampling techniques tried:
+  - Re-sampling techniques tried:
     - Random Under-Sampling
-    - Over-Sampling
+    - Over-Sampling:
       - Random Over-Sampling
       - Density Based-SMOTE [@bunkhumpornpat2012dbsmote]
       - Borderline-SMOTE [@han2005borderline]
