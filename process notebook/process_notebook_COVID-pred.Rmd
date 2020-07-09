@@ -30,7 +30,7 @@ load('covid_data_new_masked')
 dataset <- covid_data
 ```
 
-```{r packages}
+```{r packages, echo = FALSE, warning = FALSE, message = FALSE, results='hide'}
 library(magick)
 library(ggplot2)
 library(funModeling)
@@ -161,7 +161,7 @@ The descriptor is then the histogram of such which counts the occurrence of bina
 
 **Vectors:** As is previously explained there are total of 58 dimensions, to the descriptor. For a given CXR image we initially ran the descriptor on the complete image, and thus the descriptors obtained were very rich.
 
-However, with this setting there is a problem, that the CXR image not only captures the area of the lungs but the whole rib cage, which includes other organs too. Hence there is much noise considering out aim of getting the features our of the are of the lungs. For that purpose we used [segmentations](https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/) [@10.1007/978-3-319-24574-4_28], to segment the area of the lungs our by means of a mask and then calculate the LBP for the masked area.
+However, with this setting there is a problem, that the feature extractor not only captures the area of the lungs but the whole rib cage, which includes other organs too. Hence there is much noise considering our aim of getting the features our of the are of the lungs. For that purpose we used [segmentations](https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/) [@10.1007/978-3-319-24574-4_28], to segment the area of the lungs our by means of a mask and then calculate the LBP for the masked area.
 <center>
 ![original](1.jpg_plot.png)![1-mask.png](1-mask.png) ![1.jpgtmp.png](1.jpgtmp.png)  
 </center>
@@ -383,7 +383,7 @@ barplot(prop.table(table(test.df$V59)),
         main = "Test Class Distribution")
 ```
 
-For training, to tackle the class imbalance problem and we use 10 cross validation with 3 repeats. That is data will be split entirely 3 times, and for each of the 3 times, 10-fold cross validation is done for validation.
+For training, to tackle the class imbalance problem we used 10 cross validation with 3 repeats. That is data will be split entirely 3 times, and for each of the 3 times, 10-fold cross validation is done for validation.
 
 ``` {r echo=TRUE}
 trctrl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
@@ -425,8 +425,6 @@ roc.curve(test.df$V59, test_pred, plotit = T)
 
 ### Tree Classifiers {.tabset}
 
-
-***
 
 #### Random Forest
 
@@ -1046,6 +1044,281 @@ Number of features to find is set to 10.
 
 Only “positive” areas are marked in the explanation image.
 
+***
+
+## Benchmark Evaluation {.tabset}
+
+```{r accuracyplotmodel, echo=FALSE}
+
+
+x<- c("KNN", "Logistic Regresssion", "Random Forests", "Decision Tree", "Naive Bayes", "SVM")
+y<- c(85.27, 90.34, 87.84, 87.23, 83.84, 54.23)
+
+x_name <- "Models"
+y_name <- "Accuracy"
+
+df <- data.frame(x,y)
+names(df) <- c(x_name,y_name)
+
+library(ggplot2)
+ggplot(data=df, aes(x=Models, y=Accuracy)) +
+  geom_bar(stat="identity", fill="steelblue")+
+  geom_text(aes(label=Accuracy), vjust=-0.3, size=3.5)+
+  ggtitle("Accuracy of models on raw dataset")+
+  theme_light()
+
+
+```
+ 
+In accordance to [@ozturk2020automated], where in the author presented a network for detection of COVID-19  cases using Deep Neural Networks with X-Ray images.The paper presents a detailed comparison study of their network with respect to other models for COVID-19 detection, in terms of accuracy. The details of the data-set used is explained in the following paragraph.
+ 
+ 
+The database was developed by [@cohen2020covid] using images from various sources. The database is constantly upgraded, as of now, the database content comprise of around "201" COVID-19 positive X-Ray images.There were no images, which represent  X-Ray of normal lungs, hence we have used thousand healthy X-Ray images from our original database as negative class, which we have used to feed our original models.
+ 
+In the following sections, we present the figures that are obtained by training the models with the same data-set that [@ozturk2020automated] used in his experiment followed by the comparison table :
+ 
+#### <span class="sub-header">Comparison of different models</span>
+
+
+| Study           | Type Of Image | No. Of Cases                     | Method Used and Settin              | Accuracy |
+|-----------------|---------------|----------------------------------|-------------------------------------|----------|
+| Sethy and Behra | Chest X-ray   | 25 COVID-19(+) 25 COVID-19 (−)   | ResNet50+ SVM                       | 95.38    |
+| Hemdan et al.   | Chest X-ray   | 25 COVID-19(+) 25 Normal         | COVIDX-Net                          | 90.0     |
+| Narin et al.    | Chest X-ray   | 50 COVID-19(+) 50 COVID-19 (−)   | Deep CNN ResNet-50                  | 98.0     |
+| Ying et al.     | Chest CT      | 777 COVID-19(+) 708 Healthy      | DRE-Net                             | 86.0     |
+| Wang et al.     | Chest CT      | 195 COVID-19(+) 258 COVID-19(−)  | M-Inception                         | 82.9     |
+| Zheng et al.    | Chest CT      | 313 COVID-19(+) 229 COVID-19(−)  | UNet+3D Deep Network                | 90.8     |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Decision Tree with RAW Data         | 90.03    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Decision Tree with Oversampled Data | 69.05    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Random Forest with RAW Data         | 91.69    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Random Forest with Oversampled Data | 79.17    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | kNN with RAW Data                   | 90.62    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Logistic Regression with RAW Data   | 90.34    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Naive Bayes with RAW Data           | 87.0     |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | SVM with Oversampled Data           | 54.73    |
+
+***
+
+### Random Forest 
+
+```{r random forest , echo =TRUE }
+
+# Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0 245  18
+#          1   7  31
+#                                           
+#               Accuracy : 0.9169          
+#                  95% CI : (0.8798, 0.9455)
+#     No Information Rate : 0.8372          
+#     P-Value [Acc > NIR] : 3.802e-05       
+#                                           
+#                   Kappa : 0.665           
+#                                           
+#  Mcnemar's Test P-Value : 0.0455          
+#                                           
+#             Sensitivity : 0.6327          
+#             Specificity : 0.9722          
+#          Pos Pred Value : 0.8158          
+#          Neg Pred Value : 0.9316          
+#               Precision : 0.8158          
+#                  Recall : 0.6327          
+#                      F1 : 0.7126          
+#              Prevalence : 0.1628          
+#          Detection Rate : 0.1030          
+#    Detection Prevalence : 0.1262          
+#       Balanced Accuracy : 0.8024          
+#                                           
+#        'Positive' Class : 1
+
+
+
+```
+
+
+### kNN
+
+```{r knn CM, echo =TRUE}
+
+
+# Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0 283  21
+#          1  12  36
+#                                           
+#                Accuracy : 0.9062          
+#                  95% CI : (0.8709, 0.9346)
+#     No Information Rate : 0.8381          
+#     P-Value [Acc > NIR] : 0.0001493       
+#                                           
+#                   Kappa : 0.6311          
+#                                           
+#  Mcnemar's Test P-Value : 0.1637344       
+#                                           
+#             Sensitivity : 0.9593          
+#             Specificity : 0.6316          
+#          Pos Pred Value : 0.9309          
+#          Neg Pred Value : 0.7500          
+#              Prevalence : 0.8381          
+#          Detection Rate : 0.8040          
+#    Detection Prevalence : 0.8636          
+#       Balanced Accuracy : 0.7955          
+#                                           
+#        'Positive' Class : 0
+
+
+```
+
+
+
+### Logistic Regression
+```{r Logistic Regression CM, echo =TRUE}
+
+# Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0 282  21
+#          1  13  36
+#                                           
+#                Accuracy : 0.9034          
+#                  95% CI : (0.8676, 0.9322)
+#     No Information Rate : 0.8381          
+#     P-Value [Acc > NIR] : 0.0002803       
+#                                           
+#                   Kappa : 0.6228          
+#                                           
+#  Mcnemar's Test P-Value : 0.2299491       
+#                                           
+#             Sensitivity : 0.9559          
+#             Specificity : 0.6316          
+#          Pos Pred Value : 0.9307          
+#          Neg Pred Value : 0.7347          
+#              Prevalence : 0.8381          
+#          Detection Rate : 0.8011          
+#    Detection Prevalence : 0.8608          
+#       Balanced Accuracy : 0.7938          
+#                                           
+#        'Positive' Class : 0    
+```
+
+
+
+### Decision Tree
+
+```{r decision tree, echo =TRUE }
+# Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0 243  21
+#          1   9  28
+#                                           
+#                Accuracy : 0.9003          
+#                  95% CI : (0.8608, 0.9317)
+#     No Information Rate : 0.8372          
+#     P-Value [Acc > NIR] : 0.001154        
+#                                           
+#                   Kappa : 0.5943          
+#                                           
+#  Mcnemar's Test P-Value : 0.044610        
+#                                           
+#             Sensitivity : 0.57143         
+#             Specificity : 0.96429         
+#          Pos Pred Value : 0.75676         
+#          Neg Pred Value : 0.92045         
+#               Precision : 0.75676         
+#                  Recall : 0.57143         
+#                      F1 : 0.65116         
+#              Prevalence : 0.16279         
+#          Detection Rate : 0.09302         
+#    Detection Prevalence : 0.12292         
+#       Balanced Accuracy : 0.76786         
+#                                           
+#        'Positive' Class : 1
+
+
+```
+
+
+
+
+### Naive Bayes
+
+```{r navie bayes , echo =TRUE }
+## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Normal COVID19
+##    Normal     235      24
+##    COVID19     15      26
+##                                           
+##                Accuracy : 0.87            
+##                  95% CI : (0.8266, 0.9059)
+##     No Information Rate : 0.8333          
+##     P-Value [Acc > NIR] : 0.04857         
+##                                           
+##                   Kappa : 0.4957          
+##                                           
+##  Mcnemar's Test P-Value : 0.20018         
+##                                           
+##             Sensitivity : 0.52000         
+##             Specificity : 0.94000         
+##          Pos Pred Value : 0.63415         
+##          Neg Pred Value : 0.90734         
+##              Prevalence : 0.16667         
+##          Detection Rate : 0.08667         
+##    Detection Prevalence : 0.13667         
+##       Balanced Accuracy : 0.73000         
+##                                           
+##        'Positive' Class : COVID19         
+## 
+
+
+```
+
+
+
+### Support Vector Machine
+
+```{r svm, echo =TRUE }
+
+# 
+# Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0  26   0
+#          1 307 346
+#                                           
+#                Accuracy : 0.5479          
+#                  95% CI : (0.5096, 0.5858)
+#     No Information Rate : 0.5096          
+#     P-Value [Acc > NIR] : 0.02506         
+#                                           
+#                   Kappa : 0.0795          
+#                                           
+#  Mcnemar's Test P-Value : < 2e-16         
+#                                           
+#             Sensitivity : 1.00000         
+#             Specificity : 0.07808         
+#          Pos Pred Value : 0.52986         
+#          Neg Pred Value : 1.00000         
+#              Prevalence : 0.50957         
+#          Detection Rate : 0.50957         
+#    Detection Prevalence : 0.96171         
+#       Balanced Accuracy : 0.53904         
+#                                           
+#        'Positive' Class : 1
+
+```
+
+***
+
 ## Final Analysis
 
 Based on our approach, we initially tried to extract the features out of the CXR images without any segmentation. However, we found that the area of interest i.e., the lung area is a very small segment of the whole image. Hence, the noise around the lung area dominates the outcome of the classification. Moreover, we found that quality of CXR images highly affects the feature vectors. For this reason, we segmented the images to find the area of interest and extract our features on corresponding lung-segment. The results were better in that case. However, we could not deal with quality of images in terms of light exposure. 
@@ -1058,7 +1331,11 @@ We proposed to work on an ensemble architecture where we use our simpler models 
 
 We found Local Binary Pattern to be a powerful texture based descriptor, where the only justification of its usefulness can be seen when we compare our results with Neural Network based approaches in the benchmark section.
 
+***
+
 ## Conclusion
 We applied intrinsically explainable models and LIME explainer on CXR images, for COVID detection and explaination. The results obtained by the classifiers were of higher accuracy whereas LIME failed to perform the similarly. We observed that LBP are good dicriminatory feature vectors for CXR images, however we cannot mitigate the effect of luminosity, brightness and quality to the images. These factors add bias to our classifiers.
+
+***
 
 ## References

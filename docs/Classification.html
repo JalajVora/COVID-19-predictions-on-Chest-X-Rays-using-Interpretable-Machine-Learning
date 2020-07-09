@@ -380,242 +380,433 @@ div.tocify {
 
 
 <p>     </p>
-<div id="data-set" class="section level2 tabset">
-<h2 class="tabset">Data-Set</h2>
-<p>Our dataset is a collection of 1313 CXR images containing COVID-19 positive and negative samples. There is a problem of class imbalance as we had 1000 negative samples compared to only 313 positive samples. The local binary patterns that we extracted from the CXR images have 58 dimensions. For class imbalance, we have implemented an oversampling technique that is provided by the R package ‘ROSE’, which basically means Random Over Sampling Examples. It’s a resampling function that generates synthetic balanced samples using holdout, bootstrap or cross-validation methods. After oversampling our dataset consisted of 1000 negative and 1031 positive examples.</p>
+<div id="models" class="section level1 tabset">
+<h1 class="tabset">Models</h1>
+<pre class="r"><code>library(magick)
+library(ggplot2)
+library(funModeling)
+library(DataExplorer)
+library(e1071)
+library(imbalance)
+library(caret)
+library(wvtool)
+library(imager)
+library(ROSE)
+library(tidyverse)       
+library(repr)
+library(factoextra)
+library(pander)
+library(klaR)
+library(janitor)
+library(mlbench)
+library(MLmetrics)
+library(randomForest)
+library(rpart)
+library(rpart.plot)
+library(pROC)
+library(plotROC)</code></pre>
+<div id="svm" class="section level2">
+<h2>SVM</h2>
+<p>We experimented with Support Vector Classifiers with Radial Basis function as kernel. The following diagram shows the data before over-sampling.</p>
+<pre class="r"><code>load(&#39;covid_data_new_masked&#39;)
+dataset &lt;- covid_data
+plot_bar(dataset$V59)</code></pre>
+<p><img src="Classification_files/figure-html/lib-load-1.png" width="672" /></p>
+<p>Before feeding data onto the classifier, we oversampled with AdaSyn method.</p>
+<pre class="r"><code>#Over-sampling
+df.adasyn &lt;- oversample(dataset, method = &quot;ADASYN&quot;, classAttr = &quot;V59&quot;)
+df.adasyn$V59 = factor(df.adasyn$V59, levels = c(0, 1))
+plot_bar(df.adasyn$V59)</code></pre>
+<p><img src="Classification_files/figure-html/over-smpl-1.png" width="672" /></p>
+<pre class="r"><code>#train-test split
+index &lt;- 1:nrow(df.adasyn)
+testindex &lt;- sample(index, trunc(length(index)/3))
+testset &lt;- df.adasyn[testindex,]
+trainset &lt;- df.adasyn[-testindex,]</code></pre>
+<p>For hyper-parameter tuning, we have kept value of cost = 1 and gamma = 0.5 following a similar approach to <span class="citation">[<a href="#ref-pereira2020covid" role="doc-biblioref">1</a>]</span>.</p>
+<pre class="r"><code>set.seed(825)
+#Training the model to the Training set
+svm_fit_ovs &lt;- svm(V59~., kernel = &#39;radial&#39;,
+               data = trainset, scale=TRUE, cachesize = 200,
+               probability = TRUE, gamma = 0.1, cost = 1)
+
+#Predicting the test set results
+svm.pred.ovs &lt;- predict(svm_fit_ovs, testset[,-59], probability = TRUE)</code></pre>
+<p>For the evaluation part, we calculated Accuracy, F<sub>1</sub>-Score, Precision, Recall and AUC/ROC. The confusion matrix shows that SVM performs with approx. 53% of accuracy whereas the Area Under ROC is approx. 54% as well.</p>
+<pre class="r"><code>#Evaluation
+ROSE::accuracy.meas(response = testset$V59, predicted = svm.pred.ovs)</code></pre>
+<pre><code>## 
+## Call: 
+## ROSE::accuracy.meas(response = testset$V59, predicted = svm.pred.ovs)
+## 
+## Examples are labelled as positive when predicted is greater than 0.5 
+## 
+## precision: 0.523
+## recall: 1.000
+## F: 0.344</code></pre>
+<pre class="r"><code>ROSE::roc.curve(testset$V59, svm.pred.ovs, plotit = T)</code></pre>
+<p><img src="Classification_files/figure-html/eval-1.png" width="672" /></p>
+<pre><code>## Area under the curve (AUC): 0.546</code></pre>
+<pre class="r"><code>caret::confusionMatrix(svm.pred.ovs, testset$V59, positive = &#39;1&#39;)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0  30   0
+##          1 297 359
+##                                          
+##                Accuracy : 0.5671         
+##                  95% CI : (0.529, 0.6045)
+##     No Information Rate : 0.5233         
+##     P-Value [Acc &gt; NIR] : 0.01195        
+##                                          
+##                   Kappa : 0.0956         
+##                                          
+##  Mcnemar&#39;s Test P-Value : &lt; 2e-16        
+##                                          
+##             Sensitivity : 1.00000        
+##             Specificity : 0.09174        
+##          Pos Pred Value : 0.54726        
+##          Neg Pred Value : 1.00000        
+##              Prevalence : 0.52332        
+##          Detection Rate : 0.52332        
+##    Detection Prevalence : 0.95627        
+##       Balanced Accuracy : 0.54587        
+##                                          
+##        &#39;Positive&#39; Class : 1              
+## </code></pre>
+<hr />
+</div>
+<div id="knn" class="section level2">
+<h2>kNN</h2>
+<p>K-Neigherst Neighbour is one of the models used for classification. kNN has been successfully used in tasks where texture-based descriptors are used <span class="citation">[<a href="#ref-sorensen2008texture" role="doc-biblioref">2</a>]</span>. In kNN classification, we expect that the classifier will examine the k nearest neighbors and return the class labels associated with the majority of k nearest neighbor. The accuracy of the model depends heavily on k, i.e. the number of nearest neighbors to consider for classification purpose. So, each neighbor adds a vote or a confidence towards the classification of a query instance. We use this model, in hope that the features extracted above captures the specific discriminatory properties of the lung area and on similar note the nearest neighbors will capture the same properties.</p>
+<p>We initially split the data by a proportion of 30:70 distributed among both the classes for test and training purpose.</p>
+<pre class="r"><code>dim(glass.df)</code></pre>
+<pre><code>## [1] 1313   59</code></pre>
+<pre class="r"><code># all the independent variables are numbers
+# we will convert the type variable which is the response variable as factor
+glass.df$V59&lt;- as.factor(glass.df$V59) # 7 labels
+
+# training and test data 70:30
+set.seed(123)
+ind = sample(2, nrow(glass.df), replace = TRUE, prob=c(0.7,0.3))
+train.df = glass.df[ind == 1,]
+test.df = glass.df[ind == 2,]</code></pre>
+<pre class="r"><code>#Visualizing distribution of each class
+barplot(prop.table(table(glass.df$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;COVID dataset Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/pre-process1,%20data-1.png" width="672" /></p>
+<pre class="r"><code>resTable &lt;- glass.df %&gt;% tabyl(V59)
+resTable$labels &lt;- paste0(resTable$V59, &quot; (&quot;, scales::percent(resTable$percent), &quot;) &quot;) 
+
+resTable %&gt;%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat=&#39;identity&#39;)+
+  coord_polar(&quot;y&quot;)+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = &#39;none&#39;)+
+  labs(y=&#39;&#39;, x=&#39;&#39;)</code></pre>
+<p><img src="Classification_files/figure-html/pre-process1,%20data-2.png" width="672" /></p>
+<pre class="r"><code>barplot(prop.table(table(train.df$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Train Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/pre-process2,%20train%20data-1.png" width="672" /></p>
+<pre class="r"><code>resTable &lt;- train.df %&gt;% tabyl(V59)
+resTable$labels &lt;- paste0(resTable$V59, &quot; (&quot;, scales::percent(resTable$percent), &quot;) &quot;) 
+
+resTable %&gt;%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat=&#39;identity&#39;)+
+  coord_polar(&quot;y&quot;)+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = &#39;none&#39;)+
+  labs(y=&#39;&#39;, x=&#39;&#39;)</code></pre>
+<p><img src="Classification_files/figure-html/pre-process2,%20train%20data-2.png" width="672" /></p>
+<pre class="r"><code># Create data for the graph.</code></pre>
+<pre class="r"><code>barplot(prop.table(table(test.df$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Test Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/pre-process3,%20test%20data-1.png" width="672" /></p>
+<p>For training, to tackle the class imbalance problem and we use 10 cross validation with 3 repeats. That is data will be split entirely 3 times, and for each of the 3 times, 10-fold cross validation is done for validation.</p>
+<pre class="r"><code>trctrl &lt;- trainControl(method = &quot;repeatedcv&quot;, number = 10, repeats = 3)</code></pre>
+<p>For evaluation of K, we decide at train time, the number that gives the highest accuracy. In our case, k=9 gave us the best accuracy.</p>
+<pre class="r"><code>knn_fit &lt;- train(V59 ~., data = train.df, method = &quot;knn&quot;,
+                 trControl=trctrl,
+                 preProcess = c(&quot;center&quot;, &quot;scale&quot;),
+                 tuneLength = 15)</code></pre>
+<pre class="r"><code>summary(knn_fit)</code></pre>
+<pre><code>##             Length Class      Mode     
+## learn        2     -none-     list     
+## k            1     -none-     numeric  
+## theDots      0     -none-     list     
+## xNames      58     -none-     character
+## problemType  1     -none-     character
+## tuneValue    1     data.frame list     
+## obsLevels    2     -none-     character
+## param        0     -none-     list</code></pre>
+<pre class="r"><code>plot(knn_fit)</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>The pipeline of KNN model we use, additionally centers and scales the data. The unseen instances are also subject to the same fit.</p>
+<p>We also use a setting where the response is not a discrete positive or negative output but, gives the prediction confidence(probability) of the classifier for both of the classes.</p>
+<p><strong>Results:</strong> We test the model with the test data that was initially split out from the overall dataset</p>
+<pre class="r"><code>test_pred &lt;- predict(knn_fit, newdata = test.df)
+summary(test_pred)</code></pre>
+<pre><code>##   0   1 
+## 334  53</code></pre>
+<pre class="r"><code>confusionMatrix(test_pred, test.df$V59)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 286  48
+##          1   9  44
+##                                           
+##                Accuracy : 0.8527          
+##                  95% CI : (0.8134, 0.8865)
+##     No Information Rate : 0.7623          
+##     P-Value [Acc &gt; NIR] : 7.525e-06       
+##                                           
+##                   Kappa : 0.5242          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 4.823e-07       
+##                                           
+##             Sensitivity : 0.9695          
+##             Specificity : 0.4783          
+##          Pos Pred Value : 0.8563          
+##          Neg Pred Value : 0.8302          
+##              Prevalence : 0.7623          
+##          Detection Rate : 0.7390          
+##    Detection Prevalence : 0.8630          
+##       Balanced Accuracy : 0.7239          
+##                                           
+##        &#39;Positive&#39; Class : 0               
+## </code></pre>
+<pre class="r"><code>roc.curve(test.df$V59, test_pred, plotit = T)</code></pre>
+<p><img src="Classification_files/figure-html/prediction-1.png" width="672" /></p>
+<pre><code>## Area under the curve (AUC): 0.724</code></pre>
+</div>
+<div id="tree-classifiers" class="section level2 tabset">
+<h2 class="tabset">Tree Classifiers</h2>
+<hr />
+<div id="random-forest" class="section level3">
+<h3>Random Forest</h3>
+<p>Random forest is one of the algorithms we tried to apply on the lbp features that was extracted from the X-ray images. The implementation was done through the ‘randomForest’ package that is available in R. The package uses Breiman’s method of random forests for classification. But this package has the flexibility to be applied in a regression problem as well. In the default parameter setting, the no. of trees that the algorithm learns is 200. With that, we achieved an accuracy of about 87.84% with an F1 score of 0.6825 in our dataset. The area under the ROC curve in this case was 0.764. On the over-sampled data, the accuracy dropped to 75.00% with an F1 score of 0.6771. The area under the ROC curve in this case is 0.748.</p>
 <pre class="r"><code>#Visualizing distribution of each class
 barplot(prop.table(table(covid_data$V59)),
         col = rainbow(2),
         ylim = c(0,1),
-        main = &quot;Class Distribution&quot;)</code></pre>
-<p><img src="Classification_files/figure-html/plots-1.png" width="672" /></p>
+        main = &quot;Dataset Class Distribution &quot;)</code></pre>
+<p><img src="Classification_files/figure-html/data%20visualization%20plots-1.png" width="672" /></p>
 <pre class="r"><code>barplot(prop.table(table(train$V59)),
         col = rainbow(2),
         ylim = c(0,1),
-        main = &quot;Class Distribution&quot;)</code></pre>
-<p><img src="Classification_files/figure-html/plots-2.png" width="672" /></p>
+        main = &quot;Training Class Distribution &quot;)</code></pre>
+<p><img src="Classification_files/figure-html/data%20visualization%20plots-2.png" width="672" /></p>
 <pre class="r"><code>barplot(prop.table(table(test$V59)),
         col = rainbow(2),
         ylim = c(0,1),
-        main = &quot;Class Distribution&quot;)</code></pre>
-<p><img src="Classification_files/figure-html/plots-3.png" width="672" /></p>
-<pre class="r"><code>#Training Models
-library(randomForest)</code></pre>
-<pre><code>## randomForest 4.6-14</code></pre>
-<pre><code>## Type rfNews() to see new features/changes/bug fixes.</code></pre>
-<pre class="r"><code>library(rpart)
-library(rpart.plot)
-#Random Forest
+        main = &quot;Test Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/data%20visualization%20plots-3.png" width="672" /></p>
+<pre class="r"><code>#Over Sampling
+over_train = ovun.sample(V59~., data = train, method = &quot;over&quot;)$data
+table(over_train$V59)</code></pre>
+<pre><code>## 
+##   0   1 
+## 750 755</code></pre>
+<pre class="r"><code>over_test = ovun.sample(V59~., data = test, method = &quot;over&quot;)$data
+table(over_test$V59)</code></pre>
+<pre><code>## 
+##   0   1 
+## 250 246</code></pre>
+<pre class="r"><code>barplot(prop.table(table(over_train$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Oversampled training class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/rf%20over%20sampling-1.png" width="672" /></p>
+<pre class="r"><code>barplot(prop.table(table(over_test$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Oversampled testing class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/rf%20over%20sampling-2.png" width="672" /></p>
+<pre class="r"><code>#Random Forest
 rftrain &lt;- randomForest(V59~.,data = train)
-#Decision Tree
-dttrain &lt;- rpart(V59~.,data = train, method = &quot;class&quot;)
-dttrain_criteria &lt;- rpart(V59~.,data = train, method = &quot;class&quot;, minsplit = 20, minbucket = 10)
-rpart.plot(dttrain)
-rpart.plot(dttrain_criteria)</code></pre>
-<p><img src="Classification_files/figure-html/plots-4.png" width="672" /></p>
-<div id="random-forest" class="section level3">
-<h3>Random Forest</h3>
-<p>Random forest is one of the algorithms we tried to apply on the lbp features that was extracted from the X-ray images. The implementation was done through the ‘randomForest’ package that is available in R. The package uses Breiman’s method of random forests for classification. But this package has the flexibility to be applied in a regression problem as well. In the default parameter setting, the no. of trees that the algorithm learns is 200. With that, we achieved an accuracy of about 89.67% with an F1 score of 0.74 in our dataset. The area under the ROC curve in this case was 0.802. On the over-sampled data, the accuracy dropped to 81.84% with an F1 score of 0.78. The area under the ROC curve in this case is 0.819.</p>
-<p>You can also embed plots, for example:</p>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre><code>## 
-## Attaching package: &#39;ggplot2&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:randomForest&#39;:
-## 
-##     margin</code></pre>
+
+
+rftrain.pred &lt;- predict(rftrain, test)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction   0   1
-##          0 245  38
-##          1   5  41
-##                                          
-##                Accuracy : 0.8693         
-##                  95% CI : (0.828, 0.9038)
-##     No Information Rate : 0.7599         
-##     P-Value [Acc &gt; NIR] : 5.411e-07      
-##                                          
-##                   Kappa : 0.5822         
-##                                          
-##  Mcnemar&#39;s Test P-Value : 1.061e-06      
-##                                          
-##             Sensitivity : 0.5190         
-##             Specificity : 0.9800         
-##          Pos Pred Value : 0.8913         
-##          Neg Pred Value : 0.8657         
-##               Precision : 0.8913         
-##                  Recall : 0.5190         
-##                      F1 : 0.6560         
-##              Prevalence : 0.2401         
-##          Detection Rate : 0.1246         
-##    Detection Prevalence : 0.1398         
-##       Balanced Accuracy : 0.7495         
-##                                          
-##        &#39;Positive&#39; Class : 1              
-## </code></pre>
-<pre><code>## Confusion Matrix and Statistics
-## 
-##           Reference
-## Prediction   0   1
-##          0 244  36
-##          1   6  43
+##          0 246  36
+##          1   4  43
 ##                                           
-##                Accuracy : 0.8723          
-##                  95% CI : (0.8314, 0.9064)
+##                Accuracy : 0.8784          
+##                  95% CI : (0.8381, 0.9117)
 ##     No Information Rate : 0.7599          
-##     P-Value [Acc &gt; NIR] : 2.509e-07       
+##     P-Value [Acc &gt; NIR] : 4.981e-08       
 ##                                           
-##                   Kappa : 0.598           
+##                   Kappa : 0.6133          
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 7.648e-06       
+##  Mcnemar&#39;s Test P-Value : 9.509e-07       
 ##                                           
 ##             Sensitivity : 0.5443          
-##             Specificity : 0.9760          
-##          Pos Pred Value : 0.8776          
-##          Neg Pred Value : 0.8714          
-##               Precision : 0.8776          
+##             Specificity : 0.9840          
+##          Pos Pred Value : 0.9149          
+##          Neg Pred Value : 0.8723          
+##               Precision : 0.9149          
 ##                  Recall : 0.5443          
-##                      F1 : 0.6719          
+##                      F1 : 0.6825          
 ##              Prevalence : 0.2401          
 ##          Detection Rate : 0.1307          
-##    Detection Prevalence : 0.1489          
-##       Balanced Accuracy : 0.7602          
+##    Detection Prevalence : 0.1429          
+##       Balanced Accuracy : 0.7642          
 ##                                           
 ##        &#39;Positive&#39; Class : 1               
 ## </code></pre>
-<pre><code>## Confusion Matrix and Statistics
-## 
-##           Reference
-## Prediction   0   1
-##          0 244  36
-##          1   6  43
-##                                           
-##                Accuracy : 0.8723          
-##                  95% CI : (0.8314, 0.9064)
-##     No Information Rate : 0.7599          
-##     P-Value [Acc &gt; NIR] : 2.509e-07       
-##                                           
-##                   Kappa : 0.598           
-##                                           
-##  Mcnemar&#39;s Test P-Value : 7.648e-06       
-##                                           
-##             Sensitivity : 0.5443          
-##             Specificity : 0.9760          
-##          Pos Pred Value : 0.8776          
-##          Neg Pred Value : 0.8714          
-##               Precision : 0.8776          
-##                  Recall : 0.5443          
-##                      F1 : 0.6719          
-##              Prevalence : 0.2401          
-##          Detection Rate : 0.1307          
-##    Detection Prevalence : 0.1489          
-##       Balanced Accuracy : 0.7602          
-##                                           
-##        &#39;Positive&#39; Class : 1               
-## </code></pre>
-<pre><code>## Loaded ROSE 0.0-3</code></pre>
-<pre><code>## 
-##   0   1 
-##  60 234</code></pre>
-<pre><code>## 
-##  0  1 
-## 21 79</code></pre>
-<p><img src="Classification_files/figure-html/pressure-1.png" width="672" /><img src="Classification_files/figure-html/pressure-2.png" width="672" /><img src="Classification_files/figure-html/pressure-3.png" width="672" /></p>
-<pre><code>## Confusion Matrix and Statistics
-## 
-##           Reference
-## Prediction  0  1
-##          0  9  1
-##          1 12 78
-##                                          
-##                Accuracy : 0.87           
-##                  95% CI : (0.788, 0.9289)
-##     No Information Rate : 0.79           
-##     P-Value [Acc &gt; NIR] : 0.027919       
-##                                          
-##                   Kappa : 0.5149         
-##                                          
-##  Mcnemar&#39;s Test P-Value : 0.005546       
-##                                          
-##             Sensitivity : 0.9873         
-##             Specificity : 0.4286         
-##          Pos Pred Value : 0.8667         
-##          Neg Pred Value : 0.9000         
-##              Prevalence : 0.7900         
-##          Detection Rate : 0.7800         
-##    Detection Prevalence : 0.9000         
-##       Balanced Accuracy : 0.7080         
-##                                          
-##        &#39;Positive&#39; Class : 1              
-## </code></pre>
-<pre><code>## Confusion Matrix and Statistics
-## 
-##           Reference
-## Prediction  0  1
-##          0  8 11
-##          1 13 68
-##                                           
-##                Accuracy : 0.76            
-##                  95% CI : (0.6643, 0.8398)
-##     No Information Rate : 0.79            
-##     P-Value [Acc &gt; NIR] : 0.8067          
-##                                           
-##                   Kappa : 0.2505          
-##                                           
-##  Mcnemar&#39;s Test P-Value : 0.8383          
-##                                           
-##             Sensitivity : 0.8608          
-##             Specificity : 0.3810          
-##          Pos Pred Value : 0.8395          
-##          Neg Pred Value : 0.4211          
-##              Prevalence : 0.7900          
-##          Detection Rate : 0.6800          
-##    Detection Prevalence : 0.8100          
-##       Balanced Accuracy : 0.6209          
-##                                           
-##        &#39;Positive&#39; Class : 1               
-## </code></pre>
-<pre><code>## 
-##   0   1 
-## 750 750</code></pre>
-<pre><code>## 
-##   0   1 
-## 250 252</code></pre>
-<p><img src="Classification_files/figure-html/pressure-4.png" width="672" /><img src="Classification_files/figure-html/pressure-5.png" width="672" /><img src="Classification_files/figure-html/pressure-6.png" width="672" /><img src="Classification_files/figure-html/pressure-7.png" width="672" /></p>
-</div>
-<div id="decision-trees" class="section level3">
-<h3>Decision Trees</h3>
-<p>For decision trees, we used the R library ‘rpart’ which is generally used to learn classification or regression trees. We ran this algorithm in its default setting (minsplit = 20 and minbucket = round(minsplit/3)) where minsplit is the minimum number of observations that must exist in a node for a split to occur and min bucket is the minimum number of observations in any leaf node. The accuracy that we obtained on the original dataset was 85.71% with an F1 score of 0.67. The area under the ROC curve in this case is 0.772. In the over-sampled dataset, the accuracy dropped to 74.49% with 0.72 as F1 score. The area under the ROC curve also dropped to 0.732.</p>
-<pre class="r"><code>library(caret)
+<pre class="r"><code>roc.curve(test$V59, rftrain.pred, plotit = T, main=&quot;ROC curve for Raw dataset&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/rf%20raw%20data-1.png" width="672" /></p>
+<pre><code>## Area under the curve (AUC): 0.764</code></pre>
+<pre class="r"><code>rftrain_over &lt;- randomForest(V59~.,data = over_train)
+rftrain_over.pred &lt;- predict(rftrain_over, over_test)</code></pre>
+<pre class="r"><code>#Evaluation with test
 confusionMatrix(predict(rftrain_over, over_test), over_test$V59, positive = &#39;1&#39;, mode = &quot;everything&quot;)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction   0   1
-##          0 243 103
-##          1   7 149
+##          0 242 116
+##          1   8 130
 ##                                           
-##                Accuracy : 0.7809          
-##                  95% CI : (0.7421, 0.8163)
-##     No Information Rate : 0.502           
+##                Accuracy : 0.75            
+##                  95% CI : (0.7095, 0.7875)
+##     No Information Rate : 0.504           
 ##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
 ##                                           
-##                   Kappa : 0.5624          
+##                   Kappa : 0.4982          
 ##                                           
 ##  Mcnemar&#39;s Test P-Value : &lt; 2.2e-16       
 ##                                           
-##             Sensitivity : 0.5913          
-##             Specificity : 0.9720          
-##          Pos Pred Value : 0.9551          
-##          Neg Pred Value : 0.7023          
-##               Precision : 0.9551          
-##                  Recall : 0.5913          
-##                      F1 : 0.7304          
-##              Prevalence : 0.5020          
-##          Detection Rate : 0.2968          
-##    Detection Prevalence : 0.3108          
-##       Balanced Accuracy : 0.7816          
+##             Sensitivity : 0.5285          
+##             Specificity : 0.9680          
+##          Pos Pred Value : 0.9420          
+##          Neg Pred Value : 0.6760          
+##               Precision : 0.9420          
+##                  Recall : 0.5285          
+##                      F1 : 0.6771          
+##              Prevalence : 0.4960          
+##          Detection Rate : 0.2621          
+##    Detection Prevalence : 0.2782          
+##       Balanced Accuracy : 0.7482          
+##                                           
+##        &#39;Positive&#39; Class : 1               
+## </code></pre>
+<pre class="r"><code>roc.curve(over_test$V59, rftrain_over.pred, plotit = T, main =&quot;ROC curve for Oversampled dataset&quot; )</code></pre>
+<p><img src="Classification_files/figure-html/rf%20ROC%20curve%20RAW%20data-1.png" width="672" /></p>
+<pre><code>## Area under the curve (AUC): 0.748</code></pre>
+<hr />
+</div>
+<div id="decision-trees" class="section level3">
+<h3>Decision Trees</h3>
+<p>For decision trees, we used the R library ‘rpart’ which is generally used to learn classification or regression trees. We ran this algorithm in its default setting (minsplit = 20 and minbucket = round(minsplit/3)) where minsplit is the minimum number of observations that must exist in a node for a split to occur and min bucket is the minimum number of observations in any leaf node. The accuracy that we obtained on the original dataset was 87.23% with an F1 score of 0.6719. The area under the ROC curve in this case is 0.760. In the over-sampled dataset, the accuracy dropped to 70.36% with 0.6667 as F1 score. The area under the ROC curve also dropped to 0.703.</p>
+<pre class="r"><code>load(&quot;covid_data_new_masked&quot;)
+data = covid_data
+
+#Setting V59 as factor variable as that is the target
+data$V59 &lt;- as.factor(data$V59)
+#summary(data)
+
+#Split Dataset to train and test
+set.seed(123) # Set Seed so that same sample can be reproduced in future also
+# Now Selecting 75% of data as sample from total &#39;n&#39; rows of the data  
+sample &lt;- sample.int(n = nrow(data), size = floor(.75*nrow(data)), replace = F)
+train &lt;- data[sample, ]
+test  &lt;- data[-sample, ]
+
+#Visualizing distribution of each class
+barplot(prop.table(table(covid_data$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Dataset Class Distribution &quot;)</code></pre>
+<p><img src="Classification_files/figure-html/r-code-1.png" width="672" /></p>
+<pre class="r"><code>barplot(prop.table(table(train$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Training Class Distribution &quot;)</code></pre>
+<p><img src="Classification_files/figure-html/r-code-2.png" width="672" /></p>
+<pre class="r"><code>barplot(prop.table(table(test$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Test Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/r-code-3.png" width="672" /></p>
+<pre class="r"><code>#Over Sampling
+over_train = ovun.sample(V59~., data = train, method = &quot;over&quot;)$data
+table(over_train$V59)</code></pre>
+<pre><code>## 
+##   0   1 
+## 750 755</code></pre>
+<pre class="r"><code>over_test = ovun.sample(V59~., data = test, method = &quot;over&quot;)$data
+table(over_test$V59)</code></pre>
+<pre><code>## 
+##   0   1 
+## 250 246</code></pre>
+<pre class="r"><code>barplot(prop.table(table(over_train$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Oversampled training class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/over%20sampling-rf-1.png" width="672" /></p>
+<pre class="r"><code>barplot(prop.table(table(over_test$V59)),
+        col = rainbow(2),
+        ylim = c(0,1),
+        main = &quot;Oversampled testing class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/over%20sampling-rf-2.png" width="672" /></p>
+<pre class="r"><code>#Decision Tree
+dttrain &lt;- rpart(V59~.,data = train, method = &quot;class&quot;)
+
+
+dttrain_over &lt;- rpart(V59~.,data = over_train, method = &quot;class&quot;)
+
+
+rpart.plot(dttrain, main = &quot;Decision Tree for Raw Dataset &quot; )</code></pre>
+<p><img src="Classification_files/figure-html/model%20decison%20tree-1.png" width="672" /></p>
+<pre class="r"><code>rpart.plot(dttrain_over, main = &quot;Decision Tree for Oversampled Dataset &quot;)</code></pre>
+<p><img src="Classification_files/figure-html/model%20decison%20tree-2.png" width="672" /></p>
+<pre class="r"><code>#save(dttrain, file = &quot;DT_model&quot;)
+#save(dttrain_over, file = &quot;DT_model_over&quot;)
+
+confusionMatrix(predict(object=dttrain,test,type=&quot;class&quot;), test$V59, positive = &#39;1&#39;, mode = &quot;everything&quot;)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction   0   1
+##          0 244  36
+##          1   6  43
+##                                           
+##                Accuracy : 0.8723          
+##                  95% CI : (0.8314, 0.9064)
+##     No Information Rate : 0.7599          
+##     P-Value [Acc &gt; NIR] : 2.509e-07       
+##                                           
+##                   Kappa : 0.598           
+##                                           
+##  Mcnemar&#39;s Test P-Value : 7.648e-06       
+##                                           
+##             Sensitivity : 0.5443          
+##             Specificity : 0.9760          
+##          Pos Pred Value : 0.8776          
+##          Neg Pred Value : 0.8714          
+##               Precision : 0.8776          
+##                  Recall : 0.5443          
+##                      F1 : 0.6719          
+##              Prevalence : 0.2401          
+##          Detection Rate : 0.1307          
+##    Detection Prevalence : 0.1489          
+##       Balanced Accuracy : 0.7602          
 ##                                           
 ##        &#39;Positive&#39; Class : 1               
 ## </code></pre>
@@ -624,63 +815,374 @@ confusionMatrix(predict(rftrain_over, over_test), over_test$V59, positive = &#39
 ## 
 ##           Reference
 ## Prediction   0   1
-##          0 202  71
-##          1  48 181
+##          0 202  99
+##          1  48 147
 ##                                           
-##                Accuracy : 0.7629          
-##                  95% CI : (0.7233, 0.7995)
-##     No Information Rate : 0.502           
-##     P-Value [Acc &gt; NIR] : &lt; 2e-16         
+##                Accuracy : 0.7036          
+##                  95% CI : (0.6613, 0.7435)
+##     No Information Rate : 0.504           
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
 ##                                           
-##                   Kappa : 0.5261          
+##                   Kappa : 0.4062          
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 0.04372         
+##  Mcnemar&#39;s Test P-Value : 3.725e-05       
 ##                                           
-##             Sensitivity : 0.7183          
+##             Sensitivity : 0.5976          
 ##             Specificity : 0.8080          
-##          Pos Pred Value : 0.7904          
-##          Neg Pred Value : 0.7399          
-##               Precision : 0.7904          
-##                  Recall : 0.7183          
-##                      F1 : 0.7526          
-##              Prevalence : 0.5020          
-##          Detection Rate : 0.3606          
-##    Detection Prevalence : 0.4562          
-##       Balanced Accuracy : 0.7631          
+##          Pos Pred Value : 0.7538          
+##          Neg Pred Value : 0.6711          
+##               Precision : 0.7538          
+##                  Recall : 0.5976          
+##                      F1 : 0.6667          
+##              Prevalence : 0.4960          
+##          Detection Rate : 0.2964          
+##    Detection Prevalence : 0.3931          
+##       Balanced Accuracy : 0.7028          
 ##                                           
 ##        &#39;Positive&#39; Class : 1               
 ## </code></pre>
-<pre class="r"><code>confusionMatrix(predict(object=dttrain_over_criteria,test,type=&quot;class&quot;), test$V59, positive = &#39;1&#39;, mode = &quot;everything&quot;)</code></pre>
+<pre class="r"><code>#ROC Curves
+dttrain.pred &lt;- predict(dttrain, test, type = &quot;class&quot;)
+roc.curve(test$V59, dttrain.pred, plotit = T , main =&quot;ROC curve for Raw dataset&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/ROC%20curve%20decison%20tree-1.png" width="672" /></p>
+<pre><code>## Area under the curve (AUC): 0.760</code></pre>
+<pre class="r"><code>dttrain_over.pred &lt;- predict(dttrain_over, over_test, type = &quot;class&quot;)
+roc.curve(over_test$V59, dttrain_over.pred, plotit = T ,main =&quot; ROC curve for Oversampled dataset&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/ROC%20curve%20decison%20tree-2.png" width="672" /></p>
+<pre><code>## Area under the curve (AUC): 0.703</code></pre>
+<hr />
+</div>
+</div>
+<div id="logistic-regression" class="section level2">
+<h2>Logistic Regression</h2>
+<blockquote>
+<p>If linear regression serves to predict continuous Y variables, logistic regression is used for binary classification.</p>
+</blockquote>
+<p>Logistic Regression is one of the basic algorithms used for binary classification.The regression model is used to function with the lbp features that was extracted from the X-ray images. The implementation was done through the ‘caret’ package that is available in R.This package has the flexibility to be applied in a regression problem extensively. For classification and regression with no tuning parameters. We achieved an accuracy of about 90.34% with an F1 score of 0.6792 in our dataset. The area under the ROC curve in this case was 0.794.</p>
+<pre class="r"><code>load(&quot;covid_data_benchmark&quot;)
+glass.df = covid_data</code></pre>
+<p>Ideally, the proportion of events and non-events in the Y variable should approximately be the same. So, lets first check the proportion of classes</p>
+<pre class="r"><code># all the independent variables are numbers
+# we will convert the type variable which is the response variable as factor
+
+glass.df$V59&lt;- as.factor(glass.df$V59) # 7 labels
+table(glass.df$V59)
+#   0    1 
+# 1000  197 </code></pre>
+<pre class="r"><code>#Visualizing distribution of each class
+barplot(prop.table(table(glass.df$V59)),
+        col = &quot;coral&quot;,
+        ylim = c(0,1),
+        main = &quot;COVID dataset Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/pre-process%20data-1.png" width="672" /></p>
+<pre class="r"><code>resTable &lt;- glass.df %&gt;% tabyl(V59)
+resTable$labels &lt;- paste0(resTable$V59, &quot; (&quot;, scales::percent(resTable$percent), &quot;) &quot;) 
+
+resTable %&gt;%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat=&#39;identity&#39;)+
+  coord_polar(&quot;y&quot;)+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = &#39;none&#39;)+
+  labs(y=&#39;&#39;, x=&#39;&#39;)</code></pre>
+<p><img src="Classification_files/figure-html/pre-process%20data-2.png" width="672" /></p>
+<p><strong>Parameters and Settings:</strong> We initially split the data by a proportion of 30:70 distributed among both the classes for test and training purpose. You can also embed plots, for example:</p>
+<pre class="r"><code># training and test data 70:30
+set.seed(123)
+ind = sample(2, nrow(glass.df), replace = TRUE, prob=c(0.7,0.3))
+train.df = glass.df[ind == 1,]
+test.df = glass.df[ind == 2,]
+dim(train.df)
+dim(test.df)
+
+table(train.df$V59)
+
+table(test.df$V59)</code></pre>
+<pre class="r"><code>barplot(prop.table(table(train.df$V59)),
+        col = &quot;coral&quot;,
+        ylim = c(0,1),
+        main = &quot;Training Class Distribution&quot;)</code></pre>
+<p><img src="Classification_files/figure-html/pre-pro2%20train%20data-1.png" width="672" /></p>
+<pre class="r"><code>resTable &lt;- train.df %&gt;% tabyl(V59)
+resTable$labels &lt;- paste0(resTable$V59, &quot; (&quot;, scales::percent(resTable$percent), &quot;) &quot;) 
+
+resTable %&gt;%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat=&#39;identity&#39;)+
+  coord_polar(&quot;y&quot;)+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = &#39;none&#39;)+
+  labs(y=&#39;&#39;, x=&#39;&#39;)</code></pre>
+<p><img src="Classification_files/figure-html/pre-pro2%20train%20data-2.png" width="672" /></p>
+<pre class="r"><code># Create data for the graph.</code></pre>
+<p>For training, to tackle the class imbalance problem and we use 10 cross validation with 3 repeats. That is data will be split entirely 3 times, and for each of the 3 times, 10-fold cross validation is done for validation.</p>
+<pre class="r"><code>fitControl &lt;- trainControl(## 10-fold CV
+  method = &quot;cv&quot;,
+  number = 10,
+  savePredictions = TRUE
+)
+
+## Logistic Regression MODEL
+logistic_fit&lt;-train(V59 ~.,data=train.df,method=&quot;glm&quot;,
+                     preProcess = c(&quot;center&quot;, &quot;scale&quot;),
+                    family=binomial(),trControl=fitControl, 
+                    tuneLength=20)
+
+
+
+importance &lt;- varImp(logistic_fit,scale= FALSE)
+plot(importance)</code></pre>
+<p><img src="Classification_files/figure-html/logistic%20model-1.png" width="672" /></p>
+<pre class="r"><code>test_pred &lt;- predict(logistic_fit, newdata = test.df)
+
+table(test_pred,test.df$V59)
+
+#test_pred   0   1
+#        0 282  21
+#        1  13  36</code></pre>
+<pre class="r"><code>#confusion matrix
+
+confusionMatrix(test_pred, test.df$V59 , positive = &#39;1&#39;, mode = &quot;everything&quot;)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction   0   1
-##          0 244  36
-##          1   6  43
+##          0 282  21
+##          1  13  36
 ##                                           
-##                Accuracy : 0.8723          
-##                  95% CI : (0.8314, 0.9064)
-##     No Information Rate : 0.7599          
-##     P-Value [Acc &gt; NIR] : 2.509e-07       
+##                Accuracy : 0.9034          
+##                  95% CI : (0.8676, 0.9322)
+##     No Information Rate : 0.8381          
+##     P-Value [Acc &gt; NIR] : 0.0002803       
 ##                                           
-##                   Kappa : 0.598           
+##                   Kappa : 0.6228          
 ##                                           
-##  Mcnemar&#39;s Test P-Value : 7.648e-06       
+##  Mcnemar&#39;s Test P-Value : 0.2299491       
 ##                                           
-##             Sensitivity : 0.5443          
-##             Specificity : 0.9760          
-##          Pos Pred Value : 0.8776          
-##          Neg Pred Value : 0.8714          
-##               Precision : 0.8776          
-##                  Recall : 0.5443          
-##                      F1 : 0.6719          
-##              Prevalence : 0.2401          
-##          Detection Rate : 0.1307          
-##    Detection Prevalence : 0.1489          
-##       Balanced Accuracy : 0.7602          
+##             Sensitivity : 0.6316          
+##             Specificity : 0.9559          
+##          Pos Pred Value : 0.7347          
+##          Neg Pred Value : 0.9307          
+##               Precision : 0.7347          
+##                  Recall : 0.6316          
+##                      F1 : 0.6792          
+##              Prevalence : 0.1619          
+##          Detection Rate : 0.1023          
+##    Detection Prevalence : 0.1392          
+##       Balanced Accuracy : 0.7938          
 ##                                           
 ##        &#39;Positive&#39; Class : 1               
 ## </code></pre>
+<pre class="r"><code>mean(test_pred == test.df$V59)</code></pre>
+<pre><code>## [1] 0.9034091</code></pre>
+<pre><code>## Generalized Linear Model 
+## 
+## 849 samples
+##  58 predictor
+##   2 classes: &#39;0&#39;, &#39;1&#39; 
+## 
+## Pre-processing: centered (58), scaled (58) 
+## Resampling: Cross-Validated (10 fold) 
+## Summary of sample sizes: 763, 764, 763, 765, 763, 765, ... 
+## Resampling results:
+## 
+##   Accuracy   Kappa    
+##   0.9080861  0.6371457</code></pre>
+<p><img src="Classification_files/figure-html/ROC%20curve-lr%20-1.png" width="672" /></p>
+<pre><code>## Area under the curve (AUC): 0.794</code></pre>
+<p><strong>Results:</strong> We test the model with the test data that was initially split out from the overall dataset</p>
+<hr />
+</div>
+<div id="naive-bayes" class="section level2">
+<h2>Naive Bayes</h2>
+<pre class="r"><code>load(&#39;covid_data_new_masked&#39;)
+
+masked &lt;- covid_data %&gt;% 
+  mutate(V59 = factor(V59, labels   = c(&#39;Normal&#39;,&#39;COVID19&#39;)))
+
+sum(colSums(is.na(masked)))</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>resTable &lt;- masked %&gt;% tabyl(V59)
+resTable$labels &lt;- paste0(resTable$V59, &quot; (&quot;, scales::percent(resTable$percent), &quot;) &quot;) 
+
+resTable %&gt;%ggplot(aes(x=factor(1),y=n, fill=V59))+
+  geom_bar(width = 1, stat=&#39;identity&#39;)+
+  coord_polar(&quot;y&quot;)+
+  theme_minimal()+
+  geom_text(aes(y = c(800,200), 
+            label = labels), size=5)+
+  theme(legend.position = &#39;none&#39;)+
+  labs(y=&#39;&#39;, x=&#39;&#39;)</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-4-1.png" width="1152" /></p>
+<p><strong>Filtering near-zero variance predictors</strong></p>
+<p>To filter for near-zero variance predictors, the caret package function <code>nearZeroVar</code> will return the column numbers of any predictors with 0 variance</p>
+<pre class="r"><code>## When predictors should be removed, a vector of integers is
+## returned that indicates which columns should be removed.
+ZeroVar &lt;- nearZeroVar(masked)
+ZeroVar</code></pre>
+<pre><code>##  [1] 35 36 37 38 39 40 41 42 43 44 45 46 47 48 51 52 53 54 55 56 57 58</code></pre>
+<pre class="r"><code>var(masked$V35)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>length(ZeroVar)</code></pre>
+<pre><code>## [1] 22</code></pre>
+<p>The function returns column numbers denoting the predictors that are recommended for deletion:</p>
+<pre class="r"><code>filtered.dataset &lt;- masked[, -ZeroVar]</code></pre>
+<p><strong>Feature Selection</strong></p>
+<pre class="r"><code>set.seed(690)
+
+# prepare training scheme
+control &lt;- trainControl(method = &quot;cv&quot;, number = 10)
+# train the model
+model &lt;- train(V59~. , data=filtered.dataset, 
+               method = &quot;lvq&quot;, 
+               trControl = control)
+
+# estimate variable importance
+importance &lt;- varImp(model, scale=FALSE)
+# summarize importance
+#print(importance)
+
+# plot importance
+plot(importance)</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-7-1.png" width="1152" /></p>
+<pre class="r"><code>significant_features &lt;- c(predictors(rfRFE)[1:15], &#39;V59&#39;)
+dataset_after_fs &lt;- filtered.dataset[, significant_features]</code></pre>
+<p><strong>Spliting Data</strong></p>
+<p>The training and test sets were created using stratified random sampling:</p>
+<pre class="r"><code># Create Training and Test data 
+set.seed(1234)
+training_data &lt;- dataset_after_fs %&gt;%
+    dplyr::select(V59) %&gt;%
+    unlist() %&gt;%
+    createDataPartition(p = 0.75, list = FALSE)
+X_train &lt;- dataset_after_fs %&gt;%
+    dplyr::select(-V59) %&gt;%
+    slice(training_data) %&gt;%
+    data.frame()
+Y_train &lt;- dataset_after_fs %&gt;%
+    dplyr::select(V59) %&gt;%
+    slice(training_data) %&gt;%
+    unlist()
+X_test &lt;- dataset_after_fs %&gt;%
+    dplyr::select(-V59) %&gt;%
+    slice(-training_data) %&gt;%
+    data.frame()
+Y_test &lt;- dataset_after_fs %&gt;%
+    dplyr::select(V59) %&gt;%
+    slice(-training_data) %&gt;%
+    unlist()</code></pre>
+<p>downSample and upSample functions from the caret package, that readjust the class frequencies. Each takes arguments for the predictors (called x) and the outcome class (y). Both functions return a data frame with the sampled version of the training set:</p>
+<p><strong>Naive bayes on data_masking</strong></p>
+<p>Naive Bayes is a classification technique based on Bayes’ theorem with an assumption of independence between predictors. In simple terms, a Naive Bayes classifier assumes that the presence of a particular feature in a class is unrelated to the presence of any other feature.</p>
+<pre class="r"><code>train_control &lt;- trainControl(method = &quot;cv&quot;, number = 10,
+                    search = &#39;random&#39;,
+                   summaryFunction = twoClassSummary,classProbs = TRUE)
+#Naive algorithm
+set.seed(1234)
+nb_fit &lt;- train(X_train, Y_train, 
+                    method = &quot;nb&quot;,
+                    metric = &quot;ROC&quot;,
+                    preProcess=c(&quot;scale&quot;,&quot;center&quot;),
+                    trControl= train_control)
+nb_fit_full &lt;- train(V59~.,masked, 
+                    method = &quot;nb&quot;,
+                    metric = &quot;ROC&quot;,
+                    preProcess=c(&quot;scale&quot;,&quot;center&quot;),
+                    trControl= train_control)
+
+# results
+table(predict(nb_fit, X_train), Y_train)</code></pre>
+<pre><code>##          Y_train
+##           Normal COVID19
+##   Normal     699      96
+##   COVID19     51     139</code></pre>
+<p>The confusion matrix shows that Naive Bayes classifier predicted 704 Normal cases correctly and 102 wrong predictions. Similarly, the model predicted 133 COVID19 cases correctly and 46 wrong predictions.</p>
+<pre class="r"><code>confusionMatrix(nb_fit)</code></pre>
+<pre><code>## Cross-Validated (10 fold) Confusion Matrix 
+## 
+## (entries are percentual average cell counts across resamples)
+##  
+##           Reference
+## Prediction Normal COVID19
+##    Normal    70.8    10.1
+##    COVID19    5.4    13.8
+##                             
+##  Accuracy (average) : 0.8457</code></pre>
+<pre class="r"><code>confusionMatrix(nb_fit_full)</code></pre>
+<pre><code>## Cross-Validated (10 fold) Confusion Matrix 
+## 
+## (entries are percentual average cell counts across resamples)
+##  
+##           Reference
+## Prediction Normal COVID19
+##    Normal    72.7    12.9
+##    COVID19    3.4    10.9
+##                             
+##  Accuracy (average) : 0.8363</code></pre>
+<pre class="r"><code>#Predicting the test set results
+nb.pred &lt;- predict(nb_fit, X_test)
+
+accuracy.meas(response = Y_test, predicted = nb.pred)</code></pre>
+<pre><code>## 
+## Call: 
+## accuracy.meas(response = Y_test, predicted = nb.pred)
+## 
+## Examples are labelled as positive when predicted is greater than 0.5 
+## 
+## precision: 0.238
+## recall: 1.000
+## F: 0.192</code></pre>
+<pre class="r"><code>confusionMatrix(nb.pred, Y_test, positive = &#39;COVID19&#39;)</code></pre>
+<pre><code>## Confusion Matrix and Statistics
+## 
+##           Reference
+## Prediction Normal COVID19
+##    Normal     235      38
+##    COVID19     15      40
+##                                          
+##                Accuracy : 0.8384         
+##                  95% CI : (0.794, 0.8766)
+##     No Information Rate : 0.7622         
+##     P-Value [Acc &gt; NIR] : 0.0004808      
+##                                          
+##                   Kappa : 0.5039         
+##                                          
+##  Mcnemar&#39;s Test P-Value : 0.0025117      
+##                                          
+##             Sensitivity : 0.5128         
+##             Specificity : 0.9400         
+##          Pos Pred Value : 0.7273         
+##          Neg Pred Value : 0.8608         
+##              Prevalence : 0.2378         
+##          Detection Rate : 0.1220         
+##    Detection Prevalence : 0.1677         
+##       Balanced Accuracy : 0.7264         
+##                                          
+##        &#39;Positive&#39; Class : COVID19        
+## </code></pre>
+<p>The ROC and lift curves are created from these objects. For example:</p>
+<pre class="r"><code>roc.curve(Y_test, nb.pred, plotit = T)</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-14-1.png" width="1152" /></p>
+<pre><code>## Area under the curve (AUC): 0.726</code></pre>
+<pre class="r"><code># Visualize Naive Bayes clustering
+
+fviz_cluster(list(data=X_test, cluster=nb.pred),
+             ellipse.type = &#39;norm&#39;,geom = &#39;point&#39;,
+             stand = F, palette=&#39;jco&#39;, 
+             main=&#39;Cluster Analysis for COVID19 Using Naive Bayes  classifier&#39;,
+             ggtheme = theme_classic())</code></pre>
+<p><img src="Classification_files/figure-html/unnamed-chunk-15-1.png" width="1152" /></p>
+<hr />
+<div id="refs" class="references">
+<div id="ref-pereira2020covid">
+<p>[1] R.M. Pereira, D. Bertolini, L.O. Teixeira, C.N. Silla Jr, Y.M. Costa, COVID-19 identification in chest x-ray images on flat and hierarchical classification scenarios, Computer Methods and Programs in Biomedicine. (2020) 105532.</p>
+</div>
+<div id="ref-sorensen2008texture">
+<p>[2] L. Sørensen, S.B. Shaker, M. De Bruijne, Texture classification in lung ct using local binary patterns, in: International Conference on Medical Image Computing and Computer-Assisted Intervention, Springer, 2008: pp. 934–941.</p>
+</div>
+</div>
 </div>
 </div>
 

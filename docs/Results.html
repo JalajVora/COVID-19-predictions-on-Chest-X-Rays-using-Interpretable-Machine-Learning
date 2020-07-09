@@ -380,220 +380,329 @@ div.tocify {
 
 
 <p>     </p>
-<div id="svm" class="section level2">
-<h2>SVM</h2>
-<p>We used Support Vector Classifiers with Radial Basis function as kernel. With the hyper-parameter tuning, we found value of cost = 1 and gamma = 0.5 to be optimal w.r.t our ground truth.</p>
-<div id="library-imports" class="section level3">
-<h3>Library Imports</h3>
-<p>The CRAN packages <code>e1071</code> for classification using Support Vector Classifiers with Radial Basis Function kernel and hyper-parameter tuning and <code>ROSE</code> for over-sampling of data are being used.</p>
-<pre class="r"><code>library(e1071)
-library(ROSE)</code></pre>
-<pre><code>## Loaded ROSE 0.0-3</code></pre>
+<div id="benchmark-evaluation" class="section level2 tabset">
+<h2 class="tabset">Benchmark Evaluation</h2>
+<p><img src="Results_files/figure-html/accuracyplotmodel-1.png" width="672" /></p>
+<p>In accordance to the scientific paper<span class="citation">[<span class="citeproc-not-found" data-reference-id="Ozturk"><strong>???</strong></span>]</span>,where in the author presented a network for detection of COVID-19 cases using Deep Neural Networks with X-Ray images.The paper presents a detailed comparison study of their network with respect to other models for COVID-19 detection, in terms of accuracy. The details of the data-set used is explained in the following paragraph.</p>
+<p>The database was developed by <span class="citation">[<span class="citeproc-not-found" data-reference-id="Cohen-JP"><strong>???</strong></span>]</span> using images from various sources. The database is constantly upgraded, as of now, the database content comprise of around “201” COVID-19 positive X-Ray images.There were no images, which represent X-Ray of normal lungs, hence we have used thousand healthy X-Ray images from our original database as negative class, which we have used to feed our original models. The data-set can be downloaded from this link(<a href="https://github.com/ieee8023/COVID-chestxray-dataset" class="uri">https://github.com/ieee8023/COVID-chestxray-dataset</a>).</p>
+<p>In the following sections, we present the figures that are obtained by training the models with the same data-set that <span class="citation">[<span class="citeproc-not-found" data-reference-id="Ozturk"><strong>???</strong></span>]</span> used in his experiment followed by the comparison table :</p>
+<div id="random-forest" class="section level3">
+<h3>Random Forest</h3>
+<pre class="r"><code># Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0 245  18
+#          1   7  31
+#                                           
+#               Accuracy : 0.9169          
+#                  95% CI : (0.8798, 0.9455)
+#     No Information Rate : 0.8372          
+#     P-Value [Acc &gt; NIR] : 3.802e-05       
+#                                           
+#                   Kappa : 0.665           
+#                                           
+#  Mcnemar&#39;s Test P-Value : 0.0455          
+#                                           
+#             Sensitivity : 0.6327          
+#             Specificity : 0.9722          
+#          Pos Pred Value : 0.8158          
+#          Neg Pred Value : 0.9316          
+#               Precision : 0.8158          
+#                  Recall : 0.6327          
+#                      F1 : 0.7126          
+#              Prevalence : 0.1628          
+#          Detection Rate : 0.1030          
+#    Detection Prevalence : 0.1262          
+#       Balanced Accuracy : 0.8024          
+#                                           
+#        &#39;Positive&#39; Class : 1</code></pre>
 </div>
-<div id="pre-processing" class="section level3">
-<h3>Pre-Processing</h3>
-<pre><code>##        V1                V2                V3               V4         
-##  Min.   :      0   Min.   :      0   Min.   :     0   Min.   :      0  
-##  1st Qu.:1095008   1st Qu.: 560166   1st Qu.: 24092   1st Qu.: 338044  
-##  Median :1421973   Median : 860980   Median : 55360   Median : 594510  
-##  Mean   :1475117   Mean   :1031130   Mean   : 63767   Mean   : 596393  
-##  3rd Qu.:1834942   3rd Qu.:1318568   3rd Qu.: 94668   3rd Qu.: 830550  
-##  Max.   :4446528   Max.   :6340033   Max.   :401556   Max.   :2090907  
-##        V5               V6               V7               V8         
-##  Min.   :     0   Min.   :     0   Min.   :     0   Min.   :      0  
-##  1st Qu.: 37808   1st Qu.:     0   1st Qu.:     0   1st Qu.: 218172  
-##  Median : 80880   Median : 27719   Median : 37098   Median : 435603  
-##  Mean   : 89719   Mean   : 36925   Mean   : 49901   Mean   : 483330  
-##  3rd Qu.:131688   3rd Qu.: 57210   3rd Qu.: 77091   3rd Qu.: 670221  
-##  Max.   :328031   Max.   :614955   Max.   :370502   Max.   :1814066  
-##        V9              V10              V11              V12        
-##  Min.   :     0   Min.   :     0   Min.   :     0   Min.   :     0  
-##  1st Qu.: 24325   1st Qu.:     0   1st Qu.:     0   1st Qu.:     0  
-##  Median : 56706   Median :     0   Median :     0   Median : 24331  
-##  Mean   : 63292   Mean   : 18742   Mean   :  9109   Mean   : 28857  
-##  3rd Qu.: 95504   3rd Qu.: 29095   3rd Qu.: 18166   3rd Qu.: 48344  
-##  Max.   :273870   Max.   :155845   Max.   :273028   Max.   :468048  
-##       V13              V14              V15               V16         
-##  Min.   :     0   Min.   :     0   Min.   :      0   Min.   :      0  
-##  1st Qu.: 16351   1st Qu.:     0   1st Qu.:      0   1st Qu.:  67146  
-##  Median : 41948   Median :     0   Median :  35977   Median : 159173  
-##  Mean   : 54049   Mean   : 14207   Mean   : 114882   Mean   : 267047  
-##  3rd Qu.: 80607   3rd Qu.: 26228   3rd Qu.:  95132   3rd Qu.: 316470  
-##  Max.   :342023   Max.   :132165   Max.   :2684936   Max.   :3409900  
-##       V17               V18                V19              V20        
-##  Min.   :      0   Min.   :       0   Min.   :     0   Min.   :     0  
-##  1st Qu.: 568440   1st Qu.:  159250   1st Qu.:     0   1st Qu.: 46640  
-##  Median : 879072   Median :  286545   Median :     0   Median : 94060  
-##  Mean   :1025878   Mean   :  465573   Mean   : 19870   Mean   :109127  
-##  3rd Qu.:1293583   3rd Qu.:  483375   3rd Qu.: 29920   3rd Qu.:152802  
-##  Max.   :5184326   Max.   :14411810   Max.   :153810   Max.   :465584  
-##       V21              V22              V23              V24        
-##  Min.   :     0   Min.   :     0   Min.   :     0   Min.   :     0  
-##  1st Qu.:     0   1st Qu.:     0   1st Qu.:     0   1st Qu.: 29914  
-##  Median : 27978   Median :     0   Median :     0   Median : 70002  
-##  Mean   : 36317   Mean   : 21106   Mean   : 15880   Mean   : 75837  
-##  3rd Qu.: 54292   3rd Qu.: 29821   3rd Qu.: 26917   3rd Qu.:110559  
-##  Max.   :463822   Max.   :633590   Max.   :131336   Max.   :285192  
-##       V25               V26              V27              V28        
-##  Min.   :      0   Min.   :     0   Min.   :     0   Min.   :     0  
-##  1st Qu.: 340509   1st Qu.: 43600   1st Qu.:     0   1st Qu.: 51126  
-##  Median : 532350   Median : 88816   Median : 24752   Median : 98440  
-##  Mean   : 553534   Mean   :101550   Mean   : 29203   Mean   :106956  
-##  3rd Qu.: 739025   3rd Qu.:149495   3rd Qu.: 47274   3rd Qu.:154510  
-##  Max.   :2264850   Max.   :430668   Max.   :468048   Max.   :780080  
-##       V29               V30              V31               V32         
-##  Min.   :      0   Min.   :     0   Min.   :      0   Min.   :      0  
-##  1st Qu.: 237432   1st Qu.: 27988   1st Qu.:  82797   1st Qu.: 353073  
-##  Median : 429495   Median : 64822   Median : 184686   Median : 540540  
-##  Mean   : 468205   Mean   : 71144   Mean   : 286418   Mean   : 566503  
-##  3rd Qu.: 652132   3rd Qu.:103932   3rd Qu.: 333664   3rd Qu.: 714104  
-##  Max.   :1834487   Max.   :401280   Max.   :3035669   Max.   :4494390  
-##       V33              V34              V35         V36         V37   
-##  Min.   :     0   Min.   :     0   Min.   :0   Min.   :0   Min.   :0  
-##  1st Qu.: 35637   1st Qu.:     0   1st Qu.:0   1st Qu.:0   1st Qu.:0  
-##  Median : 74452   Median : 32069   Median :0   Median :0   Median :0  
-##  Mean   : 85330   Mean   : 32288   Mean   :0   Mean   :0   Mean   :0  
-##  3rd Qu.:129440   3rd Qu.: 44749   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0  
-##  Max.   :459918   Max.   :211535   Max.   :0   Max.   :0   Max.   :0  
-##       V38         V39         V40         V41         V42         V43   
-##  Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :0  
-##  1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0  
-##  Median :0   Median :0   Median :0   Median :0   Median :0   Median :0  
-##  Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   :0  
-##  3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0  
-##  Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :0  
-##       V44         V45         V46         V47         V48         V49         
-##  Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :      0  
-##  1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.: 207804  
-##  Median :0   Median :0   Median :0   Median :0   Median :0   Median : 324270  
-##  Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   : 356536  
-##  3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.: 476641  
-##  Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :1522620  
-##       V50              V51         V52         V53         V54         V55   
-##  Min.   :     0   Min.   :0   Min.   :0   Min.   :0   Min.   :0   Min.   :0  
-##  1st Qu.:     0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0  
-##  Median : 40735   Median :0   Median :0   Median :0   Median :0   Median :0  
-##  Mean   : 55231   Mean   :0   Mean   :0   Mean   :0   Mean   :0   Mean   :0  
-##  3rd Qu.: 84624   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0  
-##  Max.   :305350   Max.   :0   Max.   :0   Max.   :0   Max.   :0   Max.   :0  
-##       V56         V57         V58         V59        
-##  Min.   :0   Min.   :0   Min.   :0   Min.   :0.0000  
-##  1st Qu.:0   1st Qu.:0   1st Qu.:0   1st Qu.:0.0000  
-##  Median :0   Median :0   Median :0   Median :0.0000  
-##  Mean   :0   Mean   :0   Mean   :0   Mean   :0.2384  
-##  3rd Qu.:0   3rd Qu.:0   3rd Qu.:0   3rd Qu.:0.0000  
-##  Max.   :0   Max.   :0   Max.   :0   Max.   :1.0000</code></pre>
-<pre><code>## [1] TRUE</code></pre>
-<pre><code>## 
-##   0   1 
-## 650 653</code></pre>
-<pre><code>## 
-##   0   1 
-## 350 360</code></pre>
+<div id="knn" class="section level3">
+<h3>kNN</h3>
+<pre class="r"><code># Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0 283  21
+#          1  12  36
+#                                           
+#                Accuracy : 0.9062          
+#                  95% CI : (0.8709, 0.9346)
+#     No Information Rate : 0.8381          
+#     P-Value [Acc &gt; NIR] : 0.0001493       
+#                                           
+#                   Kappa : 0.6311          
+#                                           
+#  Mcnemar&#39;s Test P-Value : 0.1637344       
+#                                           
+#             Sensitivity : 0.9593          
+#             Specificity : 0.6316          
+#          Pos Pred Value : 0.9309          
+#          Neg Pred Value : 0.7500          
+#              Prevalence : 0.8381          
+#          Detection Rate : 0.8040          
+#    Detection Prevalence : 0.8636          
+#       Balanced Accuracy : 0.7955          
+#                                           
+#        &#39;Positive&#39; Class : 0</code></pre>
 </div>
-<div id="classification" class="section level3">
-<h3>Classification</h3>
-<pre class="r"><code>set.seed(825)
-
-#fitting the Support Vector Machine to the Training set
-svm_fit_ovs &lt;- svm(V59~., kernel = &#39;radial&#39;,
-               data = train_ov_sampled, scale=TRUE, cachesize = 200,
-               probability = TRUE, gamma = 0.5, cost = 1)</code></pre>
-<pre><code>## Warning in svm.default(x, y, scale = scale, ..., na.action = na.action):
-## Variable(s) &#39;V35&#39; and &#39;V36&#39; and &#39;V37&#39; and &#39;V38&#39; and &#39;V39&#39; and &#39;V40&#39; and &#39;V41&#39;
-## and &#39;V42&#39; and &#39;V43&#39; and &#39;V44&#39; and &#39;V45&#39; and &#39;V46&#39; and &#39;V47&#39; and &#39;V48&#39; and &#39;V51&#39;
-## and &#39;V52&#39; and &#39;V53&#39; and &#39;V54&#39; and &#39;V55&#39; and &#39;V56&#39; and &#39;V57&#39; and &#39;V58&#39; constant.
-## Cannot scale data.</code></pre>
-<pre class="r"><code>summary(svm_fit_ovs)</code></pre>
-<pre><code>## 
-## Call:
-## svm(formula = V59 ~ ., data = train_ov_sampled, kernel = &quot;radial&quot;, 
-##     cachesize = 200, probability = TRUE, gamma = 0.5, cost = 1, scale = TRUE)
-## 
-## 
-## Parameters:
-##    SVM-Type:  C-classification 
-##  SVM-Kernel:  radial 
-##        cost:  1 
-## 
-## Number of Support Vectors:  991
-## 
-##  ( 615 376 )
-## 
-## 
-## Number of Classes:  2 
-## 
-## Levels: 
-##  0 1</code></pre>
-<pre class="r"><code>#Hyper-Parameter Tuning
-# obj &lt;- tune.svm(V59~., data = train_ov_sampled, sampling = &quot;cross&quot;,
-#           gamma = 2^c(-1:4), cost = c(1:10))
-# summary(obj)</code></pre>
+<div id="logistic-regression" class="section level3">
+<h3>Logistic Regression</h3>
+<pre class="r"><code># Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0 282  21
+#          1  13  36
+#                                           
+#                Accuracy : 0.9034          
+#                  95% CI : (0.8676, 0.9322)
+#     No Information Rate : 0.8381          
+#     P-Value [Acc &gt; NIR] : 0.0002803       
+#                                           
+#                   Kappa : 0.6228          
+#                                           
+#  Mcnemar&#39;s Test P-Value : 0.2299491       
+#                                           
+#             Sensitivity : 0.9559          
+#             Specificity : 0.6316          
+#          Pos Pred Value : 0.9307          
+#          Neg Pred Value : 0.7347          
+#              Prevalence : 0.8381          
+#          Detection Rate : 0.8011          
+#    Detection Prevalence : 0.8608          
+#       Balanced Accuracy : 0.7938          
+#                                           
+#        &#39;Positive&#39; Class : 0    </code></pre>
 </div>
-<div id="prediction" class="section level3">
-<h3>Prediction</h3>
-<p><img src="Results_files/figure-html/prediction-1.png" width="672" /></p>
-<pre><code>##   0   1 
-## 694  16</code></pre>
+<div id="decision-tree" class="section level3">
+<h3>Decision Tree</h3>
+<pre class="r"><code># Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0 243  21
+#          1   9  28
+#                                           
+#                Accuracy : 0.9003          
+#                  95% CI : (0.8608, 0.9317)
+#     No Information Rate : 0.8372          
+#     P-Value [Acc &gt; NIR] : 0.001154        
+#                                           
+#                   Kappa : 0.5943          
+#                                           
+#  Mcnemar&#39;s Test P-Value : 0.044610        
+#                                           
+#             Sensitivity : 0.57143         
+#             Specificity : 0.96429         
+#          Pos Pred Value : 0.75676         
+#          Neg Pred Value : 0.92045         
+#               Precision : 0.75676         
+#                  Recall : 0.57143         
+#                      F1 : 0.65116         
+#              Prevalence : 0.16279         
+#          Detection Rate : 0.09302         
+#    Detection Prevalence : 0.12292         
+#       Balanced Accuracy : 0.76786         
+#                                           
+#        &#39;Positive&#39; Class : 1</code></pre>
 </div>
-<div id="evaluation" class="section level3">
-<h3>Evaluation</h3>
-<pre><code>## 
-## Call: 
-## accuracy.meas(response = test_ov_sampled$V59, predicted = svm.pred.ovs)
-## 
-## Examples are labelled as positive when predicted is greater than 0.5 
-## 
-## precision: 0.507
-## recall: 1.000
-## F: 0.336</code></pre>
-<pre><code>## Area under the curve (AUC): 0.522</code></pre>
-<p><img src="Results_files/figure-html/evaluation-1.png" width="672" /></p>
-<pre><code>## Confusion Matrix and Statistics
+<div id="naive-bayes" class="section level3">
+<h3>Naive Bayes</h3>
+<pre class="r"><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
-## Prediction   0   1
-##          0 350 344
-##          1   0  16
-##                                          
-##                Accuracy : 0.5155         
-##                  95% CI : (0.478, 0.5528)
-##     No Information Rate : 0.507          
-##     P-Value [Acc &gt; NIR] : 0.3399         
-##                                          
-##                   Kappa : 0.0438         
-##                                          
-##  Mcnemar&#39;s Test P-Value : &lt;2e-16         
-##                                          
-##             Sensitivity : 0.04444        
-##             Specificity : 1.00000        
-##          Pos Pred Value : 1.00000        
-##          Neg Pred Value : 0.50432        
-##              Prevalence : 0.50704        
-##          Detection Rate : 0.02254        
-##    Detection Prevalence : 0.02254        
-##       Balanced Accuracy : 0.52222        
-##                                          
-##        &#39;Positive&#39; Class : 1              
+## Prediction Normal COVID19
+##    Normal     235      24
+##    COVID19     15      26
+##                                           
+##                Accuracy : 0.87            
+##                  95% CI : (0.8266, 0.9059)
+##     No Information Rate : 0.8333          
+##     P-Value [Acc &gt; NIR] : 0.04857         
+##                                           
+##                   Kappa : 0.4957          
+##                                           
+##  Mcnemar&#39;s Test P-Value : 0.20018         
+##                                           
+##             Sensitivity : 0.52000         
+##             Specificity : 0.94000         
+##          Pos Pred Value : 0.63415         
+##          Neg Pred Value : 0.90734         
+##              Prevalence : 0.16667         
+##          Detection Rate : 0.08667         
+##    Detection Prevalence : 0.13667         
+##       Balanced Accuracy : 0.73000         
+##                                           
+##        &#39;Positive&#39; Class : COVID19         
 ## </code></pre>
 </div>
+<div id="support-vector-machine" class="section level3">
+<h3>Support Vector Machine</h3>
+<pre class="r"><code># 
+# Confusion Matrix and Statistics
+# 
+#           Reference
+# Prediction   0   1
+#          0  26   0
+#          1 307 346
+#                                           
+#                Accuracy : 0.5479          
+#                  95% CI : (0.5096, 0.5858)
+#     No Information Rate : 0.5096          
+#     P-Value [Acc &gt; NIR] : 0.02506         
+#                                           
+#                   Kappa : 0.0795          
+#                                           
+#  Mcnemar&#39;s Test P-Value : &lt; 2e-16         
+#                                           
+#             Sensitivity : 1.00000         
+#             Specificity : 0.07808         
+#          Pos Pred Value : 0.52986         
+#          Neg Pred Value : 1.00000         
+#              Prevalence : 0.50957         
+#          Detection Rate : 0.50957         
+#    Detection Prevalence : 0.96171         
+#       Balanced Accuracy : 0.53904         
+#                                           
+#        &#39;Positive&#39; Class : 1</code></pre>
+<div id="comparison-of-different-models" class="section level4">
+<h4><span class="sub-header">Comparison of different models:</span></h4>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="13%" />
+<col width="30%" />
+<col width="32%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Study</th>
+<th>Type Of Image</th>
+<th>No. Of Cases</th>
+<th>Method Used and Settin</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sethy and Behra</td>
+<td>Chest X-ray</td>
+<td>25 COVID-19(+) 25 COVID-19 (−)</td>
+<td>ResNet50+ SVM</td>
+<td>95.38</td>
+</tr>
+<tr class="even">
+<td>Hemdan et al.</td>
+<td>Chest X-ray</td>
+<td>25 COVID-19(+) 25 Normal</td>
+<td>COVIDX-Net</td>
+<td>90.0</td>
+</tr>
+<tr class="odd">
+<td>Narin et al.</td>
+<td>Chest X-ray</td>
+<td>50 COVID-19(+) 50 COVID-19 (−)</td>
+<td>Deep CNN ResNet-50</td>
+<td>98.0</td>
+</tr>
+<tr class="even">
+<td>Ying et al.</td>
+<td>Chest CT</td>
+<td>777 COVID-19(+) 708 Healthy</td>
+<td>DRE-Net</td>
+<td>86.0</td>
+</tr>
+<tr class="odd">
+<td>Wang et al.</td>
+<td>Chest CT</td>
+<td>195 COVID-19(+) 258 COVID-19(−)</td>
+<td>M-Inception</td>
+<td>82.9</td>
+</tr>
+<tr class="even">
+<td>Zheng et al.</td>
+<td>Chest CT</td>
+<td>313 COVID-19(+) 229 COVID-19(−)</td>
+<td>UNet+3D Deep Network</td>
+<td>90.8</td>
+</tr>
+<tr class="odd">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Decision Tree with RAW Data</td>
+<td>90.03</td>
+</tr>
+<tr class="even">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Decision Tree with Oversampled Data</td>
+<td>69.05</td>
+</tr>
+<tr class="odd">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Random Forest with RAW Data</td>
+<td>91.69</td>
+</tr>
+<tr class="even">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Random Forest with Oversampled Data</td>
+<td>79.17</td>
+</tr>
+<tr class="odd">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>kNN with RAW Data</td>
+<td>90.62</td>
+</tr>
+<tr class="even">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Logistic Regression with RAW Data</td>
+<td>90.34</td>
+</tr>
+<tr class="odd">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Naive Bayes with RAW Data</td>
+<td>87.0</td>
+</tr>
+<tr class="even">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>SVM with Oversampled Data</td>
+<td>54.73</td>
+</tr>
+</tbody>
+</table>
+<hr />
 </div>
-<div id="explanations" class="section level1">
-<h1>Explanations</h1>
-<p>Apart from prediction of positive and negative for Covid-19 cases from CXR images, we try providing an explanation of which areas of the image contributes towards the predicted results. Local interpretable model-agnostic explanations (LIME) <span class="citation">[<a href="#ref-ribeiro2016should" role="doc-biblioref">1</a>]</span> is a local surrogate model. That is instead of explaining the global prediction, it only explains the local prediction. Therefore once the predictions are available, the LIME model can be run, in hope that, the model finds the areas of the image that contributes most towards the prediction.</p>
-<p>Given any(black box/transparent) model, the Lime model probes the model and gets the output any number of time(theoritically). Lime creates a data set consist of permutated samples of the images, and feed those images to the model and tries to predict what happens to the predictions for the permutated samples.</p>
-<p>We initially ran our application, while feeding the whole image. However, as expected the areas where the lime model is trying to explain, is outside the intended region. For that reason, we give the model, the masked lungs image as input, while the other parts of the image is black. We thus, force the lime model to do any changes in the model on the intended area. This time, as expected the lime model focuses more on the parts of the lungs and thus gives a better performance.</p>
-<center>
-<p><img src="1-mask.png" alt="1-mask.png" /> <img src="1.jpgtmp.png" alt="1.jpgtmp.png" /> <img src="1.png" alt="1.png" /></p>
-</center>
-<p><strong>Parameters and settings:</strong> As a part of preprocessing of the images to be fed to the lime model, we do greyscaling of the image. While no resizing is done, the image is processed so that the 1 channel greyscaled masked image is fed to the LIME model.</p>
-<p>Number of features to find is set to 10.</p>
-<p>Only “positive” areas are marked in the explanation image.</p>
-<div id="refs" class="references">
-<div id="ref-ribeiro2016should">
-<p>[1] M.T. Ribeiro, S. Singh, C. Guestrin, " Why should i trust you?" Explaining the predictions of any classifier, in: Proceedings of the 22nd Acm Sigkdd International Conference on Knowledge Discovery and Data Mining, 2016: pp. 1135–1144.</p>
 </div>
 </div>
+<div id="final-analysis" class="section level2">
+<h2>Final Analysis</h2>
+<p>Based on our approach, we initially tried to extract the features out of the CXR images without any segmentation. However, we found that the area of interest i.e., the lung area is a very small segment of the whole image. Hence, the noise around the lung area dominates the outcome of the classification. Moreover, we found that quality of CXR images highly affects the feature vectors. For this reason, we segmented the images to find the area of interest and extract our features on corresponding lung-segment. The results were better in that case. However, we could not deal with quality of images in terms of light exposure.</p>
+<p>We tried explaining our prediction using <code>LIME</code> image module. Intially, we tried applying LIME on the whole image. However, the results were not good. All the areas highlighted by LIME were outside of lung-portion. So, we tried applying LIME on segmented image by applying black background on the non-lung area hoping that the LIME super-pixels will ignore the black backgrounded regions. We manually confirmed that any perturbed image outside the lung-segment area doesn’t get a different prediction. However, we partially succeded on this approach where we noticed that only the negative COVID images (False Negatives too) were correctly marked by LIME. However, positive images could not be properly annotated by LIME within the area of interest.</p>
+<p>We also applied classification algorithms, on benchmark dataset and compared the performaces of simple intrinsically explainable models we used and found that some of the very simple models such as kNN, Naive Bayes and Random Forest are giving high accuracy. To our astonishment, SVM couldn’t perform well in comparsion to these simpler models.</p>
+<p>We proposed to work on an ensemble architecture where we use our simpler models to boost our confidence in prediction. However, such an approach couldn’t give us the kind of robustness we expected. Hence, after seeing results with the ensemble approach, we dropped the idea of ensemble classification.</p>
+<p>We found Local Binary Pattern to be a powerful texture based descriptor, where the only justification of its usefulness can be seen when we compare our results with Neural Network based approaches in the benchmark section.</p>
+<hr />
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>We applied intrinsically explainable models and LIME explainer on CXR images, for COVID detection and explaination. The results obtained by the classifiers were of higher accuracy whereas LIME failed to perform the similarly. We observed that LBP are good dicriminatory feature vectors for CXR images, however we cannot mitigate the effect of luminosity, brightness and quality to the images. These factors add bias to our classifiers.</p>
 </div>
 
 
