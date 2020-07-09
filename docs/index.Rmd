@@ -114,11 +114,10 @@ We followed a typical Data Science pipeline starting with Pre-Processing of the 
   - We implemented following algorithms [@albahri2020role]:
     + k-nearest neighbours
     + Logistic Regression
-    + Support Vector Machines 
+    + Support Vector Machine 
     + Tree-based Classifiers
       - Decision Trees
       - Naive Bayes
-    + Multi-layer Perceptron
   
  <center> ![Pipeline Architecture](Picture1.png) </center>
 
