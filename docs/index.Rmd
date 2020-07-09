@@ -117,7 +117,8 @@ We followed a typical Data Science pipeline starting with Pre-Processing of the 
     + Support Vector Machine 
     + Tree-based Classifiers
       - Decision Trees
-      - Naive Bayes
+      - Random Forest
+    + Naive Bayes
   
  <center> ![Pipeline Architecture](Picture1.png) </center>
 
