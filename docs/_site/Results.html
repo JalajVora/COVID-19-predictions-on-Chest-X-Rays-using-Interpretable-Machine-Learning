@@ -380,12 +380,25 @@ div.tocify {
 
 
 <p>     </p>
+<div id="explanations" class="section level2">
+<h2>Explanations</h2>
+<p>Apart from prediction of positive and negative for COVID-19 cases from CXR images, we try providing an explanation of which areas of the image contributes towards the predicted results. Local interpretable model-agnostic explanations (LIME) <span class="citation">[<a href="#ref-ribeiro2016should" role="doc-biblioref">1</a>]</span> is a local surrogate model. That is instead of explaining the global prediction, it only explains the local prediction. Therefore once the predictions are available, the LIME model can be run, in hope that, the model finds the areas of the image that contributes most towards the prediction.</p>
+<p>Given any(black box/transparent) model, the Lime model probes the model and gets the output any number of time(theoritically). Lime creates a data set consist of permutated samples of the images, and feed those images to the model and tries to predict what happens to the predictions for the permutated samples.</p>
+<p>We initially ran our application, while feeding the whole image. However, as expected the areas where the lime model is trying to explain, is outside the intended region. For that reason, we give the model, the masked lungs image as input, while the other parts of the image is black. We thus, force the lime model to do any changes in the model on the intended area. This time, as expected the lime model focuses more on the parts of the lungs and thus gives a better performance.</p>
+<center>
+<p><img src="1-mask.png" alt="1-mask.png" /> <img src="1.jpgtmp.png" alt="1.jpgtmp.png" /> <img src="1.png" alt="1.png" /></p>
+</center>
+<p><strong>Parameters and settings:</strong> As a part of preprocessing of the images to be fed to the lime model, we do greyscaling of the image. While no resizing is done, the image is processed so that the 1 channel greyscaled masked image is fed to the LIME model.</p>
+<p>Number of features to find is set to 10.</p>
+<p>Only “positive” areas are marked in the explanation image.</p>
+<hr />
+</div>
 <div id="benchmark-evaluation" class="section level2 tabset">
 <h2 class="tabset">Benchmark Evaluation</h2>
 <p><img src="Results_files/figure-html/accuracyplotmodel-1.png" width="672" /></p>
-<p>In accordance to <span class="citation">[<a href="#ref-ozturk2020automated" role="doc-biblioref">1</a>]</span>, where in the author presented a network for detection of COVID-19 cases using Deep Neural Networks with X-Ray images.The paper presents a detailed comparison study of their network with respect to other models for COVID-19 detection, in terms of accuracy. The details of the data-set used is explained in the following paragraph.</p>
-<p>The database was developed by <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">2</a>]</span> using images from various sources. The database is constantly upgraded, as of now, the database content comprise of around “201” COVID-19 positive X-Ray images.There were no images, which represent X-Ray of normal lungs, hence we have used thousand healthy X-Ray images from our original database as negative class, which we have used to feed our original models.</p>
-<p>In the following sections, we present the figures that are obtained by training the models with the same data-set that <span class="citation">[<a href="#ref-ozturk2020automated" role="doc-biblioref">1</a>]</span> used in his experiment followed by the comparison table :</p>
+<p>In accordance to <span class="citation">[<a href="#ref-ozturk2020automated" role="doc-biblioref">2</a>]</span>, where in the author presented a network for detection of COVID-19 cases using Deep Neural Networks with X-Ray images.The paper presents a detailed comparison study of their network with respect to other models for COVID-19 detection, in terms of accuracy. The details of the data-set used is explained in the following paragraph.</p>
+<p>The database was developed by <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">3</a>]</span> using images from various sources. The database is constantly upgraded, as of now, the database content comprise of around “201” COVID-19 positive X-Ray images.There were no images, which represent X-Ray of normal lungs, hence we have used thousand healthy X-Ray images from our original database as negative class, which we have used to feed our original models.</p>
+<p>In the following sections, we present the figures that are obtained by training the models with the same data-set that <span class="citation">[<a href="#ref-ozturk2020automated" role="doc-biblioref">2</a>]</span> used in his experiment followed by the comparison table :</p>
 <div id="comparison-of-different-models" class="section level4">
 <h4><span class="sub-header">Comparison of different models</span></h4>
 <table>
@@ -709,11 +722,14 @@ div.tocify {
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
 <div id="refs" class="references">
+<div id="ref-ribeiro2016should">
+<p>[1] M.T. Ribeiro, S. Singh, C. Guestrin, " Why should i trust you?" Explaining the predictions of any classifier, in: Proceedings of the 22nd Acm Sigkdd International Conference on Knowledge Discovery and Data Mining, 2016: pp. 1135–1144.</p>
+</div>
 <div id="ref-ozturk2020automated">
-<p>[1] T. Ozturk, M. Talo, E.A. Yildirim, U.B. Baloglu, O. Yildirim, U.R. Acharya, Automated detection of covid-19 cases using deep neural networks with x-ray images, Computers in Biology and Medicine. (2020) 103792.</p>
+<p>[2] T. Ozturk, M. Talo, E.A. Yildirim, U.B. Baloglu, O. Yildirim, U.R. Acharya, Automated detection of covid-19 cases using deep neural networks with x-ray images, Computers in Biology and Medicine. (2020) 103792.</p>
 </div>
 <div id="ref-cohen2020covid">
-<p>[2] J.P. Cohen, P. Morrison, L. Dao, COVID-19 image data collection, arXiv 2003.11597. (2020). <a href="https://github.com/ieee8023/covid-chestxray-dataset">https://github.com/ieee8023/covid-chestxray-dataset</a>.</p>
+<p>[3] J.P. Cohen, P. Morrison, L. Dao, COVID-19 image data collection, arXiv 2003.11597. (2020). <a href="https://github.com/ieee8023/covid-chestxray-dataset">https://github.com/ieee8023/covid-chestxray-dataset</a>.</p>
 </div>
 </div>
 </div>
