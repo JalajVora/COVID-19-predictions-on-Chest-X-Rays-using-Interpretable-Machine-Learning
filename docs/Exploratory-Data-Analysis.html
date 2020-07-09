@@ -381,9 +381,9 @@ div.tocify {
 
 <p>     </p>
 <div id="data-exploration" class="section level2">
-<h2>Data Exploration:</h2>
+<h2>Data Exploration</h2>
 <p>Real world datasets are mostly imbalanced. The COVID-19 CXR (Chest X-Rays) dataset we used has around 1000 to 313 negative to positive ratio. That there are nearly three times more negative cases than that of positive. The classification algorithms in this case tends to favor the majority class. The distribution of the classes in the dataset in reality refers to the actual class distribution of the covid affected cases. Hence, the learning task in hand is a imbalanced learning task because there are more people with healthy lungs than that of with COVID-19.</p>
-<p>There are several methods to deal with this problem in classification setting, where the main objective is to rebalance the distribution by resampling the data to reduce the class imbalance problem, namely oversampling and under sampling. For our purpose we have used k fold cross-validation to train our model, where the data is split into multiple portions, and then (k-1) splits are used for training and 1 split for validation. And then this process is repeated several times. Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">1</a>]</span>[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">2</a>]</span>.</p>
+<p>There are several methods to deal with this problem in classification setting, where the main objective is to rebalance the distribution by resampling the data to reduce the class imbalance problem, namely oversampling and under sampling. For our purpose we have used k fold cross-validation to train our model, where the data is split into multiple portions, and then (k-1) splits are used for training and 1 split for validation. And then this process is repeated several times. Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">1</a>]</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, Kaggle CXR Pneumonia dataset by Paul Mooney,<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> CXR images of adult subjects from the RSNA Pneumonia Detection Challenge,<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> original and augmented versions of COVID-19 examples<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> from <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">2</a>]</span>.</p>
 <p>The image below is an instance of COVID negative image. The figure above shows an instance of a COVID-19 negative images. Similar to this image, all the images in the dataset are in Standard RGB color space. The dataset contains files in <code>.jpg</code>, <code>.jpeg</code> and <code>.png</code> formats. All the files are standardised to <code>.png</code> format for the ease of further processing.</p>
 <pre><code>##   format width height colorspace matte filesize density
 ## 1   JPEG   657    735       sRGB FALSE   101551 300x300</code></pre>
@@ -467,6 +467,15 @@ Thereafter, it forms a dataframe of 1313 rows and 59 columns where 59th column b
 <p>[4] P.L. Paula Filho, L.S. Oliveira, S. Nisgoski, A.S. Britto, Forest species recognition using macroscopic images, Machine Vision and Applications. 25 (2014) 1019–1031.</p>
 </div>
 </div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://github.com/rezacsedu/DeepCOVIDExplainer" class="uri">https://github.com/rezacsedu/DeepCOVIDExplainer</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia" class="uri">https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p><a href="https://www.kaggle.com/c/rsna-pneumonia-detection-challenge" class="uri">https://www.kaggle.com/c/rsna-pneumonia-detection-challenge</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+<li id="fn4"><p><a href="https://github.com/ieee8023/covid-chestxray-dataset" class="uri">https://github.com/ieee8023/covid-chestxray-dataset</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
+</ol>
 </div>
 
 
