@@ -380,16 +380,10 @@ div.tocify {
 
 
 <p>     </p>
-<div id="dataset" class="section level2">
-<h2>Dataset:</h2>
-<p>According to <span class="citation">[<a href="#ref-Zhao2020COVIDCTDatasetAC" role="doc-biblioref">1</a>–<a href="#ref-singh2020classification" role="doc-biblioref">5</a>]</span> CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F<sub>1</sub>-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won’t be that competible in terms of quality w.r.t CT-Scans but <span class="citation">[<a href="#ref-KERMANY20181122" role="doc-biblioref">6</a>]</span> suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.</p>
-<p>In particular we have used the <a href="https://shorturl.at/qwLR0">COVID-19 Dataset-Repo</a> as our Ground Truth.</p>
-<hr />
-</div>
 <div id="data-exploration" class="section level2">
 <h2>Data Exploration:</h2>
 <p>Real world datasets are mostly imbalanced. The COVID-19 CXR (Chest X-Rays) dataset we used has around 1000 to 313 negative to positive ratio. That there are nearly three times more negative cases than that of positive. The classification algorithms in this case tends to favor the majority class. The distribution of the classes in the dataset in reality refers to the actual class distribution of the covid affected cases. Hence, the learning task in hand is a imbalanced learning task because there are more people with healthy lungs than that of with COVID-19.</p>
-<p>There are several methods to deal with this problem in classification setting, where the main objective is to rebalance the distribution by resampling the data to reduce the class imbalance problem, namely oversampling and under sampling. For our purpose we have used k fold cross-validation to train our model, where the data is split into multiple portions, and then (k-1) splits are used for training and 1 split for validation. And then this process is repeated several times. Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">4</a>]</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, Kaggle CXR Pneumonia dataset by Paul Mooney,<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> CXR images of adult subjects from the RSNA Pneumonia Detection Challenge,<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> original and augmented versions of COVID-19 examples<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> from <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">7</a>]</span>.</p>
+<p>There are several methods to deal with this problem in classification setting, where the main objective is to rebalance the distribution by resampling the data to reduce the class imbalance problem, namely oversampling and under sampling. For our purpose we have used k fold cross-validation to train our model, where the data is split into multiple portions, and then (k-1) splits are used for training and 1 split for validation. And then this process is repeated several times. Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">1</a>]</span>[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">2</a>]</span>.</p>
 <p>The image below is an instance of COVID negative image. The figure above shows an instance of a COVID-19 negative images. Similar to this image, all the images in the dataset are in Standard RGB color space. The dataset contains files in <code>.jpg</code>, <code>.jpeg</code> and <code>.png</code> formats. All the files are standardised to <code>.png</code> format for the ease of further processing.</p>
 <pre><code>##   format width height colorspace matte filesize density
 ## 1   JPEG   657    735       sRGB FALSE   101551 300x300</code></pre>
@@ -414,11 +408,11 @@ div.tocify {
 </div>
 <div id="feature-extraction" class="section level3">
 <h3><span class="sub-header">Feature Extraction</span></h3>
-<p>For CXR images, the visual attribute that shows the most promising results are the texture based descriptors. There are several texture based descriptors that are available, both handcrafted and non handcrafted, however, we have focused mostly on the widely used Local Binary Patterns, formularized by <span class="citation">[<a href="#ref-ojala1996comparative" role="doc-biblioref">8</a>]</span>.</p>
+<p>For CXR images, the visual attribute that shows the most promising results are the texture based descriptors. There are several texture based descriptors that are available, both handcrafted and non handcrafted, however, we have focused mostly on the widely used Local Binary Patterns, formularized by <span class="citation">[<a href="#ref-ojala1996comparative" role="doc-biblioref">3</a>]</span>.</p>
 <p>LBP is a powerful texture descriptor, that has been applied on several classification tasks involving the texture. The LBP is calculated on a pixel to pixel basis by considering a center pixel(c) and its neighbourhood pixels (n) with some radius. Each neighbour pixel n is compared with center pixel c by means of substracting the grey values say g(c) and g(n) to get a distance d, such that if the d is negative then 0 is substituted in the place of the neighbour pixel else 1.</p>
 <p><span class="math display">\[d = 1~~iff~~g(c)-g(n)≥0\]</span> <span class="math display">\[d=0~otherwise\]</span></p>
-<p>The descriptor is then the histogram of such which counts the occurrence of binary pattens. The histogram depends on the setup of the radius and the obviously the pixel neighborhood. LBP has been successfully tried on several classification techniques <span class="citation">[<a href="#ref-paula2014forest" role="doc-biblioref">9</a>]</span></p>
-<p><strong>Parameters:</strong> Parameters used for the purpose are LBP <sub>8,2</sub> with 58 dimensions. The details of the parameters can be found in <span class="citation">[<a href="#ref-ojala1996comparative" role="doc-biblioref">8</a>]</span>.</p>
+<p>The descriptor is then the histogram of such which counts the occurrence of binary pattens. The histogram depends on the setup of the radius and the obviously the pixel neighborhood. LBP has been successfully tried on several classification techniques <span class="citation">[<a href="#ref-paula2014forest" role="doc-biblioref">4</a>]</span></p>
+<p><strong>Parameters:</strong> Parameters used for the purpose are LBP <sub>8,2</sub> with 58 dimensions. The details of the parameters can be found in <span class="citation">[<a href="#ref-ojala1996comparative" role="doc-biblioref">3</a>]</span>.</p>
 <p><strong>Vectors:</strong> As is previously explained there are total of 58 dimensions, to the descriptor. For a given CXR image we initially ran the descriptor on the complete image, and thus the descriptors obtained were very rich.</p>
 <p>However, with this setting there is a problem, that the CXR image not only captures the area of the lungs but the whole rib cage, which includes other organs too. Hence there is much noise considering out aim of getting the features our of the are of the lungs. For that purpose we used <a href="https://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/">segmentations</a>, to segment the area of the lungs our by means of a mask and then calculate the LBP for the masked area.</p>
 <pre><code>## # A tibble: 1 x 7
@@ -460,43 +454,19 @@ Thereafter, it forms a dataframe of 1313 rows and 59 columns where 59th column b
 <div id="references" class="section level1 unnumbered">
 <h1 class="unnumbered">References</h1>
 <div id="refs" class="references">
-<div id="ref-Zhao2020COVIDCTDatasetAC">
-<p>[1] J. Zhao, Y. Zhang, X. He, P. Xie, COVID-ct-dataset: A ct scan dataset about covid-19, ArXiv. abs/2003.13865 (2020).</p>
-</div>
-<div id="ref-wang2020deep">
-<p>[2] S. Wang, B. Kang, J. Ma, X. Zeng, M. Xiao, J. Guo, M. Cai, J. Yang, Y. Li, X. Meng, others, A deep learning algorithm using ct images to screen for corona virus disease (covid-19), MedRxiv. (2020).</p>
-</div>
-<div id="ref-li2020artificial">
-<p>[3] L. Li, L. Qin, Z. Xu, Y. Yin, X. Wang, B. Kong, J. Bai, Y. Lu, Z. Fang, Q. Song, others, Artificial intelligence distinguishes covid-19 from community acquired pneumonia on chest ct, Radiology. (2020) 200905.</p>
-</div>
 <div id="ref-karim2020deepcovidexplainer">
-<p>[4] M. Karim, T. Döhmen, D. Rebholz-Schuhmann, S. Decker, M. Cochez, O. Beyan, others, Deepcovidexplainer: Explainable covid-19 predictions based on chest x-ray images, arXiv Preprint arXiv:2004.04582. (2020).</p>
-</div>
-<div id="ref-singh2020classification">
-<p>[5] D. Singh, V. Kumar, M. Kaur, Classification of covid-19 patients from chest ct images using multi-objective differential evolution–based convolutional neural networks, European Journal of Clinical Microbiology &amp; Infectious Diseases. (2020) 1–11.</p>
-</div>
-<div id="ref-KERMANY20181122">
-<p>[6] D.S. Kermany, M. Goldbaum, W. Cai, C.C.S. Valentim, H. Liang, S.L. Baxter, A. McKeown, G. Yang, X. Wu, F. Yan, J. Dong, M.K. Prasadha, J. Pei, M.Y.L. Ting, J. Zhu, C. Li, S. Hewett, J. Dong, I. Ziyar, A. Shi, R. Zhang, L. Zheng, R. Hou, W. Shi, X. Fu, Y. Duan, V.A.N. Huu, C. Wen, E.D. Zhang, C.L. Zhang, O. Li, X. Wang, M.A. Singer, X. Sun, J. Xu, A. Tafreshi, M.A. Lewis, H. Xia, K. Zhang, Identifying medical diagnoses and treatable diseases by image-based deep learning, Cell. 172 (2018) 1122–1131.e9. <a href="https://doi.org/https://doi.org/10.1016/j.cell.2018.02.010">https://doi.org/https://doi.org/10.1016/j.cell.2018.02.010</a>.</p>
+<p>[1] M. Karim, T. Döhmen, D. Rebholz-Schuhmann, S. Decker, M. Cochez, O. Beyan, others, Deepcovidexplainer: Explainable covid-19 predictions based on chest x-ray images, arXiv Preprint arXiv:2004.04582. (2020).</p>
 </div>
 <div id="ref-cohen2020covid">
-<p>[7] J.P. Cohen, P. Morrison, L. Dao, COVID-19 image data collection, arXiv 2003.11597. (2020). <a href="https://github.com/ieee8023/covid-chestxray-dataset">https://github.com/ieee8023/covid-chestxray-dataset</a>.</p>
+<p>[2] J.P. Cohen, P. Morrison, L. Dao, COVID-19 image data collection, arXiv 2003.11597. (2020). <a href="https://github.com/ieee8023/covid-chestxray-dataset">https://github.com/ieee8023/covid-chestxray-dataset</a>.</p>
 </div>
 <div id="ref-ojala1996comparative">
-<p>[8] T. Ojala, M. Pietikäinen, D. Harwood, A comparative study of texture measures with classification based on featured distributions, Pattern Recognition. 29 (1996) 51–59.</p>
+<p>[3] T. Ojala, M. Pietikäinen, D. Harwood, A comparative study of texture measures with classification based on featured distributions, Pattern Recognition. 29 (1996) 51–59.</p>
 </div>
 <div id="ref-paula2014forest">
-<p>[9] P.L. Paula Filho, L.S. Oliveira, S. Nisgoski, A.S. Britto, Forest species recognition using macroscopic images, Machine Vision and Applications. 25 (2014) 1019–1031.</p>
+<p>[4] P.L. Paula Filho, L.S. Oliveira, S. Nisgoski, A.S. Britto, Forest species recognition using macroscopic images, Machine Vision and Applications. 25 (2014) 1019–1031.</p>
 </div>
 </div>
-</div>
-<div class="footnotes">
-<hr />
-<ol>
-<li id="fn1"><p><a href="https://github.com/rezacsedu/DeepCOVIDExplainer" class="uri">https://github.com/rezacsedu/DeepCOVIDExplainer</a><a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p><a href="https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia" class="uri">https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia</a><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
-<li id="fn3"><p><a href="https://www.kaggle.com/c/rsna-pneumonia-detection-challenge" class="uri">https://www.kaggle.com/c/rsna-pneumonia-detection-challenge</a><a href="#fnref3" class="footnote-back">↩︎</a></p></li>
-<li id="fn4"><p><a href="https://github.com/ieee8023/covid-chestxray-dataset" class="uri">https://github.com/ieee8023/covid-chestxray-dataset</a><a href="#fnref4" class="footnote-back">↩︎</a></p></li>
-</ol>
 </div>
 
 

@@ -36,7 +36,7 @@ references:
 
 # Models {.tabset}
 
-```{r packages, echo = TRUE, warning = FALSE, message = FALSE, results='hide'}
+```{r packages, echo = FALSE, warning = FALSE, message = FALSE, results='hide'}
 library(magick)
 library(ggplot2)
 library(funModeling)

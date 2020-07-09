@@ -33,18 +33,6 @@ dataset <- covid_data
 
 
 
-## Dataset:
-According to [@Zhao2020COVIDCTDatasetAC; @wang2020deep; @li2020artificial; @karim2020deepcovidexplainer; @singh2020classification] CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F~1~-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won't be that competible in terms of quality w.r.t CT-Scans but @KERMANY20181122 suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.
-
-In particular we have used the [COVID-19 Dataset-Repo](https://shorturl.at/qwLR0) as our Ground Truth.
-
-[^1]: https://github.com/rezacsedu/DeepCOVIDExplainer
-[^2]: https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia
-[^3]: https://www.kaggle.com/c/rsna-pneumonia-detection-challenge
-[^4]: https://github.com/ieee8023/covid-chestxray-dataset
-
-***
-
 ## Data Exploration:
 
 Real world datasets are mostly imbalanced. The COVID-19 CXR (Chest X-Rays) dataset we used has around 1000 to 313 negative to positive ratio. That there are nearly three times more negative cases than that of positive. The classification algorithms in this case tends to favor the majority class. The distribution of the classes in the dataset in reality refers to the actual class distribution of the covid affected cases. Hence, the learning task in hand is a imbalanced learning task because there are more people with healthy lungs than that of with COVID-19.

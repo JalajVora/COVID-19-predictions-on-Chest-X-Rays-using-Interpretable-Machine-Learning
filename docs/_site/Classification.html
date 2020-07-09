@@ -382,29 +382,6 @@ div.tocify {
 <p>     </p>
 <div id="models" class="section level1 tabset">
 <h1 class="tabset">Models</h1>
-<pre class="r"><code>library(magick)
-library(ggplot2)
-library(funModeling)
-library(DataExplorer)
-library(e1071)
-library(imbalance)
-library(caret)
-library(wvtool)
-library(imager)
-library(ROSE)
-library(tidyverse)       
-library(repr)
-library(factoextra)
-library(pander)
-library(klaR)
-library(janitor)
-library(mlbench)
-library(MLmetrics)
-library(randomForest)
-library(rpart)
-library(rpart.plot)
-library(pROC)
-library(plotROC)</code></pre>
 <div id="svm" class="section level2">
 <h2>SVM</h2>
 <p>We experimented with Support Vector Classifiers with Radial Basis function as kernel. The following diagram shows the data before over-sampling.</p>
@@ -441,39 +418,39 @@ ROSE::accuracy.meas(response = testset$V59, predicted = svm.pred.ovs)</code></pr
 ## 
 ## Examples are labelled as positive when predicted is greater than 0.5 
 ## 
-## precision: 0.523
+## precision: 0.517
 ## recall: 1.000
-## F: 0.344</code></pre>
+## F: 0.341</code></pre>
 <pre class="r"><code>ROSE::roc.curve(testset$V59, svm.pred.ovs, plotit = T)</code></pre>
 <p><img src="Classification_files/figure-html/eval-1.png" width="672" /></p>
-<pre><code>## Area under the curve (AUC): 0.546</code></pre>
+<pre><code>## Area under the curve (AUC): 0.541</code></pre>
 <pre class="r"><code>caret::confusionMatrix(svm.pred.ovs, testset$V59, positive = &#39;1&#39;)</code></pre>
 <pre><code>## Confusion Matrix and Statistics
 ## 
 ##           Reference
 ## Prediction   0   1
-##          0  30   0
-##          1 297 359
-##                                          
-##                Accuracy : 0.5671         
-##                  95% CI : (0.529, 0.6045)
-##     No Information Rate : 0.5233         
-##     P-Value [Acc &gt; NIR] : 0.01195        
-##                                          
-##                   Kappa : 0.0956         
-##                                          
-##  Mcnemar&#39;s Test P-Value : &lt; 2e-16        
-##                                          
-##             Sensitivity : 1.00000        
-##             Specificity : 0.09174        
-##          Pos Pred Value : 0.54726        
-##          Neg Pred Value : 1.00000        
-##              Prevalence : 0.52332        
-##          Detection Rate : 0.52332        
-##    Detection Prevalence : 0.95627        
-##       Balanced Accuracy : 0.54587        
-##                                          
-##        &#39;Positive&#39; Class : 1              
+##          0  27   0
+##          1 304 355
+##                                           
+##                Accuracy : 0.5569          
+##                  95% CI : (0.5188, 0.5944)
+##     No Information Rate : 0.5175          
+##     P-Value [Acc &gt; NIR] : 0.02133         
+##                                           
+##                   Kappa : 0.0842          
+##                                           
+##  Mcnemar&#39;s Test P-Value : &lt; 2e-16         
+##                                           
+##             Sensitivity : 1.00000         
+##             Specificity : 0.08157         
+##          Pos Pred Value : 0.53869         
+##          Neg Pred Value : 1.00000         
+##              Prevalence : 0.51749         
+##          Detection Rate : 0.51749         
+##    Detection Prevalence : 0.96064         
+##       Balanced Accuracy : 0.54079         
+##                                           
+##        &#39;Positive&#39; Class : 1               
 ## </code></pre>
 <hr />
 </div>

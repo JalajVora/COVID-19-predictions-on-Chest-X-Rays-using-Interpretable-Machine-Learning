@@ -165,6 +165,23 @@ packages <- c(
   "knitr"
   "jsonlite"
   "crul"
+  "rpart.plot"
+  "pROC"
+  "plotROC"
+  "magick"
+  "funModeling"
+  "DataExplorer"
+  "tidyverse"
+  "repr"
+  "factoextra"
+  "pander"
+  "klaR"
+  "janitor"
+  "mlbench"
+  "MLmetrics"
+  "randomForest"
+  "rpart"
+
 )
 
 verify.packages <- function(pkg) {
