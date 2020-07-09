@@ -383,9 +383,131 @@ div.tocify {
 <div id="benchmark-evaluation" class="section level2 tabset">
 <h2 class="tabset">Benchmark Evaluation</h2>
 <p><img src="Results_files/figure-html/accuracyplotmodel-1.png" width="672" /></p>
-<p>In accordance to the scientific paper<span class="citation">[<span class="citeproc-not-found" data-reference-id="Ozturk"><strong>???</strong></span>]</span>,where in the author presented a network for detection of COVID-19 cases using Deep Neural Networks with X-Ray images.The paper presents a detailed comparison study of their network with respect to other models for COVID-19 detection, in terms of accuracy. The details of the data-set used is explained in the following paragraph.</p>
-<p>The database was developed by <span class="citation">[<span class="citeproc-not-found" data-reference-id="Cohen-JP"><strong>???</strong></span>]</span> using images from various sources. The database is constantly upgraded, as of now, the database content comprise of around “201” COVID-19 positive X-Ray images.There were no images, which represent X-Ray of normal lungs, hence we have used thousand healthy X-Ray images from our original database as negative class, which we have used to feed our original models. The data-set can be downloaded from this link(<a href="https://github.com/ieee8023/COVID-chestxray-dataset" class="uri">https://github.com/ieee8023/COVID-chestxray-dataset</a>).</p>
-<p>In the following sections, we present the figures that are obtained by training the models with the same data-set that <span class="citation">[<span class="citeproc-not-found" data-reference-id="Ozturk"><strong>???</strong></span>]</span> used in his experiment followed by the comparison table :</p>
+<p>In accordance to <span class="citation">[<a href="#ref-ozturk2020automated" role="doc-biblioref">1</a>]</span>, where in the author presented a network for detection of COVID-19 cases using Deep Neural Networks with X-Ray images.The paper presents a detailed comparison study of their network with respect to other models for COVID-19 detection, in terms of accuracy. The details of the data-set used is explained in the following paragraph.</p>
+<p>The database was developed by <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">2</a>]</span> using images from various sources. The database is constantly upgraded, as of now, the database content comprise of around “201” COVID-19 positive X-Ray images.There were no images, which represent X-Ray of normal lungs, hence we have used thousand healthy X-Ray images from our original database as negative class, which we have used to feed our original models.</p>
+<p>In the following sections, we present the figures that are obtained by training the models with the same data-set that <span class="citation">[<a href="#ref-ozturk2020automated" role="doc-biblioref">1</a>]</span> used in his experiment followed by the comparison table :</p>
+<div id="comparison-of-different-models" class="section level4">
+<h4><span class="sub-header">Comparison of different models</span></h4>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="13%" />
+<col width="30%" />
+<col width="32%" />
+<col width="8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Study</th>
+<th>Type Of Image</th>
+<th>No. Of Cases</th>
+<th>Method Used and Settin</th>
+<th>Accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sethy and Behra</td>
+<td>Chest X-ray</td>
+<td>25 COVID-19(+) 25 COVID-19 (−)</td>
+<td>ResNet50+ SVM</td>
+<td>95.38</td>
+</tr>
+<tr class="even">
+<td>Hemdan et al.</td>
+<td>Chest X-ray</td>
+<td>25 COVID-19(+) 25 Normal</td>
+<td>COVIDX-Net</td>
+<td>90.0</td>
+</tr>
+<tr class="odd">
+<td>Narin et al.</td>
+<td>Chest X-ray</td>
+<td>50 COVID-19(+) 50 COVID-19 (−)</td>
+<td>Deep CNN ResNet-50</td>
+<td>98.0</td>
+</tr>
+<tr class="even">
+<td>Ying et al.</td>
+<td>Chest CT</td>
+<td>777 COVID-19(+) 708 Healthy</td>
+<td>DRE-Net</td>
+<td>86.0</td>
+</tr>
+<tr class="odd">
+<td>Wang et al.</td>
+<td>Chest CT</td>
+<td>195 COVID-19(+) 258 COVID-19(−)</td>
+<td>M-Inception</td>
+<td>82.9</td>
+</tr>
+<tr class="even">
+<td>Zheng et al.</td>
+<td>Chest CT</td>
+<td>313 COVID-19(+) 229 COVID-19(−)</td>
+<td>UNet+3D Deep Network</td>
+<td>90.8</td>
+</tr>
+<tr class="odd">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Decision Tree with RAW Data</td>
+<td>90.03</td>
+</tr>
+<tr class="even">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Decision Tree with Oversampled Data</td>
+<td>69.05</td>
+</tr>
+<tr class="odd">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Random Forest with RAW Data</td>
+<td>91.69</td>
+</tr>
+<tr class="even">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Random Forest with Oversampled Data</td>
+<td>79.17</td>
+</tr>
+<tr class="odd">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>kNN with RAW Data</td>
+<td>90.62</td>
+</tr>
+<tr class="even">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Logistic Regression with RAW Data</td>
+<td>90.34</td>
+</tr>
+<tr class="odd">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>Naive Bayes with RAW Data</td>
+<td>87.0</td>
+</tr>
+<tr class="even">
+<td>Our Study</td>
+<td>Chest X-ray</td>
+<td>1000 COVID-19(-) 201 COVID-19(+)</td>
+<td>SVM with Oversampled Data</td>
+<td>54.73</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
 <div id="random-forest" class="section level3">
 <h3>Random Forest</h3>
 <pre class="r"><code># Confusion Matrix and Statistics
@@ -567,128 +689,7 @@ div.tocify {
 #       Balanced Accuracy : 0.53904         
 #                                           
 #        &#39;Positive&#39; Class : 1</code></pre>
-<div id="comparison-of-different-models" class="section level4">
-<h4><span class="sub-header">Comparison of different models:</span></h4>
-<table>
-<colgroup>
-<col width="15%" />
-<col width="13%" />
-<col width="30%" />
-<col width="32%" />
-<col width="8%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Study</th>
-<th>Type Of Image</th>
-<th>No. Of Cases</th>
-<th>Method Used and Settin</th>
-<th>Accuracy</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Sethy and Behra</td>
-<td>Chest X-ray</td>
-<td>25 COVID-19(+) 25 COVID-19 (−)</td>
-<td>ResNet50+ SVM</td>
-<td>95.38</td>
-</tr>
-<tr class="even">
-<td>Hemdan et al.</td>
-<td>Chest X-ray</td>
-<td>25 COVID-19(+) 25 Normal</td>
-<td>COVIDX-Net</td>
-<td>90.0</td>
-</tr>
-<tr class="odd">
-<td>Narin et al.</td>
-<td>Chest X-ray</td>
-<td>50 COVID-19(+) 50 COVID-19 (−)</td>
-<td>Deep CNN ResNet-50</td>
-<td>98.0</td>
-</tr>
-<tr class="even">
-<td>Ying et al.</td>
-<td>Chest CT</td>
-<td>777 COVID-19(+) 708 Healthy</td>
-<td>DRE-Net</td>
-<td>86.0</td>
-</tr>
-<tr class="odd">
-<td>Wang et al.</td>
-<td>Chest CT</td>
-<td>195 COVID-19(+) 258 COVID-19(−)</td>
-<td>M-Inception</td>
-<td>82.9</td>
-</tr>
-<tr class="even">
-<td>Zheng et al.</td>
-<td>Chest CT</td>
-<td>313 COVID-19(+) 229 COVID-19(−)</td>
-<td>UNet+3D Deep Network</td>
-<td>90.8</td>
-</tr>
-<tr class="odd">
-<td>Our Study</td>
-<td>Chest X-ray</td>
-<td>1000 COVID-19(-) 201 COVID-19(+)</td>
-<td>Decision Tree with RAW Data</td>
-<td>90.03</td>
-</tr>
-<tr class="even">
-<td>Our Study</td>
-<td>Chest X-ray</td>
-<td>1000 COVID-19(-) 201 COVID-19(+)</td>
-<td>Decision Tree with Oversampled Data</td>
-<td>69.05</td>
-</tr>
-<tr class="odd">
-<td>Our Study</td>
-<td>Chest X-ray</td>
-<td>1000 COVID-19(-) 201 COVID-19(+)</td>
-<td>Random Forest with RAW Data</td>
-<td>91.69</td>
-</tr>
-<tr class="even">
-<td>Our Study</td>
-<td>Chest X-ray</td>
-<td>1000 COVID-19(-) 201 COVID-19(+)</td>
-<td>Random Forest with Oversampled Data</td>
-<td>79.17</td>
-</tr>
-<tr class="odd">
-<td>Our Study</td>
-<td>Chest X-ray</td>
-<td>1000 COVID-19(-) 201 COVID-19(+)</td>
-<td>kNN with RAW Data</td>
-<td>90.62</td>
-</tr>
-<tr class="even">
-<td>Our Study</td>
-<td>Chest X-ray</td>
-<td>1000 COVID-19(-) 201 COVID-19(+)</td>
-<td>Logistic Regression with RAW Data</td>
-<td>90.34</td>
-</tr>
-<tr class="odd">
-<td>Our Study</td>
-<td>Chest X-ray</td>
-<td>1000 COVID-19(-) 201 COVID-19(+)</td>
-<td>Naive Bayes with RAW Data</td>
-<td>87.0</td>
-</tr>
-<tr class="even">
-<td>Our Study</td>
-<td>Chest X-ray</td>
-<td>1000 COVID-19(-) 201 COVID-19(+)</td>
-<td>SVM with Oversampled Data</td>
-<td>54.73</td>
-</tr>
-</tbody>
-</table>
 <hr />
-</div>
 </div>
 </div>
 <div id="final-analysis" class="section level2">
@@ -703,6 +704,18 @@ div.tocify {
 <div id="conclusion" class="section level2">
 <h2>Conclusion</h2>
 <p>We applied intrinsically explainable models and LIME explainer on CXR images, for COVID detection and explaination. The results obtained by the classifiers were of higher accuracy whereas LIME failed to perform the similarly. We observed that LBP are good dicriminatory feature vectors for CXR images, however we cannot mitigate the effect of luminosity, brightness and quality to the images. These factors add bias to our classifiers.</p>
+<hr />
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references">
+<div id="ref-ozturk2020automated">
+<p>[1] T. Ozturk, M. Talo, E.A. Yildirim, U.B. Baloglu, O. Yildirim, U.R. Acharya, Automated detection of covid-19 cases using deep neural networks with x-ray images, Computers in Biology and Medicine. (2020) 103792.</p>
+</div>
+<div id="ref-cohen2020covid">
+<p>[2] J.P. Cohen, P. Morrison, L. Dao, COVID-19 image data collection, arXiv 2003.11597. (2020). <a href="https://github.com/ieee8023/covid-chestxray-dataset">https://github.com/ieee8023/covid-chestxray-dataset</a>.</p>
+</div>
+</div>
 </div>
 
 

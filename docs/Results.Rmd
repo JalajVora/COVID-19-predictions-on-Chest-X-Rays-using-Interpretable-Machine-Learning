@@ -51,18 +51,35 @@ ggplot(data=df, aes(x=Models, y=Accuracy)) +
 
 ```
  
-In accordance to the scientific paper[@Ozturk],where in the author presented a network for detection of COVID-19  cases using Deep Neural Networks with X-Ray images.The paper presents a detailed comparison study of their network with respect to other models for COVID-19 detection, in terms of accuracy. The details of the data-set used is explained in the following paragraph.
+In accordance to [@ozturk2020automated], where in the author presented a network for detection of COVID-19  cases using Deep Neural Networks with X-Ray images.The paper presents a detailed comparison study of their network with respect to other models for COVID-19 detection, in terms of accuracy. The details of the data-set used is explained in the following paragraph.
  
  
-The database was developed by [@Cohen-JP] using images from various sources. The database is constantly upgraded, as of now, the database content comprise of around "201" COVID-19 positive X-Ray images.There were no images, which represent  X-Ray of normal lungs, hence we have used thousand healthy X-Ray images from our original database as negative class, which we have used to feed our original models.
-The data-set can be downloaded from this link(https://github.com/ieee8023/COVID-chestxray-dataset).
+The database was developed by [@cohen2020covid] using images from various sources. The database is constantly upgraded, as of now, the database content comprise of around "201" COVID-19 positive X-Ray images.There were no images, which represent  X-Ray of normal lungs, hence we have used thousand healthy X-Ray images from our original database as negative class, which we have used to feed our original models.
+ 
+In the following sections, we present the figures that are obtained by training the models with the same data-set that [@ozturk2020automated] used in his experiment followed by the comparison table :
+ 
+#### <span class="sub-header">Comparison of different models</span>
 
 
- 
- 
-In the following sections, we present the figures that are obtained by training the models with the same data-set that [@Ozturk] used in his experiment followed by the comparison table :
- 
- 
+| Study           | Type Of Image | No. Of Cases                     | Method Used and Settin              | Accuracy |
+|-----------------|---------------|----------------------------------|-------------------------------------|----------|
+| Sethy and Behra | Chest X-ray   | 25 COVID-19(+) 25 COVID-19 (−)   | ResNet50+ SVM                       | 95.38    |
+| Hemdan et al.   | Chest X-ray   | 25 COVID-19(+) 25 Normal         | COVIDX-Net                          | 90.0     |
+| Narin et al.    | Chest X-ray   | 50 COVID-19(+) 50 COVID-19 (−)   | Deep CNN ResNet-50                  | 98.0     |
+| Ying et al.     | Chest CT      | 777 COVID-19(+) 708 Healthy      | DRE-Net                             | 86.0     |
+| Wang et al.     | Chest CT      | 195 COVID-19(+) 258 COVID-19(−)  | M-Inception                         | 82.9     |
+| Zheng et al.    | Chest CT      | 313 COVID-19(+) 229 COVID-19(−)  | UNet+3D Deep Network                | 90.8     |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Decision Tree with RAW Data         | 90.03    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Decision Tree with Oversampled Data | 69.05    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Random Forest with RAW Data         | 91.69    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Random Forest with Oversampled Data | 79.17    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | kNN with RAW Data                   | 90.62    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Logistic Regression with RAW Data   | 90.34    |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Naive Bayes with RAW Data           | 87.0     |
+| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | SVM with Oversampled Data           | 54.73    |
+
+***
+
 ### Random Forest 
 
 ```{r random forest , echo =TRUE }
@@ -281,31 +298,8 @@ In the following sections, we present the figures that are obtained by training 
 
 ```
 
-
-
-
-#### <span class="sub-header">Comparison of different models:</span>
-
-
-
-| Study           | Type Of Image | No. Of Cases                     | Method Used and Settin              | Accuracy |
-|-----------------|---------------|----------------------------------|-------------------------------------|----------|
-| Sethy and Behra | Chest X-ray   | 25 COVID-19(+) 25 COVID-19 (−)   | ResNet50+ SVM                       | 95.38    |
-| Hemdan et al.   | Chest X-ray   | 25 COVID-19(+) 25 Normal         | COVIDX-Net                          | 90.0     |
-| Narin et al.    | Chest X-ray   | 50 COVID-19(+) 50 COVID-19 (−)   | Deep CNN ResNet-50                  | 98.0     |
-| Ying et al.     | Chest CT      | 777 COVID-19(+) 708 Healthy      | DRE-Net                             | 86.0     |
-| Wang et al.     | Chest CT      | 195 COVID-19(+) 258 COVID-19(−)  | M-Inception                         | 82.9     |
-| Zheng et al.    | Chest CT      | 313 COVID-19(+) 229 COVID-19(−)  | UNet+3D Deep Network                | 90.8     |
-| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Decision Tree with RAW Data         | 90.03    |
-| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Decision Tree with Oversampled Data | 69.05    |
-| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Random Forest with RAW Data         | 91.69    |
-| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Random Forest with Oversampled Data | 79.17    |
-| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | kNN with RAW Data                   | 90.62    |
-| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Logistic Regression with RAW Data   | 90.34    |
-| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | Naive Bayes with RAW Data           | 87.0     |
-| Our Study       | Chest X-ray   | 1000 COVID-19(-) 201 COVID-19(+) | SVM with Oversampled Data           | 54.73    |
-
 ***
+
 ## Final Analysis
 
 Based on our approach, we initially tried to extract the features out of the CXR images without any segmentation. However, we found that the area of interest i.e., the lung area is a very small segment of the whole image. Hence, the noise around the lung area dominates the outcome of the classification. Moreover, we found that quality of CXR images highly affects the feature vectors. For this reason, we segmented the images to find the area of interest and extract our features on corresponding lung-segment. The results were better in that case. However, we could not deal with quality of images in terms of light exposure. 
@@ -321,5 +315,8 @@ We found Local Binary Pattern to be a powerful texture based descriptor, where t
 ***
 
 ## Conclusion
-
 We applied intrinsically explainable models and LIME explainer on CXR images, for COVID detection and explaination. The results obtained by the classifiers were of higher accuracy whereas LIME failed to perform the similarly. We observed that LBP are good dicriminatory feature vectors for CXR images, however we cannot mitigate the effect of luminosity, brightness and quality to the images. These factors add bias to our classifiers.
+
+***
+
+## References
