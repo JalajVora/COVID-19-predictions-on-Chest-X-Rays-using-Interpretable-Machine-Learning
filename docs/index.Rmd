@@ -179,9 +179,6 @@ packages <- c(
   "janitor"
   "mlbench"
   "MLmetrics"
-  "randomForest"
-  "rpart"
-
 )
 
 verify.packages <- function(pkg) {
