@@ -381,13 +381,13 @@ div.tocify {
 
 <p>     </p>
 <div id="background-and-motivation" class="section level2">
-<h2>Background and Motivation:</h2>
+<h2>Background and Motivation</h2>
 <p>The COVID-19 or the SARS-CoV-2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide <span class="citation">[<a href="#ref-WHO" role="doc-biblioref">1</a>]</span>. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits <span class="citation">[<a href="#ref-Zhao2020COVIDCTDatasetAC" role="doc-biblioref">2</a>]</span>; which usually takes upto 4-6 hours to reproduce the results is not very optimal way to move forward as the rate of COVID-19 patients registered grows exponentially. With this problem in scientific community, it motivated the aim of Machine Learning methods be brought to be a part in helping flattening the curve <span class="citation">[<a href="#ref-Respond" role="doc-biblioref">3</a>]</span>. So, this lead to a goal of building classifiers which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images <span class="citation">[<a href="#ref-wang2020covid" role="doc-biblioref">4</a>,<a href="#ref-narin2020automatic" role="doc-biblioref">5</a>]</span>. As this approach is less time and resource consuming; it is expected to achieve more streamlined performance compared to RT-PCR kits. Also in addition to a good prediction, we needed reasons that could justify what could be the features that are responsible in the diagonistic process <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">6</a>]</span>.</p>
 <p>With this idea and motivation in hand, our work tries to experiment in building classifiers with CXR (Chest X-Rays) as Ground Truth that predicts whether an X-Ray image is COVID-19 negative or positive. Along with, we try to come up with features that contributes to the detection of an image and also with an explaination delineating why was such a behaviour observed.</p>
 <hr />
 </div>
 <div id="project-objective" class="section level2">
-<h2>Project Objective:</h2>
+<h2>Project Objective</h2>
 <p>With the motivation to help fight against and analyse COVID-19, we came up with a research question of whether</p>
 <blockquote>
 <p>Can we use Machine Learning methods to diagonise COVID-19 and explain the prediction?</p>
@@ -403,7 +403,7 @@ div.tocify {
 <hr />
 </div>
 <div id="dataset" class="section level2">
-<h2>Dataset:</h2>
+<h2>Dataset</h2>
 <p>Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of <span class="citation">[<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">6</a>]</span><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, Kaggle CXR Pneumonia dataset by Paul Mooney,<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> CXR images of adult subjects from the RSNA Pneumonia Detection Challenge,<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> original and augmented versions of COVID-19 examples<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> from <span class="citation">[<a href="#ref-cohen2020covid" role="doc-biblioref">7</a>]</span>.</p>
 <p>According to <span class="citation">[<a href="#ref-Zhao2020COVIDCTDatasetAC" role="doc-biblioref">2</a>,<a href="#ref-karim2020deepcovidexplainer" role="doc-biblioref">6</a>,<a href="#ref-wang2020deep" role="doc-biblioref">8</a>–<a href="#ref-singh2020classification" role="doc-biblioref">10</a>]</span> CT-Scan data would be gold-standard for us and also potray pretty good results evaluated in terms of Accuracy and F<sub>1</sub>-Score. However, due to CT Scan being available in very less quantity publicly, we would like to use Chest X-rays as our dataset. Though, it won’t be that competible in terms of quality w.r.t CT-Scans but <span class="citation">[<a href="#ref-KERMANY20181122" role="doc-biblioref">11</a>]</span> suggests CXR to be sufficient and comparable to CT-Scans in order to diagnose COVID-19 patients.</p>
 <p>In particular we have used the <a href="https://shorturl.at/qwLR0">COVID-19 Dataset-Repo</a> as our Ground Truth.</p>
@@ -414,7 +414,7 @@ div.tocify {
 </div>
 </div>
 <div id="design-overview-algorithms-and-methods" class="section level2">
-<h2>Design Overview (Algorithms and Methods):</h2>
+<h2>Design Overview (Algorithms and Methods)</h2>
 <p>We followed a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding Descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor’s results. The details are delineated in the following sections:</p>
 <ul>
 <li><strong>Pre-Processing</strong>
@@ -493,10 +493,12 @@ div.tocify {
 </ul></li>
 </ul></li>
 </ul>
+<hr />
 </div>
 <div id="screencast" class="section level2">
 <h2>Screencast</h2>
-<p>(space for screencast)</p>
+<p><video src="CoV-19.mp4" style="width:90.0%" controls=""><a href="CoV-19.mp4">Video</a></video></p>
+<hr />
 </div>
 <div id="team" class="section level2">
 <h2>Team</h2>
@@ -507,6 +509,7 @@ div.tocify {
 <li>Shivam Singh</li>
 <li>Roshmitha Thummala</li>
 </ol>
+<hr />
 </div>
 <div id="r-packages" class="section level2">
 <h2>R packages</h2>
@@ -555,6 +558,7 @@ verify.packages &lt;- function(pkg) {
 }
 
 verify.packages(packages)</code></pre>
+<hr />
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>

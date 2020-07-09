@@ -37,7 +37,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-## Background and Motivation:
+## Background and Motivation
 
 The COVID-19 or the SARS-CoV-2 originated from the district of Wuhan, China has transpired to be a pandemic worldwide [@WHO]. Research on the COVID-19 is a hot topic among the Artificial Intelligence community recently. Due to shortage and limited efficiency of current testing mechanism of COVID-19 tests, i.e. through RT-PCR kits [@Zhao2020COVIDCTDatasetAC]; which usually takes upto 4-6 hours to reproduce the results is not very optimal way to move forward as the rate of COVID-19 patients registered grows exponentially. With this problem in scientific community, it motivated the aim of Machine Learning methods be brought to be a part in helping flattening the curve [@Respond]. So, this lead to a goal of building classifiers which can diagonise patients as COVID-19 negative or positive based on their respective X-Ray images [@wang2020covid; @narin2020automatic]. As this approach is less time and resource consuming; it is expected to achieve more streamlined performance compared to RT-PCR kits. Also in addition to a good prediction, we needed reasons that could justify what could be the features that are responsible in the diagonistic process [@karim2020deepcovidexplainer]. 
 
@@ -45,7 +45,7 @@ With this idea and motivation in hand, our work tries to experiment in building 
 
 
 ***
-## Project Objective:
+## Project Objective
 
 With the motivation to help fight against and analyse COVID-19, we came up with a research question of whether
 
@@ -60,7 +60,7 @@ To answer the this question, we aim to answer few sub-questions:
 * Can we come up with explaination of our model's decsision and prediction?
 
 ***
-## Dataset:
+## Dataset
 
 Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @karim2020deepcovidexplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @cohen2020covid. 
 
@@ -77,7 +77,7 @@ In particular we have used the [COVID-19 Dataset-Repo](https://shorturl.at/qwLR0
 The `R` scripts, process notebook and other resources have been stored at the [repository](https://github.com/JalajVora/Data-Science-with-R-Project.git).
 
 ***
-## Design Overview (Algorithms and Methods):
+## Design Overview (Algorithms and Methods)
 
 We followed a typical Data Science pipeline starting with Pre-Processing of the Dataset, Feature Extraction and Selection and then feeding Descriptors (Trainable Vectors) to different classifiers to train and test and then finally evaluation would be done based on predictor's results. The details are delineated in the following sections:
 
@@ -130,8 +130,13 @@ We followed a typical Data Science pipeline starting with Pre-Processing of the 
     - *F~1~-Score*
     - *AUC & ROC*
 
+***
+
 ## Screencast
-(space for screencast)
+
+![](CoV-19.mp4){width="90%"}
+
+***
 
 ## Team
 1. Subhajit Mondal
@@ -139,6 +144,8 @@ We followed a typical Data Science pipeline starting with Pre-Processing of the 
 3. Subhankar Patra
 4. Shivam Singh
 5. Roshmitha Thummala
+
+***
 
 ## R packages
 The following packages must be installed in R-Studio:
@@ -191,5 +198,7 @@ verify.packages <- function(pkg) {
 verify.packages(packages)
 
 ```
+
+***
 
 ## References
