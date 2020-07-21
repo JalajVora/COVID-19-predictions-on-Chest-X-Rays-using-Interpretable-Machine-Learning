@@ -12,13 +12,6 @@ summary(dataset)
 
 
 
-#preprocessing
-#dataset %>% drop_na()
-# drop <- c('V35', 'V36', 'V37', 'V38', 'V39', 'V40', 'V41', 'V42', 'V43', 'V44', 'V45', 
-#           'V46', 'V47', 'V48', 'V51', 'V52', 'V53', 'V54', 'V55', 'V56', 'V57', 'V58')
-# df = dataset[,!(names(df) %in% drop)]
-# summary(df)
-
 
 
 #Factoring the Target variable of (0,1)

@@ -63,6 +63,7 @@ With this idea and motivation in hand, our work tries to experiment in building 
 
 
 ***
+
 ## Project Objective
 
 With the motivation to help fight against and analyse COVID-19, we came up with a research question of whether
@@ -79,6 +80,7 @@ To answer the this question, we aim to answer few sub-questions:
 
 
 ***
+
 ## Dataset
 
 Our Dataset consists of 313 Positive COVID CXR and 1000 Negative CXR collected from four different sources to make our version of the dataset to work upon. This includes COVIDx dataset of @karim2020deepcovidexplainer[^1], Kaggle CXR Pneumonia dataset by Paul Mooney [^2], CXR images of adult subjects from the RSNA Pneumonia Detection Challenge [^3], original and augmented versions of COVID-19 examples [^4] from @cohen2020covid. 
@@ -648,7 +650,7 @@ roc.curve(over_test$V59, dttrain_over.pred, plotit = T ,main =" ROC curve for Ov
 
 ### Logistic Regression
 
->If linear regression serves to predict continuous Y variables, logistic regression is used for binary classification.
+> If linear regression serves to predict continuous Y variables, logistic regression is used for binary classification.
 
 
 Logistic Regression is one of the basic algorithms used for binary classification.The regression model is used to function with the lbp features that was extracted from the X-ray images. The implementation was done through the ‘caret’ package that is available in R.This package has the flexibility to be applied in a regression problem extensively. For classification and regression with no tuning parameters. We achieved an accuracy of about 90.34% with an F1 score of 0.6792 in our dataset. The area under the ROC curve in this case was 0.794.
