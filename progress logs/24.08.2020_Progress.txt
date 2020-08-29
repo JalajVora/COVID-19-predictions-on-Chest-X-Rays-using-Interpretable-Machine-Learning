@@ -1,0 +1,22 @@
+AIM: Our Task is to create something similar to Chester AI Radiology, but just that we have constraints of making it with Interpretable Machine Learning Models 
+and Explanability with SHAP. In order to work with Interpretable Machine Learning models, we need some kind of feature engineering. 
+The idea for the feature engineering so far is that to use Radiological features extracted by paper as our baseline features, and we need methods or models which extracts these individual approx. 10 features from 
+image and gives us feature vectors. So far we don't have any model that just gives us feature vectors out of an image(CXR) feeded. We found few implementations who tried to so but,
+those are individual feature efforts. I mean one model for 2-3 features. We would need different different models in order to extract all 10 or may be combine them. We need to work on that technical aspect ASAP,
+so that we could start implementation of features and we could work on its errors and we could proceed with implementing SHAP. Apparantely, difficulty lies in either making a custom model for feature extraction (A Feature Extractor)
+or combining the existing. As per my team mates, implementing would be an easier task. For Kick-off, We would also need a presentation with a pellucid idea of our pipleline and feature extractor and SHAP explicitly.
+Though complete implementation is not required but we would need something to show. At the end I am not sure whether we would have to make an online/ web-based application running the same.
+We also need to update and rebuild our working website to add feather to the cap. On the side of code, first we need to have some working code satisfying all the dependencies and requirements and 
+then we can restructure and beautify.
+
+
+ISSUE: One big issue we're facing is that all the existing similar experiments we saw, they have labelled dataset. Meaning Radiologically-annotated images.
+This makes our task bit differently difficult. Most of the imgages used in the existing experiments are Digital Imaging and Communications in Medicine (DICOM) images.
+
+
+
+Implementation Methods we know:
+	1. Implementation of AI Chester Radiology Assistant.
+	2. Pneumothorax Detection
+	3. Cardiomegaly Detection
+	4. 

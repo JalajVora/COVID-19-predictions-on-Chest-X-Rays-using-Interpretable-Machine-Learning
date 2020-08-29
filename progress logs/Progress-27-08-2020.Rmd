@@ -1,0 +1,48 @@
+---
+title: "Progress-27.08.2020"
+author: "Team COVID-IML"
+date: "8/27/2020"
+output:
+  pdf_document:
+    latex_engine: xelatex
+bibliography: references.bib
+csl: data-and-knowledge-engineering.csl
+nocite: '@*'
+---
+
+# COVID-19 Prediction on CXRs using Interpretable Machine Learning
+
+## AIM: 
+
+Our Task is to create something similar to Chester AI Radiology, but just that we have constraints of making it with Interpretable Machine Learning Models and Explanability with SHAP. In order to work with Interpretable Machine Learning models, we need some kind of feature engineering. 
+
+The idea for the feature engineering so far is that to use Radiological features extracted by paper as our baseline features, and we need methods or models which extracts these individual approx. 10 features from image and gives us feature vectors. So far we don't have any model that just gives us feature vectors out of an image(CXR) fed. We found few implementations who tried to so but, those are individual feature efforts. I mean one model for 2-3 features. We would need different different models in order to extract all 10 or may be combine them. We need to work on that technical aspect ASAP, so that we could start implementation of features and we could work on its errors and we could proceed with implementing SHAP. 
+
+Apparently, difficulty lies in either making a custom model for feature extraction (A Feature Extractor) or combining the existing. As per my team mates, implementing would be an easier task. For Kick-off, We would also need a presentation with a pellucid idea of our pipeline and feature extractor and SHAP explicitly.
+
+Though complete implementation is not required but we would need something to show. At the end I am not sure whether we would have to make an online/ web-based application running the same. We also need to update and rebuild our working website to add feather to the cap. On the side of code, first we need to have some working code satisfying all the dependencies and requirements and then we can restructure and beautify.
+
+
+## ISSUE: 
+
+One big issue we're facing is that all the existing similar experiments we saw, they have labeled data-set. Meaning Radiologically-annotated images. This makes our task bit differently difficult. Most of the images used in the existing experiments are Digital Imaging and Communications in Medicine (DICOM) images.
+
+
+
+## Implementation Methods we know:
+  
+1. Implementation of AI Chester Radiology Assistant. [^1] [^6]
+2. Pneumothorax Detection 
+3. Cardiomegaly Detection
+4. Pneumonia Radiological Feature Detection [^2] [^3] [^4] [^5] [^7] [^8]
+
+[^1]: https://mlmed.org/tools/xray/
+[^2]: https://github.com/brucechou1983/CheXNet-Keras
+[^3]: https://www.kaggle.com/kmader/cardiomegaly-pretrained-vgg16
+[^4]: https://github.com/PyTorchLightning/lightning-Covid19
+[^5]: https://github.com/ManuelPalermo/X-Ray-ConvNet
+[^6]: https://github.com/mlmed/chester-xray
+[^7]: https://github.com/mlmed/torchxrayvision
+[^8]: https://biomedical-engineering-online.biomedcentral.com/articles/10.1186/s12938-019-0627-4
+
+## References
