@@ -6,3 +6,7 @@ Jalaj Vora <br>
 Subhankar Patra <br>
 Shivam Singh <br>
 Subhajit Mondal <br>
+
+***
+
+Further details could be found at [website](https://jalajvora.github.io/COVID-19-predictions-on-Chest-X-Rays-using-Interpretable-Machine-Learning/).
