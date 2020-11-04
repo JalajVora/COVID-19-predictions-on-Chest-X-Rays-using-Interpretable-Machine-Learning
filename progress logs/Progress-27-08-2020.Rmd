@@ -1,7 +1,7 @@
 ---
 title: "Progress Report"
 author: "Team COVID-IML"
-date: "04.09.2020"
+date: "24.09.2020"
 output:
   pdf_document:
     latex_engine: xelatex
@@ -11,21 +11,11 @@ link-citations: yes
 #nocite: '@*'
 ---
 
-# COVID-19 Prediction on CXRs using Interpretable Machine Learning
+# Explanable Machine Learning for COVID-19 Prediction on Chest X-Rays
 
-## Aim:
+From the last meet on 03.09.2020, we were given time till 24.09.2020 to work upon the Feature Engineering part. After our experiment and literature survey, We all agreed to stick to Uli's suggested timeline, i.e. to end the project by 24.03.2021.
 
-Our Task is to create something similar to Chester AI Radiology Assistant[^1], but just that we have constraints of making it with Intrinsically Explainable Machine Learning Models and Explanability using SHAP. In order to work with Interpretable Machine Learning models, we need some kind of feature engineering. 
-
-[^1]: https://mlmed.org/tools/xray/
-
-## Feature Engineering:
-
-The idea for the feature engineering so far is that to use Radiological features extracted by paper [@durrani2020chest; @cozzi2020chest; @cleverley2020role; @rubin2020role]. Also, as per [radiology assistant](https://radiologyassistant.nl/chest/covid-19/covid19-imaging-findings) we used @hansell2008fleischner as a reference to see what exactly these features mean and would contribute. We also found out that there exists implementations for detection of Pneumonia from CXRs and COVID-19 being kind of acellular viral pneumonia [@pereira2020covid]. [@pereira2020covid]'s experiment and his work centered around COVID-19 detection but lacked expalanibility entirely. Nicely engineered but badly doctored.
-
-So far we don't have any model that just gives us feature vectors out of an image(CXR) fed. We found few implementations who tried to so but, those are individual feature efforts. We got an idea from [@ye2019detection]'s experiment with detecting GGO (Ground Glass Opacity from CT Scans using Deep Learning. It was a good experiment but through our journey we realized that this wouldn't be a very good idea to do so as then we'd have to find similar networks for all 12 features and we'd have to build 12 NN each detecting individual features and that would be too complex and Naive to do so) and [cardiomegaly](https://www.kaggle.com/kmader/cardiomegaly-pretrained-vgg16). 
-
-So we found [CheXNet](https://stanfordmlgroup.github.io/projects/chexnet/) to be one of the implementations that could be helpful detecting features. The outcome of CheXNet and [@durrani2020chest; @cozzi2020chest; @cleverley2020role] we decided to combine and filter down to the 14 radiological findings as our features.
+Our problem after last attempt was to work specifically on CheXNet architecture as we intend to use it as our feature extractor. For a recap, we intend to stick to 14 radiological features [@durrani2020chest; @cozzi2020chest; @cleverley2020role; @rubin2020role], detected by CheXNet and also suggested by other papers to detect COVID-19 in CXRs.
 
 These features are:
 1. Atelectasis
@@ -43,75 +33,15 @@ These features are:
 13. Pneumonia
 14. Pneumothorax
 
+On a deep dive to the architecture we came to know it's know how and also we tried to configure in a way that it detects the presence of features as probabilities. Also, we faced an issue that the architecture is made in such a manner that it inputs the radiologically annotated NIH dataset in order to train and test. Whereas, we intend to use this architecture as pre-trained network which works on our COVID-19 dataset.
 
-## Issues faced: 
-One big issue we're facing is that all the existing similar experiments we saw, they have labeled data-set. Meaning Radiologicaly-annotated images. This makes our task bit differently difficult. Most of the images used in the existing experiments are Digital Imaging and Communications in Medicine (DICOM) images.
-
-After an extensive search, we found that use of DICOM images entirely or partly is not possible because we don't have any publicly available source for COVID-19 patients. Though, we can use the DICOM data for training feature extractor but a confirmed use will be stated in upcoming further progress reports.
+After several attempts, we're still working on the modifying the architecture so that it also works for non-annotated dataset similar to ours. With this attempt, on our minor literature survey, we found that there are few attempts by [@barstugan2020coronavirus; @apostolopoulos2020extracting; @hasan2020classification; @elaziz2020new; @perumal2020detection; @khuzani2020covid] which work for a similar objective but in different fashion i.e., using mixture of texture based and other methods. Also, we found that we intend to experiment with MobileNetv2 architecture in order to check whether this modification could work for our objective or not!
 
 
-## Implementation Methods we know:
-
-### Theoretically:
-
-@zhang2019radiological also has a very nice piece of literature survey. He survey different approaches to be tried starting from surveying various feature extraction techniques which informed and inspired us and also explain different usage of Machine learning techniques used so far on brain based radiological studies (mostly MRIs). If that can happen on brain, it can also happen on CXRs.
-
-@toussie2020clinical shows that along with radiological, pathological or clinical findings could also help and adds to the idea of using features as Global and Local. 
-
-@hasan2020classification and @article shows a different kind of approach for dealing with features i.e., using hand-crafted features.
-
-We also studied some extraction methods like one from @hong1991algebraic but didn't found to be that much useful to our project as it might get too complex. 
-
-[@zokaeinikoo2020aidcov]'s experiment is also nice and could be taken into consideration while comparing and benchmarking; 
-
-#### Interpretable Experiments:
-
-[@wang2020covid; @kumar2014detailed; @tsiknakis2020interpretable;  @nour2020novel; @ilovar2011analysis; @candemir2018deep; @akl2020use; @wong2020frequency] have extensively worked on interpretable COVID-19 prediction with @chen2020interpretable working on diagnosis of severity of COVID patients based on clinical findings. 
-
-Whereas @apostolopoulos2020extracting does not exactly have approach similar to us but considers diseases which satisfies our assumption of considering Pneumonia as higher distinguishing factor.
-
-[@chatterjee2020exploration]'s study is more on interpretability of existing state-of-the-art networks but study also supports to our viral pneumonia assumption.
-
-[@kassani2020automatic]'s experiment idea similar to us but he used transfer learning for feature extraction and then feeds to NNs and then classification was done using classical ML models such as SVM, DT & Random Forests and compares the findings. 
-
-[@zhang2020viral] found to have a very different approach and interesting, especially its feature extraction could be helpful somehow. 
-
-A study by [@ahsan2020study] helped us regarding state-of-the-art methods' literature review. we studied @neuman2012variability to get to know CXR more better. 
-
-@brunese2020explainable (bit not sure because he just used labels with combination of different datasets and then confirmed through Radiologists. Need to make a story before jumping to conclusion of rad. features); 
-
-@toba2020prediction 's pre-processing was interesting because we thought w.r.t CXR we could used such pre-processed images so that it might increase the prediction probability and clarity along with explanation.
-
-@sethy2020detection did an experiment similar to us but they used deep features using few NNs and then fed those to SVM but no explanibility;
-
-### Practically:
-
-* [1](https://github.com/brucechou1983/CheXNet-Keras) Model is well defined, however the pre-processing performed on image was much complicated.
-
-* [2](https://github.com/jrzech/reproduce-chexnet) used annotated dataset, we tried to use the pre-trained model against our CXR images, however the technical for dimensions.
-
-* [3](https://github.com/arnoweng/CheXNet) The implementation was in PyTorch and had many dependencies to proceed with the implementation.
-
-* [4](https://github.com/JanMarcelKezmann/Pneumothorax-Detection) This implementation was more meaningful and not complicated. We are considering this as one of the references to implement the Deep CNN/NN
-
-* [5](https://mlmed.org/tools/xray/) Implementation of AI Chester Radiology Assistant [@cohen2020limits].
-
-* [6] Pneumonia Radiological Feature Detection [^2] [^3]
-
-
-[^2]: https://github.com/PyTorchLightning/lightning-Covid19
-[^3]: https://github.com/ManuelPalermo/X-Ray-ConvNet
-
-## Inferences of feedback on 03.09.2020:
+## Inferences of feedback on 24.09.2020:
 
 We found our presentation went good according to our supervisors but they had few comments on the progress. We inferred that:
 
-1. In the final report/paper, we need some kind of visualization with ranking of features may be in descending order according to their importance after explanation.
 
-2. We need to have a structure where in our feature extractor and model are concerned in a fashion such that there exists Global and Local features and also have some interaction and/or correlation among them which helps explanation.
-
-3. In the final paper, we need a fine detailed explanation of why we chose 14 radiological features, how this 14 features be of good importance in detection and what exactly are these 14 features are (bit detailed).
-
-4. Bi-weekly progress report and a meet.
 
 ## References

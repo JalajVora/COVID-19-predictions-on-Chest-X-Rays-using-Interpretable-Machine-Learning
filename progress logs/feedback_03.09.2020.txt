@@ -3,3 +3,50 @@ global feature importance
 features paper: 
 final paper - feature illustration explain more
 progress report
+
+
+
+Three models of different complexity
+Trying and going through Tree based model reduces complexity
+
+
+
+21.10.2020
+
+Variable importance plot
+summary plot
+the dependence plot
+the individual force plot
+the collective force plot
+
+
+
+
+
+global: measure calculates the deviation between linear and surrogate model
+black box model for global and we'd need to represent on individual instance on local  :: to make application specific
+local: shap in a local manner
+R shiny: multiple image upload and process!
+Prof. Preim last minute changes??
+
+
+As far as I remember, We have to clarify about Global Surrogate Model. What Subhajit thinks is in our common understanding and is that what we're suppose to do.
+Secondly, little bit about our progress and little bit about our goal. Good to refresh goal. Also what to do to get 1,0!
+
+One thing is clear, we need to have a CNN trained on 14 features. SHAP on local models for sure. Globally for us we could run shap. Though wouldn't matter!
+
+
+shapely values ka clustering
+we'll try to classify based on our Shapely values!
+Importance of features! may be a PCA! Correlational analysis. Spearman corelation.
+
+
+report:
+	1. spearman corelation
+	2. Consolidate kaise kar rehe hai (4 shap features hai)
+		2.2 Accuracies ko prob me convert. Shapely values * soft max-probabilities karke weighted average!
+	3. Global: Cluster me data points uthake karna hai!
+	4. Additional Experiment: Behaviour, linear ke jo weights hai, CNN ke shap values kaise change ho rahe hai -> SHAP and then our models -> shap. 
+			How shapely values changes?
+	we'll try to predict if shap values move towards linear regression or not.
+	5. SHAP importance models EDA w.r.t different models in report
