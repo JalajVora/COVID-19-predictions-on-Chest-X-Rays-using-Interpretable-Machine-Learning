@@ -42,7 +42,7 @@ Importance of features! may be a PCA! Correlational analysis. Spearman corelatio
 
 
 report:
-	1. spearman corelation
+	1. spearman correlation of shapley
 	2. Consolidate kaise kar rehe hai (4 shap features hai)
 		2.2 Accuracies ko prob me convert. Shapely values * soft max-probabilities karke weighted average!
 	3. Global: Cluster me data points uthake karna hai!
@@ -50,3 +50,17 @@ report:
 			How shapely values changes?
 	we'll try to predict if shap values move towards linear regression or not.
 	5. SHAP importance models EDA w.r.t different models in report
+	
+	
+	2.1 R file me 4 models ko load karo.
+	2.2 find softmax of their accuracy
+	2.3 for new data point get their shapely values for each of the four models
+	2.4 for each shapley value, get their abs values
+	2.5 do a weighted average w.r.t accuracy wala probability
+	
+	
+	4.1 ek aur R file create karna hai, 2 models ko le kar, hum pata rehna chahiye ki unki accuracies kya hai. 
+	4.2 We need 2 models jinki accuracies sabse zyada aur sabse kam hai.
+	4.3 do linear regression on our data
+	4.4 get the shapely values of all the instances on which linear regressor was run and weights of linear regressor.
+	4.5 Compare karna hai!
