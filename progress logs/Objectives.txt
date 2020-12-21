@@ -8,18 +8,22 @@ Project Objectives:
 	1.3 Measuring interaction
 	1.4 Surrogate Model [LASSO, Ridge and Logistic Regression]
 
+
 2. Local Interpretability [Shivam]
 	2.1 SHAP - so far we have shap values from all 5 models
 	2.2 Individual SHAP value plot
 	2.3 5 Models :: SHAP values :: Consolidation
 
+
 3. Global :: We have Surrogate model experiment. Variance between Neural Network and Linear Models (LASSO, RIDGE and Logistic Regression) [Jalaj]
 	3.1 r-squared = 1 - (variance of prediction differences / variance of black box model predictions)
 	3.2 Correlation Analysis
 
+
 4. We need to find out what relation could be established between local and global interpretability [Subhajit]
 	4.1 Cluserting SHAP values
 	4.2 Interaction between global and local SHAP
+
 
 5. SHAP values plots, Inference plots and EDA in Final Report [Jalaj]
 	
