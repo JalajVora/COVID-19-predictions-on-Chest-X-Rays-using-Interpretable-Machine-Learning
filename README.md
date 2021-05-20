@@ -1,4 +1,4 @@
-# COVID-19 predictions on Chest X-Rays using Interpretable Machine Learning
+# Explainable Machine Learning for COVID-19 Detetction in Chest X-rays
 A Team Project on COVID-19 Prediction in Chest X-Ray images using Interpretable Machine Learning in `R` under [M.Sc. Uli Niemann](http://www.kmd.ovgu.de/Team/Academic+Staff/Uli+Niemann.html) and [Dr.-Ing. Monique Meuschke](http://www.vismd.de/doku.php?id=people:start) provided by Otto-von-Guericke-University, Magdeburg
 
 ## Team:
